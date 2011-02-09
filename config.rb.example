@@ -1,0 +1,4 @@
+USER = 'username'
+PASS = 'password'
+
+LINKCHAT = -1 #topic_id
