@@ -2,7 +2,6 @@ class Define < Linkbot::Plugin
     def self.regex
       /!define (.*)/
     end
-    Linkbot::Plugin.register('urban', self.regex, self)
 
     def self.on_message(user, message, match)
       word = URI.escape(match[0])
@@ -19,4 +18,5 @@ class Define < Linkbot::Plugin
     def self.help
       "!define (word) - use a dictionary, foo"
     end
+    Linkbot::Plugin.register('urban', self.regex, self)
 end
