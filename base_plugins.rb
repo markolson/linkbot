@@ -3,30 +3,30 @@ require 'rubygems'
 require 'db'
 require 'base_dupe'
 
-class Linkbot
-  def self.match(user, message)
-    Thread.new { 
-      final_message = []
-      Linkbot::Plugin.plugins.each {|k,v|
-        if(v[:ptr].respond_to?(:on_message) && message =~ v[:regex])
-          p "#{k} matches: #{user['username']} - #{message}"
-          begin
-            end_msg = v[:ptr].on_message(user, message, v[:regex].match(message).to_a.drop(1)).join("\n")
-          rescue => e
-            end_msg = ["the #{k} plugin threw an exception"] 
-            p e.inspect
-          end
-          final_message << end_msg
-        end
-      }
-      s = final_message.join("\n")
-      print ">>>#{s}\n" if s.length > 1
-      Linkbot.msg LINKCHAT, s if defined?(LINKCHAT) && s.length > 1
-    }
-  end
-  
+class Linkbot  
   class Plugin
     @@plugins = {}
+    
+    def self.match(user, message)
+      Thread.new { 
+        final_message = []
+        Linkbot::Plugin.plugins.each {|k,v|
+          if(v[:ptr].respond_to?(:on_message) && message =~ v[:regex])
+            p "#{k} matches: #{user['username']} - #{message}"
+            begin
+              end_msg = v[:ptr].on_message(user, message, v[:regex].match(message).to_a.drop(1)).join("\n")
+            rescue => e
+              end_msg = ["the #{k} plugin threw an exception"] 
+              p e.inspect
+            end
+            final_message << end_msg
+          end
+        }
+        s = final_message.join("\n")
+        print ">>>#{s}\n" if s.length > 1
+        Linkbot.msg LINKCHAT, s if defined?(LINKCHAT) && s.length > 1
+      }
+    end
     
     def self.plugins; @@plugins; end;
 
@@ -43,8 +43,8 @@ class Linkbot
 end
 
 def test(user, message)
-  Linkbot.match(user, message)
-  Linkbot.check_dupe(user, message)
+  Linkbot::Plugin.match(user, message)
+  Linkbot::Dupe.check_dupe(user, message)
 end
 
 # test

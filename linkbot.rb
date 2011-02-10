@@ -39,9 +39,9 @@ class Linkbot
         next if user['username'] == USER
         message = m['message']
         # try and match it against the plugins (method in plugins.rb)
-        Linkbot.match(user,message)
+        Linkbot::Plugin.match(user,message)
         #and dupes
-        Linkbot.check_dupe(user,message)
+        Linkbot::Dupe.check_dupe(user,message)
       end
     }
     #update our last time
