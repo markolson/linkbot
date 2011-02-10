@@ -22,6 +22,7 @@ class Linkbot
     end  
       s = messages.join("\n")
       print "\n----\n" + s + "\n---\n" if s.length > 1
+      Linkbot.msg LINKCHAT, s if defined?(LINKCHAT) && s.length > 1
   end
   
   if Linkbot.db.table_info('links').empty?

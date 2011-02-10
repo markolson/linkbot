@@ -20,7 +20,7 @@ class Karma < Linkbot::Plugin
   end
   
   def self.on_newlink(user, message)
-    self.karam(user['id'],1)
+    self.karma(user['id'],1)
     []
   end
   
