@@ -1,12 +1,15 @@
 require 'rubygems'
+require 'db'
+require 'base_dupe'
 
 class Linkbot
   def self.match(user, message)
     Thread.new { 
       final_message = []
       Linkbot::Plugin.plugins.each {|k,v|
+        next unless v[:ptr].respond_to(:on_message)
         if(message =~ v[:regex])
-          p "#{k} matches: #{user} - #{message}"
+          p "#{k} matches: #{user['username']} - #{message}"
           begin
             end_msg = v[:ptr].on_message(user, message, v[:regex].match(message).to_a.drop(1)).join("\n")
           rescue => e
@@ -32,7 +35,6 @@ class Linkbot
     end
   
     def self.register(name, regex, s, &blk)
-      p "registered #{name}" if !@@plugins[name]
       @@plugins[name] = {:ptr => s, :regex => regex, :block => blk }
       
     end
@@ -42,11 +44,10 @@ end
 
 # test
 if not defined?(LINKCHAT)
+  user = {'id' => 123, 'username' => 'mark_olson' }
   Linkbot::Plugin.collect
-  Linkbot.match("mark", "!sleep")
-  sleep(20)
-  Linkbot::Plugin.collect
-  sleep(1)
-  Linkbot.match("mark", "!sleep")
-  sleep(10)
+  #Linkbot.match('mark', 'http://qwantz.com')
+  Linkbot.match(user, 'http://qwantz.com')
+  Linkbot.check_dupe(user,'http://qwantz.com')
+  sleep(2)
 end

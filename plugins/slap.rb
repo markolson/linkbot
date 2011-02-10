@@ -4,8 +4,8 @@ class Slap < Linkbot::Plugin
   end
   Linkbot::Plugin.register('slapper', self.regex, self)
   
-  def self.on_message(user, message, matches) 
-    ["#{user} slaps #{matches[0]} around a bit with a large trout"]
+  def self.on_message(user, message, matches)
+    ["#{user['username']} slaps #{matches[0]} around a bit with a large trout"]
   end
   
   def self.help
