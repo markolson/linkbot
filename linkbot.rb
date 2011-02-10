@@ -6,6 +6,7 @@ require 'pp'
 require 'config.rb'
 
 require 'plugins'
+require 'base_dupe'
 
 class Linkbot
   include HTTParty
@@ -32,12 +33,14 @@ class Linkbot
       sentat = m['date_created'].to_f
       # if the message is new, continue
       if(@@lastmsgs[topic] && @@lastmsgs[topic] < sentat)
-        user = m['user']['username']
+        user = m['user']
         # if it wasn't sent by us, continue
         next if user == USER
         message = m['message']
         # try and match it against the plugins (method in plugins.rb)
         Linkbot.match(user,message)
+        #and dupes
+        Linkbot.check_dupe(user,message)
       end
     }
     #update our last time
