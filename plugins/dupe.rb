@@ -4,7 +4,7 @@ require 'sqlite3'
 
 class Dupe < Linkbot::Plugin
   def self.regex
-    Regexp.new('(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))')
+    /^$/
   end
   Linkbot::Plugin.register('dupe', self.regex, self)
   
@@ -15,7 +15,6 @@ class Dupe < Linkbot::Plugin
     else
       Linkbot.db.execute("insert into stats (user_id,total,dupes) VALUES ('#{user['id']}',0,1)")
     end
-    Linkbot.msg(LINKCHAT, "DUPE!")
-    return []
+    return ['DUPE!']
   end
 end

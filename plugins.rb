@@ -1,4 +1,5 @@
 require 'rubygems'
+
 require 'db'
 require 'base_dupe'
 
@@ -7,8 +8,7 @@ class Linkbot
     Thread.new { 
       final_message = []
       Linkbot::Plugin.plugins.each {|k,v|
-        next unless v[:ptr].respond_to(:on_message)
-        if(message =~ v[:regex])
+        if(v[:ptr].respond_to?(:on_message) && message =~ v[:regex])
           p "#{k} matches: #{user['username']} - #{message}"
           begin
             end_msg = v[:ptr].on_message(user, message, v[:regex].match(message).to_a.drop(1)).join("\n")
@@ -20,7 +20,7 @@ class Linkbot
         end
       }
       s = final_message.join("\n")
-      print "\n----\n" + s + "\n---\n" if s.length > 1
+      print ">>>#{s}\n" if s.length > 1
       Linkbot.msg LINKCHAT, s if defined?(LINKCHAT) && s.length > 1
     }
   end
@@ -34,20 +34,26 @@ class Linkbot
       Dir["plugins/*.rb"].each {|file| load file }
     end
   
-    def self.register(name, regex, s, &blk)
-      @@plugins[name] = {:ptr => s, :regex => regex, :block => blk }
+    def self.register(name, regex, s)
+      @@plugins[name] = {:ptr => s, :regex => regex }
       
     end
   end
   
 end
 
+def test(user, message)
+  Linkbot.match(user, message)
+  Linkbot.check_dupe(user, message)
+end
+
 # test
 if not defined?(LINKCHAT)
-  user = {'id' => 123, 'username' => 'mark_olson' }
   Linkbot::Plugin.collect
-  #Linkbot.match('mark', 'http://qwantz.com')
-  Linkbot.match(user, 'http://qwantz.com')
-  Linkbot.check_dupe(user,'http://qwantz.com')
-  sleep(2)
+  user = {'id' => 123, 'username' => 'mark_olson' }
+  #test(user, 'http://qwantz.com')
+  #sleep(1)
+  test(user, '!vote')
+  test(user, '!boo')
+  sleep(5)
 end
