@@ -53,7 +53,6 @@ if not defined?(LINKCHAT)
   user = {'id' => 123, 'username' => 'mark_olson' }
   #test(user, 'http://qwantz.com')
   #sleep(1)
-  test(user, '!vote')
-  test(user, '!boo')
+  test(user, 'FUUUUUUUU')
   sleep(5)
 end
