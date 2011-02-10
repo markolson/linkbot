@@ -1,8 +1,8 @@
-class Slap < Linkbot::Plugin
+class Sleep < Linkbot::Plugin
   def self.regex
     /!sleep/
   end
-  Linkbot::Plugin.register('slapper', self.regex, self)
+  Linkbot::Plugin.register('sleeper', self.regex, self)
   
   def self.on_message(user, message, matches) 
     p "entering in #{Thread.current.object_id}"
