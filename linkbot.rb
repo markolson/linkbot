@@ -35,7 +35,7 @@ class Linkbot
       if(@@lastmsgs[topic] && @@lastmsgs[topic] < sentat)
         user = m['user']
         # if it wasn't sent by us, continue
-        next if user == USER
+        next if user['id'] == USER
         message = m['message']
         # try and match it against the plugins (method in plugins.rb)
         Linkbot.match(user,message)
