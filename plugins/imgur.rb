@@ -8,9 +8,10 @@ class Imgur < Linkbot::Plugin
   Linkbot::Plugin.register('imgur', self.regex, self)
   
   def self.on_message(user, message, matches) 
+    imgs = []
     1.upto(3) do |x|
       doc = Hpricot(open("http://imgur.com/gallery?p=#{x}").read)
-      imgs = doc.search("div[@class=big-preview] a img").collect{|m| m.attributes["src"].gsub("b.jpg", ".jpg")}
+      imgs += doc.search("div[@class=big-preview] a img").collect{|m| m.attributes["src"].gsub("b.jpg", ".jpg")}
     end
 
     [imgs[rand(imgs.length)]]
