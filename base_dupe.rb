@@ -27,7 +27,7 @@ class Linkbot
     end
   
     if Linkbot.db.table_info('links').empty?
-      db.execute('CREATE TABLE links (user_id INTEGER, dt DATETIME, url TEXT)');
+      Linkbot.db.execute('CREATE TABLE links (user_id INTEGER, dt DATETIME, url TEXT)');
     end
     if Linkbot.db.table_info('stats').empty?
       Linkbot.db.execute('CREATE TABLE stats (user_id INTEGER, dupes INTEGER, total INTEGER)');
