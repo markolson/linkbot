@@ -26,7 +26,16 @@ class Jason < Linkbot::Plugin
         
         1.upto(times) do
           doc = ActiveSupport::JSON.decode(open("http://reddit.com#{reddits[rand(reddits.length)]}.json").read)
-          messages << doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
+          url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
+          
+          # Check if it's an imgur link without an image extension
+          if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
+            # Fetch the imgur page and pull out the image
+            doc = Hpricot(open(url).read)
+            url = doc.search("img")[1]['src']
+          end
+          
+          messages << url
         end
         return messages
   end
