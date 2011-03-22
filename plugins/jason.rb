@@ -25,7 +25,7 @@ class Jason < Linkbot::Plugin
         messages = []
         
         1.upto(times) do
-          doc = ActiveSupport::JSON.decode(open("http://reddit.com#{reddits[rand(reddits.length)]}.json").read
+          doc = ActiveSupport::JSON.decode(open("http://reddit.com#{reddits[rand(reddits.length)]}.json").read)
           url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
           
           # Check if it's an imgur link without an image extension
