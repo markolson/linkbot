@@ -22,10 +22,15 @@ class Jason < Linkbot::Plugin
         	"/r/aww",
         ]
         times = times ? times.to_i : 1
+        times = times <= 5 ? times : 5 
+ 
         messages = []
         
         1.upto(times) do
-          doc = ActiveSupport::JSON.decode(open("http://reddit.com#{reddits[rand(reddits.length)]}.json").read)
+          subreddit = "http://reddit.com#{reddits[rand(reddits.length)]}.json"
+          puts subreddit
+          doc = ActiveSupport::JSON.decode(open(subreddit, "Cookie" => "reddit_session=8390507%2C2011-03-22T07%3A06%3A44%2C2516dcc69a22ad297b9900cbde147b365203bbbb").read)
+          
           url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
           
           # Check if it's an imgur link without an image extension
