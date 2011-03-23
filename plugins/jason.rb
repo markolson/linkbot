@@ -27,7 +27,7 @@ class Jason < Linkbot::Plugin
         last_end = 0.0
         
         reddits.each do |k,v|
-          reddits[k] = [last_end, (v.to_f / total_value)*100]
+          reddits[k] = [last_end, last_end + (v.to_f / total_value)*100]
           last_end += (v.to_f / total_value) * 100
         end
         
@@ -35,7 +35,7 @@ class Jason < Linkbot::Plugin
         times = times <= 5 ? times : 5 
  
         messages = []
-        
+              
         1.upto(times) do
           
           # Brute force this mother
@@ -47,7 +47,7 @@ class Jason < Linkbot::Plugin
               break
             end
           }
-          
+                  
           puts subreddit
           doc = ActiveSupport::JSON.decode(open(subreddit, "Cookie" => "reddit_session=8390507%2C2011-03-22T07%3A06%3A44%2C2516dcc69a22ad297b9900cbde147b365203bbbb").read)
           
