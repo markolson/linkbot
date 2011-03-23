@@ -17,7 +17,8 @@ class Linkbot
               end_msg = v[:ptr].on_message(user, message, v[:regex].match(message).to_a.drop(1)).join("\n")
             rescue => e
               end_msg = ["the #{k} plugin threw an exception"] 
-              p e.inspect
+              puts e.inspect
+              puts e.backtrace.join("\n")
             end
             final_message << end_msg
           end
