@@ -50,6 +50,10 @@ class Linkbot
 end
 
 while true
-  Linkbot.monitor(LINKCHAT)
-  sleep(3)
+  begin
+    Linkbot.monitor(LINKCHAT)
+    sleep(3)
+  rescue
+    p $!
+  end
 end
