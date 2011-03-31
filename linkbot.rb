@@ -53,7 +53,7 @@ while true
   begin
     Linkbot.monitor(LINKCHAT)
     sleep(3)
-  rescue
+  rescue Exception
     p $!
   end
 end
