@@ -29,6 +29,7 @@ class Linkbot
     results = get("/topics/#{topic}/messages.json")
     # load just the messages into an array
     messages = JSON.load(results.body)['messages']
+    p messages
     messages.each { |m|
       sentat = m['date_created'].to_f
       # if the message is new, continue
@@ -53,6 +54,10 @@ while true
   begin
     Linkbot.monitor(LINKCHAT)
     sleep(3)
+  #die on an interrupt (i.e. ^C)
+  rescue Interrupt
+    raise $!
+  #otherwise, swallow the error and keep on trucking
   rescue Exception
     p $!
   end
