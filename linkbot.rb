@@ -7,56 +7,53 @@ require 'config.rb'
 
 require 'base_plugins'
 require 'base_dupe'
+require 'base_karma'
 
 class Linkbot
   include HTTParty
   base_uri 'convore.com:443/api'
   basic_auth USER, PASS
-  @@lastmsgs = {}
 
   def self.live
-    get('/live.json')
+    cursor = nil
+    while true
+      begin
+        Linkbot::Plugin.collect
+
+        options = cursor.nil? ? {} : {'cursor' => cursor}
+        results = get('/live.json', options)
+        puts results.body
+
+        messages = JSON.load(results.body)['messages']
+        messages.each do |m|
+          cursor = m["_id"]
+
+          # if it wasn't sent by us, continue
+          user = m['user']
+          next if user['username'] == USER
+
+          message = m['message']
+
+          # try and match it against the plugins (method in plugins.rb)
+          Linkbot::Plugin.match(user,message)
+          #and dupes
+          Linkbot::Dupe.check_dupe(user,message)
+        end
+
+      #unless it's an interrupt (i.e. ^C),
+      rescue Interrupt
+        exit
+      #catch it and keep on truckin
+      rescue Exception
+        #TODO: just put that exception
+        puts $!, $!.backtrace
+      end
+    end
   end
 
   def self.msg(topic, msg)
     response = post("/topics/#{topic}/messages/create.json", :body => {'message' => msg})
   end
-  
-  def self.monitor(topic)
-    # reload our plugins
-    Linkbot::Plugin.collect
-    # get the list of messages from the api
-    results = get("/topics/#{topic}/messages.json")
-    # load just the messages into an array
-    messages = JSON.load(results.body)['messages']
-    messages.each { |m|
-      sentat = m['date_created'].to_f
-      # if the message is new, continue
-      if(@@lastmsgs[topic] && @@lastmsgs[topic] < sentat)
-        user = m['user']
-        # if it wasn't sent by us, continue
-        next if user['username'] == USER
-        message = m['message']
-        # try and match it against the plugins (method in plugins.rb)
-        Linkbot::Plugin.match(user,message)
-        #and dupes
-        Linkbot::Dupe.check_dupe(user,message)
-      end
-    }
-    #update our last time
-    @@lastmsgs[topic] = messages.last['date_created'].to_f
-  end
 end
 
-while true
-  begin
-    Linkbot.monitor(LINKCHAT)
-    sleep(3)
-  #die on an interrupt (i.e. ^C)
-  rescue Interrupt
-    raise $!
-  #otherwise, swallow the error and keep on trucking
-  rescue Exception
-    p $!
-  end
-end
+Linkbot.live
