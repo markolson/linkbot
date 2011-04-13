@@ -20,8 +20,8 @@ class Linkbot
         Linkbot::Plugin.collect
 
         options = cursor.nil? ? {} : {'cursor' => cursor}
+        puts "requesting"
         results = get('/live.json', options)
-        puts results.body
 
         messages = JSON.load(results.body)['messages']
         messages.each do |m|
@@ -30,6 +30,11 @@ class Linkbot
           # if it wasn't sent by us, continue
           user = m['user']
           next if user['username'] == USER
+
+          #ignore some verbose messages
+          if !(['login', 'logout', 'read'].include? m['kind'])
+            puts m
+          end
 
           # try and match it against the plugins (method in plugins.rb)
           Linkbot::Plugin.match(user, m)
