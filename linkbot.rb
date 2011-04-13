@@ -7,7 +7,6 @@ require 'config.rb'
 
 require 'base_plugins'
 require 'base_dupe'
-require 'base_karma'
 
 class Linkbot
   include HTTParty
