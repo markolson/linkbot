@@ -6,7 +6,9 @@ class Linkbot
       Regexp.new('(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))')
     end
   
-    def self.check_dupe(user, url)
+    def self.check_dupe(user, message)
+      url = message["message"]
+
       return unless url =~ self.regexp
     
       messages = []

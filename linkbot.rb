@@ -32,12 +32,10 @@ class Linkbot
           user = m['user']
           next if user['username'] == USER
 
-          message = m['message']
-
           # try and match it against the plugins (method in plugins.rb)
-          Linkbot::Plugin.match(user,message)
+          Linkbot::Plugin.match(user, m)
           #and dupes
-          Linkbot::Dupe.check_dupe(user,message)
+          Linkbot::Dupe.check_dupe(user, m)
         end
 
       #unless it's an interrupt (i.e. ^C),
@@ -46,7 +44,8 @@ class Linkbot
       #catch it and keep on truckin
       rescue Exception
         #TODO: just put that exception
-        puts $!, $!.backtrace
+        puts $!
+        puts $!.backtrace.join "\n"
       end
     end
   end

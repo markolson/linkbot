@@ -11,10 +11,11 @@ class Linkbot
       Thread.new { 
         final_message = []
         Linkbot::Plugin.plugins.each {|k,v|
-          if(v[:ptr].respond_to?(:on_message) && message =~ v[:regex])
-            p "#{k} matches: #{user['username']} - #{message}"
+          msgtxt = message["message"]
+          if(v[:ptr].respond_to?(:on_message) && msgtxt =~ v[:regex])
+            p "#{k} matches: #{user['username']} - #{msgtxt}"
             begin
-              end_msg = v[:ptr].on_message(user, message, v[:regex].match(message).to_a.drop(1)).join("\n")
+              end_msg = v[:ptr].on_message(user, msgtxt, v[:regex].match(msgtxt).to_a.drop(1)).join("\n")
             rescue => e
               end_msg = ["the #{k} plugin threw an exception"] 
               puts e.inspect
@@ -24,8 +25,9 @@ class Linkbot
           end
         }
         s = final_message.join("\n")
+
         print ">>>#{s}\n" if s.length > 1
-        Linkbot.msg LINKCHAT, s if defined?(LINKCHAT) && s.length > 1
+        Linkbot.msg message["topic"]["id"], s if s.length > 1
       }
     end
     
