@@ -4,7 +4,7 @@ class Shutup < Linkbot::Plugin
     end
 
     def self.on_message(user, message, match)
-      ["No, YOU #{matches[0]}"]
+      ["No, YOU #{match[0]}"]
     end
 
     Linkbot::Plugin.register('shutup', self.regex, self)
