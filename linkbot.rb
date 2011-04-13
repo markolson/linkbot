@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'httparty'
+require 'sanitize'
+require 'htmlentities'
 
 require 'json'
 require 'pp'
@@ -55,6 +57,16 @@ class Linkbot
   end
 
   def self.msg(topic, msg)
+    # Convert break tags to newlines
+    msg.gsub!(/\<br\w*\/?\w*\>/, "\n")
+    
+    # Decode HTML entities
+    coder = HTMLEntities.new
+    msg = coder.decode(msg)
+    
+    # Sanitize the HTML
+    msg = Sanitize.clean(msg)
+    
     response = post("/topics/#{topic}/messages/create.json", :body => {'message' => msg})
   end
 end
