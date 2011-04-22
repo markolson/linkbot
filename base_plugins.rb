@@ -31,6 +31,56 @@ class Linkbot
       }
     end
     
+    def self.starred(user, message)
+      Thread.new {
+        final_message = []
+        
+        Linkbot::Plugin.plugins.each {|k,v|
+          if(v[:ptr].respond_to?(:on_starred))
+            p "#{k} responding to starred message"
+            begin
+              end_msg = v[:ptr].on_starred(user, message['star']['message']['user'], message['star']['message']['message']).join("\n")
+            rescue => e
+              end_msg = ["the #{k} plugin threw an exception"] 
+              puts e.inspect
+              puts e.backtrace.join("\n")
+            end
+            final_message << end_msg
+          end
+        }
+        
+        s = final_message.join("\n")
+        print ">>>#{s}\n" if s.length > 1
+        if s.length > 1
+          Linkbot.msg(LINKCHAT, s)
+        end
+      }
+    end
+    
+    def self.unstarred(user, message)
+      Thread.new {
+        final_message = []
+        
+        Linkbot::Plugin.plugins.each {|k,v|
+          if(v[:ptr].respond_to?(:on_unstarred))
+            p "#{k} responding to unstarred message"
+            begin
+              end_msg = v[:ptr].on_unstarred(user, message['star']['message']['user'], message['star']['message']['message']).join("\n")
+            rescue => e
+              end_msg = ["the #{k} plugin threw an exception"] 
+              puts e.inspect
+              puts e.backtrace.join("\n")
+            end
+            final_message << end_msg
+          end
+        }
+        
+        s = final_message.join("\n")
+        print ">>>#{s}\n" if s.length > 1
+        Linkbot.msg LINKCHAT, s if s.length > 1
+      }
+    end
+    
     def self.plugins; @@plugins; end;
 
     def self.collect
@@ -39,7 +89,6 @@ class Linkbot
   
     def self.register(name, regex, s)
       @@plugins[name] = {:ptr => s, :regex => regex }
-      
     end
   end
   

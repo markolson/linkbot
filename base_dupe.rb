@@ -10,17 +10,18 @@ class Linkbot
       url = message["message"]
 
       return unless url =~ self.regexp
-    
+      
       messages = []
-      rows = Linkbot.db.execute("select user_id, url from links where url = '#{url}'")
+      rows = Linkbot.db.execute("select user_id,dt from links where url = '#{url}'")
       if rows.empty?
         Linkbot::Plugin.plugins.each {|k,v|
           messages << v[:ptr].on_newlink(user,url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
         }
+        # Add the link to the dupe table
         Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{user['id']}', '#{Time.now.getgm.to_i}', '#{url}')")
       else
         Linkbot::Plugin.plugins.each {|k,v|
-          messages << v[:ptr].on_dupe(user,url).join("\n") if(v[:ptr].respond_to?(:on_dupe)) 
+          messages << v[:ptr].on_dupe(user,url,rows[0][0],rows[0][1]).join("\n") if(v[:ptr].respond_to?(:on_dupe)) 
         }
       end  
         s = messages.join("\n")
@@ -28,11 +29,16 @@ class Linkbot
         Linkbot.msg LINKCHAT, s if defined?(LINKCHAT) && s.length > 1
     end
   
+    if Linkbot.db.table_info('users').empty?
+      Linkbot.db.execute('CREATE TABLE users (user_id INTEGER, username TEXT)')
+    end
     if Linkbot.db.table_info('links').empty?
       Linkbot.db.execute('CREATE TABLE links (user_id INTEGER, dt DATETIME, url TEXT)');
     end
-    if Linkbot.db.table_info('stats').empty?
-      Linkbot.db.execute('CREATE TABLE stats (user_id INTEGER, dupes INTEGER, total INTEGER)');
+
+    if Linkbot.db.table_info('trans').empty?
+      Linkbot.db.execute('CREATE TABLE trans (user_id INTEGER, karma INTEGER, trans TEXT)');
     end
+    
   end
 end

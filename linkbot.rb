@@ -7,6 +7,7 @@ require 'json'
 require 'pp'
 require 'config.rb'
 
+require 'util'
 require 'base_plugins'
 require 'base_dupe'
 
@@ -26,20 +27,36 @@ class Linkbot
         results = get('/live.json', options)
 
         messages = JSON.load(results.body)['messages']
+        
         messages.each do |m|
           cursor = m["_id"]
 
           # if it wasn't sent by us, continue
           user = m['user']
+          
           next if user['username'] == USER
 
           #ignore some verbose messages
           if !(['login', 'logout', 'read'].include? m['kind'])
             puts m
           end
+          
+          # Create the user's info, if it does not exist
+          rows = Linkbot.db.execute("select * from users where user_id = '#{user['id']}'")
+          if rows.empty?
+            Linkbot.db.execute("insert into users (user_id,username) values ('#{user['id']}', '#{user['username']}')")
+          end
 
           # try and match it against the plugins (method in plugins.rb)
           Linkbot::Plugin.match(user, m)
+          # Inform the plugins of the starred message
+          if m["kind"] == "star"
+            puts "I FOUND A STAR"
+            Linkbot::Plugin.starred(user, m)
+          elsif m["kind"] == "unstar"
+            puts "I FOUND AN UNSTAR"
+            Linkbot::Plugin.unstarred(user, m)
+          end
           #and dupes
           Linkbot::Dupe.check_dupe(user, m)
         end
