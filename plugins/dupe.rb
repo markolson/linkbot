@@ -11,7 +11,7 @@ class Dupe < Linkbot::Plugin
   
   
   def self.on_message(user, message, matches) 
-    rows = Linkbot.db.execute("select u.username,s.total,s.dupes from stats s, users u where u.user_id = s.user_id order by s.total desc")
+    rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
     mess = "Link stats:\n--------------------------\n"
     max = 1
     divvy = 10
@@ -25,7 +25,7 @@ class Dupe < Linkbot::Plugin
         end
       end
     end
-    rows.each {|row| mess = mess + sprintf("%#{max}d: #{row[0]} (%d dupes, %.2f%% new)\n", row[1], row[2], (row[1]/(row[1]+row[2]).to_f)*100)}
+    rows.each {|row| mess = mess + sprintf("%#{max}d: #{row[0]} (%d links, %d dupes, %.2f%% new)\n", row[3], row[1], row[2], (row[1]/(row[1]+row[2]).to_f)*100)}
     [mess]
   end
   
@@ -54,6 +54,10 @@ class Dupe < Linkbot::Plugin
       dupes = rows[0][2]
     end
     return total,dupes
+  end
+  
+  def self.help
+    "!stats - show all karma and links stats for linkchat participants"
   end
   
   if Linkbot.db.table_info('stats').empty?
