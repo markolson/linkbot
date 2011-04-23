@@ -11,8 +11,6 @@ class Qwantz < Linkbot::Plugin
         doc = Hpricot(open(link['href']))
         img = doc.search('img.comic')
         return [link.inner_html.strip, img.first['src']]
-        message = ::Jabber::Message.new(nil,link.to_s)
-        handle.send(message,nil)
     end
     
     def self.help

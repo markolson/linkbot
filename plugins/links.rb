@@ -23,9 +23,8 @@ class Linkbot
           messages << v[:ptr].on_dupe(user,url,rows[0][0],rows[0][1]).join("\n") if(v[:ptr].respond_to?(:on_dupe)) 
         }
       end  
-        s = messages.join("\n")
-        print "\n----\n" + s + "\n---\n" if s.length > 1
-        Linkbot.msg LINKCHAT, s if defined?(LINKCHAT) && s.length > 1
+      s = messages.join("\n")
+      [s]
     end
   
     if Linkbot.db.table_info('users').empty?
