@@ -4,6 +4,7 @@ require 'db'
 class Linkbot  
   class Plugin
     @@plugins = {}
+    @@message_log = []
     
     def self.handle_message(user, message)
       
@@ -47,6 +48,10 @@ class Linkbot
       when "direct-message"
         Linkbot.msg("/messages/#{original_message["conversation_user_id"]}/create.json", reply)
       end
+    end
+    
+    def self.message_history
+      @@message_log
     end
     
     def self.registered_methods
