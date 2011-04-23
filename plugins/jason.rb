@@ -3,7 +3,8 @@ require 'active_support'
 class Jason < Linkbot::Plugin
   Linkbot::Plugin.register('jason', self,
     {
-      :message => {:regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?'), :handler => :on_message, :help => :help}
+      :message => {:regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?'), :handler => :on_message, :help => :help},
+      :"direct-message" => {:regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?'), :handler => :on_message, :help => :help}
     }
   )
   

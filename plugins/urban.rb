@@ -17,7 +17,8 @@ class Define < Linkbot::Plugin
 
     Linkbot::Plugin.register('urban', self,
       {
-        :message => {:regex => /!define (.*)/, :handler => :on_message, :help => :help}
+        :message => {:regex => /!define (.*)/, :handler => :on_message, :help => :help},
+        :"direct-message" => {:regex => /!define (.*)/, :handler => :on_message, :help => :help}
       }
     )
 end

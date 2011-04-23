@@ -33,7 +33,8 @@ class Blowhard < Linkbot::Plugin
     
     Linkbot::Plugin.register('blowhard', self,
       {
-        :message => {:regex => /!blowhard/, :handler => :on_message, :help => :help}
+        :message => {:regex => /!blowhard/, :handler => :on_message, :help => :help},
+        :"direct-message" => {:regex => /!blowhard/, :handler => :on_message, :help => :help}
       }
     )
 end

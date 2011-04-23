@@ -1,7 +1,8 @@
 class Qwantz < Linkbot::Plugin
     Linkbot::Plugin.register('qwantz', self,
       {
-        :message => {:regex => /!qwantz/, :handler => :on_message, :help => :help}
+        :message => {:regex => /!qwantz/, :handler => :on_message, :help => :help},
+        :"direct-message" => {:regex => /!qwantz/, :handler => :on_message, :help => :help}
       }
     )
   
