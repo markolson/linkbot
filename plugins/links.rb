@@ -1,15 +1,14 @@
-require 'db'
-
 class Linkbot
-  class Dupe
-    def self.regexp
-      Regexp.new('(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))')
-    end
+  class Dupe    
+    Linkbot::Plugin.register('links', self,
+      {
+        :message => {:regex => Regexp.new('(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))'), 
+                    :handler => :on_message}
+      }
+    )
   
-    def self.check_dupe(user, message)
-      url = message["message"]
-
-      return unless url =~ self.regexp
+    def self.on_message(user, text, matches, msg)
+      url = matches[0]
       
       messages = []
       rows = Linkbot.db.execute("select user_id,dt from links where url = '#{url}'")

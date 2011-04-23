@@ -1,9 +1,5 @@
 class Snap < Linkbot::Plugin
-    def self.regex
-      /SNAP\!/
-    end
-
-    def self.on_message(user, message, match)
+    def self.on_message(user, message, matches, msg)
       snaps = [	"http://i52.tinypic.com/302melk.gif",
       		"http://www.youtube.com/watch?v=qL3TWooBGrI",
       		"http://i51.tinypic.com/2roj8k0.jpg",
@@ -13,5 +9,9 @@ class Snap < Linkbot::Plugin
       [snaps[rand(snaps.length)]]
     end
 
-    Linkbot::Plugin.register('snap', self.regex, self)
+    Linkbot::Plugin.register('snap', self,
+      {
+        :message => {:regex => /SNAP\!/, :handler => :on_message}
+      }
+    )
 end

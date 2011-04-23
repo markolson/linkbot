@@ -1,11 +1,11 @@
 class Qwantz < Linkbot::Plugin
-    def self.regex
-      Regexp.new('!qwantz')
-    end
-    
-    Linkbot::Plugin.register('qwantz', self.regex, self)
+    Linkbot::Plugin.register('qwantz', self,
+      {
+        :message => {:regex => /!qwantz/, :handler => :on_message, :help => :help}
+      }
+    )
   
-    def self.on_message(user, message, matches)
+    def self.on_message(user, message, matches, msg)
         doc = Hpricot(open('http://qwantz.com/index.php'))
         link = doc.search("div.randomquote a")[1]
         doc = Hpricot(open(link['href']))

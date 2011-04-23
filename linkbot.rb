@@ -8,8 +8,8 @@ require 'pp'
 require 'config.rb'
 
 require 'util'
+require 'db'
 require 'base_plugins'
-require 'base_dupe'
 
 class Linkbot
   include HTTParty
@@ -47,18 +47,8 @@ class Linkbot
             Linkbot.db.execute("insert into users (user_id,username) values ('#{user['id']}', '#{user['username']}')")
           end
 
-          # try and match it against the plugins (method in plugins.rb)
-          Linkbot::Plugin.match(user, m)
-          # Inform the plugins of the starred message
-          if m["kind"] == "star"
-            puts "I FOUND A STAR"
-            Linkbot::Plugin.starred(user, m)
-          elsif m["kind"] == "unstar"
-            puts "I FOUND AN UNSTAR"
-            Linkbot::Plugin.unstarred(user, m)
-          end
-          #and dupes
-          Linkbot::Dupe.check_dupe(user, m)
+          # Handle the message
+          Linkbot::Plugin.handle_message(user, m)
         end
 
       #unless it's an interrupt (i.e. ^C),
@@ -73,7 +63,7 @@ class Linkbot
     end
   end
 
-  def self.msg(topic, msg)
+  def self.msg(url, msg)
     # Convert break tags to newlines
     msg.gsub!(/\<br\w*\/?\w*\>/, "\n")
     
@@ -84,7 +74,7 @@ class Linkbot
     # Sanitize the HTML
     msg = Sanitize.clean(msg)
     
-    response = post("/topics/#{topic}/messages/create.json", :body => {'message' => msg})
+    response = post(url, :body => {'message' => msg})
   end
 end
 

@@ -1,11 +1,11 @@
 class Shutup < Linkbot::Plugin
-    def self.regex
-      /(.*), linkbot/
+    def self.on_message(user, message, matches, msg)
+      ["No, YOU #{matches[0]}"]
     end
 
-    def self.on_message(user, message, match)
-      ["No, YOU #{match[0]}"]
-    end
-
-    Linkbot::Plugin.register('shutup', self.regex, self)
+    Linkbot::Plugin.register('shutup', self,
+      {
+        :message => {:regex => /(.*), linkbot/, :handler => :on_message}
+      }
+    )
 end

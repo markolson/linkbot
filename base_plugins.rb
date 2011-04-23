@@ -1,84 +1,57 @@
 require 'rubygems'
-
 require 'db'
-require 'base_dupe'
 
 class Linkbot  
   class Plugin
     @@plugins = {}
     
-    def self.match(user, message)
+    def self.handle_message(user, message)
+      
       Thread.new { 
         final_message = []
         Linkbot::Plugin.plugins.each {|k,v|
-          msgtxt = message["message"]
-          if(v[:ptr].respond_to?(:on_message) && msgtxt =~ v[:regex])
-            p "#{k} matches: #{user['username']} - #{msgtxt}"
-            begin
-              end_msg = v[:ptr].on_message(user, msgtxt, v[:regex].match(msgtxt).to_a.drop(1)).join("\n")
-            rescue => e
-              end_msg = ["the #{k} plugin threw an exception"] 
-              puts e.inspect
-              puts e.backtrace.join("\n")
+          msgtext = message["message"]
+          
+          if v[:handlers][message['kind'].to_sym] && v[:handlers][message['kind'].to_sym][:handler]
+            
+            if ((v[:handlers][message['kind'].to_sym][:regex] && v[:handlers][message['kind'].to_sym][:regex].match(msgtext)) || v[:handlers][message['kind'].to_sym][:regex].nil?)
+              
+              matches = v[:handlers][message['kind'].to_sym][:regex] ? v[:handlers][message['kind'].to_sym][:regex].match(msgtext).to_a.drop(1) : nil
+              p "#{k} processing message type #{message['kind']}"
+              begin
+                end_msg = v[:ptr].send(v[:handlers][message['kind'].to_sym][:handler], user, msgtext, matches, message).join("\n")
+              rescue => e
+                end_msg = ["the #{k} plugin threw an exception"] 
+                puts e.inspect
+                puts e.backtrace.join("\n")
+              end
+              final_message << end_msg
             end
-            final_message << end_msg
-          end
+          end  
         }
         s = final_message.join("\n")
 
-        print ">>>#{s}\n" if s.length > 1
-        Linkbot.msg message["topic"]["id"], s if s.length > 1
-      }
-    end
-    
-    def self.starred(user, message)
-      Thread.new {
-        final_message = []
-        
-        Linkbot::Plugin.plugins.each {|k,v|
-          if(v[:ptr].respond_to?(:on_starred))
-            p "#{k} responding to starred message"
-            begin
-              end_msg = v[:ptr].on_starred(user, message['star']['message']['user'], message['star']['message']['message']).join("\n")
-            rescue => e
-              end_msg = ["the #{k} plugin threw an exception"] 
-              puts e.inspect
-              puts e.backtrace.join("\n")
-            end
-            final_message << end_msg
-          end
-        }
-        
-        s = final_message.join("\n")
-        print ">>>#{s}\n" if s.length > 1
         if s.length > 1
-          Linkbot.msg(LINKCHAT, s)
+          print ">>>#{s}\n"
+          send_message(s,message)
         end
       }
     end
     
-    def self.unstarred(user, message)
-      Thread.new {
-        final_message = []
-        
-        Linkbot::Plugin.plugins.each {|k,v|
-          if(v[:ptr].respond_to?(:on_unstarred))
-            p "#{k} responding to unstarred message"
-            begin
-              end_msg = v[:ptr].on_unstarred(user, message['star']['message']['user'], message['star']['message']['message']).join("\n")
-            rescue => e
-              end_msg = ["the #{k} plugin threw an exception"] 
-              puts e.inspect
-              puts e.backtrace.join("\n")
-            end
-            final_message << end_msg
-          end
-        }
-        
-        s = final_message.join("\n")
-        print ">>>#{s}\n" if s.length > 1
-        Linkbot.msg LINKCHAT, s if s.length > 1
-      }
+    def self.send_message(reply, original_message)
+      case original_message['kind']
+      when "message"
+        Linkbot.msg("/topics/#{original_message["topic"]["id"]}/messages/create.json", reply)
+      when "star","unstar"
+        Linkbot.msg("/topics/#{LINKCHAT}/messages/create.json", reply)
+      when "direct-message"
+        Linkbot.msg("/messages/#{original_message["conversation_user_id"]}/create.json", reply)
+      end
+    end
+    
+    def self.registered_methods
+      @registered_methods ||= {}
+      @registered_methods
     end
     
     def self.plugins; @@plugins; end;
@@ -87,16 +60,15 @@ class Linkbot
       Dir["plugins/*.rb"].each {|file| load file }
     end
   
-    def self.register(name, regex, s)
-      @@plugins[name] = {:ptr => s, :regex => regex }
+    def self.register(name, s, handlers)
+      @@plugins[name] = {:ptr => s, :handlers => handlers}
     end
   end
   
 end
 
 def test(user, message)
-  Linkbot::Plugin.match(user, message)
-  Linkbot::Dupe.check_dupe(user, message)
+  Linkbot::Plugin.handle_message(user, message)
 end
 
 # test

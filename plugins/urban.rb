@@ -1,9 +1,5 @@
 class Define < Linkbot::Plugin
-    def self.regex
-      /!define (.*)/
-    end
-
-    def self.on_message(user, message, match)
+    def self.on_message(user, message, match, msg)
       word = URI.escape(match[0])
       doc = Hpricot(open("http://www.urbandictionary.com/define.php?term=#{word}").read)
       matches = doc.search("#entries td div[@class=definition]")
@@ -18,5 +14,10 @@ class Define < Linkbot::Plugin
     def self.help
       "!define (word) - use a dictionary, foo"
     end
-    Linkbot::Plugin.register('urban', self.regex, self)
+
+    Linkbot::Plugin.register('urban', self,
+      {
+        :message => {:regex => /!define (.*)/, :handler => :on_message, :help => :help}
+      }
+    )
 end

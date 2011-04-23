@@ -1,9 +1,5 @@
 class Blowhard < Linkbot::Plugin
-    def self.regex
-      /!blowhard/
-    end
-
-    def self.on_message(user, message, match)
+    def self.on_message(user, message, matches, m)
       quotes = ['I just blue myself.',
     		"I'll be your wingman. Even if it means I have to take a chubby. I will suck it up.",
     		"Well, yes, but I'm afraid I prematurely shot my wad on what was supposed to be a dry run, if you will, so now I’m afraid I have something of a mess on my hands.",
@@ -29,8 +25,15 @@ class Blowhard < Linkbot::Plugin
       [quotes[rand(quotes.length)]]
     end
 
+
     def self.help
       "!blowhard - words of wisdom from Dr. Funke"
     end
-    Linkbot::Plugin.register('blowhard', self.regex, self)
+
+    
+    Linkbot::Plugin.register('blowhard', self,
+      {
+        :message => {:regex => /!blowhard/, :handler => :on_message, :help => :help}
+      }
+    )
 end

@@ -4,13 +4,14 @@ require 'sqlite3'
 require 'time'
 
 class Dupe < Linkbot::Plugin
-  def self.regex
-    /!stats/
-  end
-  Linkbot::Plugin.register('dupe', self.regex, self)
   
+  Linkbot::Plugin.register('dupe', self,
+    {
+      :message => {:regex => /!stats/, :handler => :on_message, :help => :help}
+    }
+  )
   
-  def self.on_message(user, message, matches) 
+  def self.on_message(user, message, matches, msg) 
     rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
     mess = "Link stats:\n--------------------------\n"
     max = 1

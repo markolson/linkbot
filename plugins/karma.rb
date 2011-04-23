@@ -1,10 +1,14 @@
 class Karma < Linkbot::Plugin
-  def self.regex
-    /^$/
-  end
-  Linkbot::Plugin.register('karma', self.regex, self)
+  Linkbot::Plugin.register('karma', self,
+    {
+      :star => {:handler => :on_starred},
+      :unstar => {:handler => :on_unstarred}
+    }
+  )
   
-  def self.on_starred(user, starred_user, starred_message)
+  def self.on_starred(user, text, matches, msg)
+    starred_user = msg['star']['message']['user']
+    starred_message = msg['star']['message']['message']
     karma = self.get_karma(starred_user)
     msg = ""
     if user['id'] == starred_user['id']
@@ -18,7 +22,9 @@ class Karma < Linkbot::Plugin
     [msg]
   end
   
-  def self.on_unstarred(user, starred_user, starred_message)
+  def self.on_unstarred(user, text, matches, msg)
+    starred_user = msg['star']['message']['user']
+    starred_message = msg['star']['message']['message']
     karma = self.get_karma(starred_user)
     msg = ""
     if user['id'] == starred_user['id']

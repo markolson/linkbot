@@ -1,10 +1,11 @@
 class Slap < Linkbot::Plugin
-  def self.regex
-    /\/slap(?: ([\w\s]+))?/
-  end
-  Linkbot::Plugin.register('slapper', self.regex, self)
+  Linkbot::Plugin.register('slapper', self,
+    {
+      :message => {:regex => /\/slap(?: ([\w\s]+))?/, :handler => :on_message, :help => :help}
+    }
+  )
   
-  def self.on_message(user, message, matches)
+  def self.on_message(user, message, matches, msg)
     ["#{user['username']} slaps #{matches[0]} around a bit with a large trout"]
   end
   
