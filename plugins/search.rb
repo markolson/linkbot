@@ -19,6 +19,10 @@ class Search < Linkbot::Plugin
     else
       mess = "No links"
     end
+    
+    # Take the karma hit
+    karma = Linkbot.db.execute("select karma from karma where user_id=#{user['id']}")[0][0] - 1
+    Linkbot.db.execute("update karma set karma=#{karma} where user_id=#{user['id']}")
     [mess]
   end
   
