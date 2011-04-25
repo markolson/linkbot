@@ -12,7 +12,7 @@ class Dupe < Linkbot::Plugin
   )
   
   def self.on_message(user, message, matches, msg) 
-    rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
+    rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma,u.showname from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
     mess = "Link stats:\n--------------------------\n"
     max = 1
     divvy = 10
@@ -26,14 +26,18 @@ class Dupe < Linkbot::Plugin
         end
       end
     end
-    rows.each {|row| mess = mess + sprintf("%#{max}d: #{row[0]} (%d links, %d dupes, %.2f%% new)\n", row[3], row[1], row[2], (row[1]/(row[1]+row[2]).to_f)*100)}
+    rows.each {|row|
+      username = (row[4].nil? || row[4] == '') ? row[0] : row[4]
+      mess = mess + sprintf("%#{max}d: #{row[4]} (%d links, %d dupes, %.2f%% new)\n", row[3], row[1], row[2], (row[1]/(row[1]+row[2]).to_f)*100)
+    }
     [mess]
   end
   
   def self.on_dupe(user, message, duped_user, duped_timestamp)
     total,dupes = self.stats(user)
     Linkbot.db.execute("update stats set dupes = #{dupes+1} where user_id='#{user['id']}'")
-    username = Linkbot.db.execute("select username from users where user_id='#{user['id']}'")[0][0]
+    res = Linkbot.db.execute("select username,showname from users where user_id='#{user['id']}'")[0]
+    username = (res[1].nil? || res[1] == '') ? res[0] : res[1]
     puts duped_timestamp
     return ["DUPE: Previously posted by #{username} #{::Util.ago_in_words(Time.now, Time.at(duped_timestamp))}"]
   end

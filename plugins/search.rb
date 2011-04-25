@@ -9,10 +9,13 @@ class Search < Linkbot::Plugin
     search = matches[0]
     rows = nil
     mess = ""
-    rows = Linkbot.db.execute('select l.url,u.username,l.dt from links l, users u where l.url like ? and l.user_id = u.user_id order by l.dt desc limit 10', "%#{search}%")
+    rows = Linkbot.db.execute('select l.url,u.username,l.dt,u.showname from links l, users u where l.url like ? and l.user_id = u.user_id order by l.dt desc limit 10', "%#{search}%")
     i = 1
     if rows.length > 0
-      rows.each {|row| mess = mess + "#{i}. #{row[0]} (#{row[1]} #{::Util.ago_in_words(Time.now, Time.at(row[2]))})\n"; i = i + 1}
+      rows.each {|row|
+        username = (row[3].nil? || row[3] == '') ? row[1] : row[3]
+        mess = mess + "#{i}. #{row[0]} (#{username} #{::Util.ago_in_words(Time.now, Time.at(row[2]))})\n"; i = i + 1
+      }
     else
       mess = "No links"
     end
