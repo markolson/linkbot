@@ -25,16 +25,19 @@ class Hats < Linkbot::Plugin
     end
     
     def self.on_message(user, message, matches, msg)
-      rows = Linkbot.db.execute("select h.url,h.count,u.showname from hats h, users u where u.user_id=#{user['id']} and h.user_id=#{user['id']}")
       mymsg = nil
-      if rows.length == 1
-        url,count,showname = rows[0]
-        mymsg = "#{showname}'s hat: #{url}"
-        count = count - 1
-        if count == 0 
-          Linkbot.db.execute("delete from hats where user_id=#{user['id']}")
-        else
-          Linkbot.db.execute("update hats set count=#{count} where user_id=#{user['id']}")
+      x = rand(10)
+      if x == 0
+        rows = Linkbot.db.execute("select h.url,h.count,u.showname from hats h, users u where u.user_id=#{user['id']} and h.user_id=#{user['id']}")
+        if rows.length == 1
+          url,count,showname = rows[0]
+          mymsg = "#{showname}'s hat: #{url}"
+          count = count - 1
+          if count == 0 
+            Linkbot.db.execute("delete from hats where user_id=#{user['id']}")
+          else
+            Linkbot.db.execute("update hats set count=#{count} where user_id=#{user['id']}")
+          end
         end
       end
       [mymsg]
