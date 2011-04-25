@@ -10,8 +10,12 @@ class Store < Linkbot::Plugin
           if v[:handlers][:"linkbot-store"] && v[:handlers][:"linkbot-store"][:regex] && v[:handlers][:"linkbot-store"][:regex].match(command)
             cost = v[:ptr].respond_to?(:cost) ? v[:ptr].send(:cost).to_i : 0
             if check_karma(user, cost)
-              mymsg = v[:ptr].send(v[:handlers][:"linkbot-store"][:handler], user, args).join("\n")
-              deduct_karma(user, cost)
+              begin
+                mymsg = v[:ptr].send(v[:handlers][:"linkbot-store"][:handler], user, args).join("\n")
+                deduct_karma(user, cost)
+              rescue StoreError
+                mymsg = $!.message
+              end
             else
               mymsg = "Not enough karma"
             end
@@ -61,4 +65,7 @@ class Store < Linkbot::Plugin
         :"direct-message" => {:regex => /!store(.*)/, :handler => :on_message, :help => :help},
       }
     )
+end
+
+class StoreError < StandardError
 end

@@ -6,7 +6,7 @@ class Titles < Linkbot::Plugin
         target_user = args.shift
         rows = Linkbot.db.execute("select username,showname from users where username='#{target_user}'")
         if rows.length == 0
-          mymsg = "Unknown user"
+          raise StoreError.new("Unknown user")
         else
           old_username = (rows[0][1].nil? || rows[0][1] == '') ? rows[0][0] : rows[0][1]
           new_username = args.join(" ")
@@ -15,7 +15,7 @@ class Titles < Linkbot::Plugin
         end
       end
       
-      [mymsg]
+      return [mymsg]
     end
     
     def self.cost
