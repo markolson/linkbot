@@ -15,8 +15,10 @@ class Last < Linkbot::Plugin
         rows = Linkbot.db.execute("select l.url,l.dt,u.username,u.showname from links l, users u where l.user_id = u.user_id order by l.dt desc limit #{count}")
         i = 1
         if rows.length > 0
-          username = (row[3].nil? || row[3] == '') ? row[2] : row[3]
-          rows.each {|row| mess = mess + "#{i}. #{row[0]} (#{username} #{::Linkbot::Util.ago_in_words(Time.now, Time.at(row[1]))})\n"; i = i + 1}
+          rows.each {|row| 
+            username = (row[3].nil? || row[3] == '') ? row[2] : row[3]
+            mess = mess + "#{i}. #{row[0]} (#{username} #{::Linkbot::Util.ago_in_words(Time.now, Time.at(row[1]))})\n"; i = i + 1
+          }
         else
           mess = "No links"
         end
