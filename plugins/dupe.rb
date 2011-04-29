@@ -14,18 +14,10 @@ class Dupe < Linkbot::Plugin
   def self.on_message(user, message, matches, msg) 
     rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma,u.showname from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
     mess = "Link stats:\n--------------------------\n"
-    max = 1
-    divvy = 10
-    rows.each do |row|
-      while true do
-        if row[1].to_i / divvy > 0
-          max = max + 1
-          divvy = divvy * 10
-        else
-          break
-        end
-      end
-    end
+
+    #find the maximum length karma total
+    max = rows.collect { |row| row[1].to_s }.map(&:length).max
+
     rows.each {|row|
       username = (row[4].nil? || row[4] == '') ? row[0] : row[4]
       mess = mess + sprintf("%#{max}d: #{row[4]} (%d links, %d dupes, %.2f%% new)\n", row[3], row[1], row[2], (row[1]/(row[1]+row[2]).to_f)*100)
