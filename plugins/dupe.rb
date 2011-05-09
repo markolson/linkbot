@@ -20,7 +20,8 @@ class Dupe < Linkbot::Plugin
 
     rows.each {|row|
       username = (row[4].nil? || row[4] == '') ? row[0] : row[4]
-      mess = mess + sprintf("%#{max}d: #{row[4]} (%d links, %d dupes, %.2f%% new)\n", row[3], row[1], row[2], (row[1]/(row[1]+row[2]).to_f)*100)
+      dupe = row[2] == 1 ? 'dupe' : 'dupes'
+      mess = mess + sprintf("%#{max}d: #{row[4]} (%d links, %d %s, %.2f%% new)\n", row[3], row[1], row[2], dupe, (row[1]/(row[1]+row[2]).to_f)*100)
     }
     [mess]
   end
