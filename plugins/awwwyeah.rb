@@ -5,7 +5,7 @@ class Awwyeah < Linkbot::Plugin
 
     Linkbot::Plugin.register('awwwyeah', self,
       {
-        :message => {:regex => /a+w+ y+e+a+h+/, :handler => :on_message}
+        :message => {:regex => /a+w+ y+e+a+h+/i, :handler => :on_message}
       }
     )
 end
