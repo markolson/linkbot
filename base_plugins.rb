@@ -1,55 +1,47 @@
 require 'rubygems'
 require 'db'
 
+class MessageType
+  MESSAGE       = :message
+  DIRECTMESSAGE = :"direct-message"
+  STARRED       = :starred
+  UNSTARRED     = :unstarred
+end
+
+#The interface message object between Linkbot::Plugin and the plugins.
+#New axiom: the plugins know nothing about the service they're using!
+Message = Struct.new(:body, :user_id, :type)
+
 class Linkbot  
   class Plugin
     @@plugins = {}
     @@message_log = []
     
-    def self.handle_message(user, message)
-      
-      Thread.new { 
-        final_message = []
-        Linkbot::Plugin.plugins.each {|k,v|
-          msgtext = message["message"]
-          
-          if v[:handlers][message['kind'].to_sym] && v[:handlers][message['kind'].to_sym][:handler]
-            
-            if ((v[:handlers][message['kind'].to_sym][:regex] && v[:handlers][message['kind'].to_sym][:regex].match(msgtext)) || v[:handlers][message['kind'].to_sym][:regex].nil?)
-              
-              matches = v[:handlers][message['kind'].to_sym][:regex] ? v[:handlers][message['kind'].to_sym][:regex].match(msgtext).to_a.drop(1) : nil
-              p "#{k} processing message type #{message['kind']}"
-              begin
-                end_msg = v[:ptr].send(v[:handlers][message['kind'].to_sym][:handler], user, msgtext, matches, message).join("\n")
-              rescue => e
-                end_msg = ["the #{k} plugin threw an exception"] 
-                puts e.inspect
-                puts e.backtrace.join("\n")
-              end
-              final_message << end_msg
-            end
-          end  
-        }
-        s = final_message.join("\n")
+    def self.handle_message(message)
+      print "handle_message got called with #{message}"
+      final_message = []
 
-        if s.length > 1
-          print ">>>#{s}\n"
-          send_message(s,message)
-        end
+      Linkbot::Plugin.plugins.each {|k,v|
+        if v[:handlers][message.type] && v[:handlers][message.type][:handler]
+          
+          if ((v[:handlers][message.type][:regex] && v[:handlers][message.type][:regex].match(message.body)) || v[:handlers][message.type][:regex].nil?)
+            
+            matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
+            p "#{k} processing message type #{message.type}"
+            begin
+              end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message.body, matches, message).join("\n")
+            rescue => e
+              end_msg = ["the #{k} plugin threw an exception"] 
+              puts e.inspect
+              puts e.backtrace.join("\n")
+            end
+            final_message << end_msg
+          end
+        end  
       }
+      final_message.join("\n")
     end
-    
-    def self.send_message(reply, original_message)
-      case original_message['kind']
-      when "message"
-        Linkbot.msg("/topics/#{original_message["topic"]["id"]}/messages/create.json", reply)
-      when "star","unstar"
-        Linkbot.msg("/topics/#{LINKCHAT}/messages/create.json", reply)
-      when "direct-message"
-        Linkbot.msg("/messages/#{original_message["conversation_user_id"]}/create.json", reply)
-      end
-    end
-    
+
     def self.message_history
       @@message_log
     end
@@ -70,18 +62,4 @@ class Linkbot
     end
   end
   
-end
-
-def test(user, message)
-  Linkbot::Plugin.handle_message(user, message)
-end
-
-# test
-if not defined?(LINKCHAT)
-  Linkbot::Plugin.collect
-  user = {'id' => 123, 'username' => 'mark_olson' }
-  #test(user, 'http://qwantz.com')
-  #sleep(1)
-  test(user, 'FUUUUUUUU')
-  sleep(5)
 end

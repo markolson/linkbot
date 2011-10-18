@@ -23,16 +23,10 @@ class Linkbot
   headers 'Content-Type' => 'application/json' 
   debug_output $stderr
 
+  attr_accessor :my_user
+
   def initialize
     Linkbot::Plugin.collect
-    #{"user":{"type":"Member",
-    #         "created_at":"2011/10/17 18:14:21 +0000",
-    #         "avatar_url":"http://asset0.37img.com/global/missing/avatar.png?r=3",
-    #         "id":1031898,
-    #         "admin":false,
-    #         "name":"Linkbot McGee",
-    #         "email_address":"bill.mill+linkbot@gmail.com",
-    #         "api_auth_token":"db8b174571365a8e638528f8eca5e43ca6860b26"}}
     @my_user = JSON.load(self.class.get("/users/me.json").body)["user"]
     self.class.basic_auth @my_user["api_auth_token"], "x"
     
@@ -42,45 +36,53 @@ class Linkbot
     if response.response.code != "200"
       raise "Unable to join room #{joinroom}, got #{response.response}"
     end
-  end
 
-  def my_user
-    @my_user
+    @typemap = {
+      "TextMessage" => MessageType::MESSAGE,
+      #stars don't seem to show up in the livestream?
+    }
   end
 
   def process(message)
-    message = JSON.parse(message)
-    return if message["type"] != "TextMessage"
+    EventMachine::defer(proc {
+      message = JSON.parse(message)
 
-    #DELETEME
-    pp message
-    
-    # if it wasn't sent by us, continue
-    return if message['user_id'] == @my_user["id"]
+      #DELETEME
+      puts "processing:\n"
+      pp message
+      #DELETEME
 
-    # Create the user's info, if it does not exist
-    rows = Linkbot.db.execute("select * from users where user_id = '#{message['user_id']}'")
-    if rows.empty?
-      user = JSON.parse(self.class.get("/users/#{message['user_id']}.json").body)["user"]
-      Linkbot.db.execute("insert into users (user_id,username) values ('#{user['id']}', '#{user['name']}')")
-    end
+      return if message['user_id'] == @my_user["id"]
+      return if !message['user_id'] || !message['body'] || !message['type']
 
-    # Handle the message
-    Linkbot::Plugin.handle_message(user, m)
+      type = @typemap[message["type"]]
+
+      raise "Unknown Message Type #{message["type"]}" if not type
+
+      message = Message.new(message['body'], message['user_id'], type)
+
+      # Create the user's info, if it does not exist
+      rows = Linkbot.db.execute("select * from users where user_id = '#{message.user_id}'")
+      if rows.empty?
+        user = JSON.parse(self.class.get("/users/#{message.user_id}.json").body)["user"]
+        Linkbot.db.execute("insert into users (user_id,username) values ('#{user['id']}', '#{user['name']}')")
+      end
+
+      # Handle the message
+      messages = Linkbot::Plugin.handle_message(message)
+      #TODO: send the bastards
+    })
   end
 
-  def self.msg(url, msg)
-    # Convert break tags to newlines
-    msg.gsub!(/\<br\w*\/?\w*\>/, "\n")
-    
-    # Decode HTML entities
-    coder = HTMLEntities.new
-    msg = coder.decode(msg)
-    
-    # Sanitize the HTML
-    msg = Sanitize.clean(msg)
-    
-    response = post(url, :body => {'message' => msg})
+  def send_messages(messages)
+    1
+    #when "message"
+    #  Linkbot.msg("/topics/#{original_message["topic"]["id"]}/messages/create.json", reply)
+    #when "star","unstar"
+    #  Linkbot.msg("/topics/#{LINKCHAT}/messages/create.json", reply)
+    #when "direct-message"
+    #  Linkbot.msg("/messages/#{original_message["conversation_user_id"]}/create.json", reply)
+    #end
   end
 end
 
