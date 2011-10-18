@@ -76,16 +76,18 @@ class Linkbot
 
   def send_messages(messages)
     messages.each do |m|
-      type = m.include?("\n") ? "PasteMessage" : "TextMessage"
+      if m.include? "\n":
+        return send_messages(m.split("\n"))
+      end
 
       j = {
         'message' => {
           'body' => m,
-          'type' => type,
+          'type' => "TextMessage",
         }
       }
 
-      response = self.class.post("/room/#{ROOM_ID}/speak.xml", :body => j.to_json)
+      response = self.class.post("/room/#{ROOM_ID}/speak.json", :body => j.to_json)
 
       if response.response.code != "201"
         raise "Unable to send message #{m}, got #{response.response}"
