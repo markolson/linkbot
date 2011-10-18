@@ -10,7 +10,7 @@ class Onion < Linkbot::Plugin
   
   def self.on_message(message, matches, msg) 
     links = Hpricot(open('http://feeds.theonion.com/theonion/daily')).search('feedburner:origlink').collect{|l| l.html}
-    [links[rand(links.length)]]
+    links[rand(links.length)]
   end
   
   def self.help

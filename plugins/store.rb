@@ -43,7 +43,7 @@ class Store < Linkbot::Plugin
         
         mymsg = mymsg.join("\n")
       end
-      [mymsg]
+      mymsg
     end
     
     def self.check_karma(user, cost)

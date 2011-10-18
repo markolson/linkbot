@@ -19,7 +19,7 @@ class Karma < Linkbot::Plugin
       starred_username = Linkbot.db.execute("select username from users where user_id = '#{starred_user['id']}'")[0][0]
       username = Linkbot.db.execute("select username from users where user_id = '#{user['id']}'")[0][0]
     end
-    [msg]
+    msg
   end
   
   def self.on_unstarred(text, matches, msg)
@@ -35,7 +35,7 @@ class Karma < Linkbot::Plugin
       starred_username = Linkbot.db.execute("select username from users where user_id = '#{starred_user['id']}'")[0][0]
       username = Linkbot.db.execute("select username from users where user_id = '#{user['id']}'")[0][0]
     end
-    [msg]
+    msg
   end
   
   def self.on_newlink(message)
@@ -46,7 +46,7 @@ class Karma < Linkbot::Plugin
   def self.on_dupe(message, duped_user, duped_timestamp)
     karma = self.get_karma(user)
     Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{user['id']}'")
-    ["Removed 5 karma"]
+    "Removed 5 karma"
   end
   
   def self.get_karma(user)

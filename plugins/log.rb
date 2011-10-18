@@ -12,6 +12,6 @@ class MessageLog < Linkbot::Plugin
     end
     
     @@message_log.unshift(msg)
-    []
+    ""
   end
 end

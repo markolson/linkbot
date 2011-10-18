@@ -22,7 +22,7 @@ class Blowhard < Linkbot::Plugin
     		"I'm looking for something that says 'Dad likes leather'. ",
     		"I need to go take down the buffet and set up the leather pony. "]
     	
-      [quotes[rand(quotes.length)]]
+      quotes[rand(quotes.length)]
     end
 
 

@@ -23,7 +23,7 @@ class Dupe < Linkbot::Plugin
       dupe = row[2] == 1 ? 'dupe' : 'dupes'
       mess = mess + sprintf("%#{max}d: #{username} (%d links, %d %s, %.2f%% new)\n", row[3], row[1], row[2], dupe, (row[1]/(row[1]+row[2]).to_f)*100)
     }
-    [mess]
+    mess
   end
   
   def self.on_dupe(message, duped_user, duped_timestamp)
@@ -32,7 +32,7 @@ class Dupe < Linkbot::Plugin
     res = Linkbot.db.execute("select username,showname from users where user_id='#{user['id']}'")[0]
     username = (res[1].nil? || res[1] == '') ? res[0] : res[1]
     puts duped_timestamp
-    return ["DUPE: Previously posted by #{duped_user} #{::Util.ago_in_words(Time.now, Time.at(duped_timestamp))}"]
+    "DUPE: Previously posted by #{duped_user} #{::Util.ago_in_words(Time.now, Time.at(duped_timestamp))}"
   end
   
   def self.on_newlink(message)

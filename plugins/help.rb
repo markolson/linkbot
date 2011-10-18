@@ -14,6 +14,6 @@ class Helper < Linkbot::Plugin
         messages << v[:ptr].send(v[:handlers][msg.type][:help])
       end
     }
-    messages
+    messages.join("\n")
   end
 end

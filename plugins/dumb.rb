@@ -1,6 +1,6 @@
 class Dumb < Linkbot::Plugin
     def self.on_message(message, matches, msg) 
-      ["No, you're dumb"]
+      "No, you're dumb"
     end
 
     Linkbot::Plugin.register('dumb', self,

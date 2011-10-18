@@ -1,6 +1,6 @@
 class Fuu < Linkbot::Plugin
     def self.on_message(message, matches, msg)
-      ["http://imgur.com/M4KFN.jpg"]
+      "http://imgur.com/M4KFN.jpg"
     end
     
     Linkbot::Plugin.register('fuuu', self,

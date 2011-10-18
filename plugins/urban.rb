@@ -10,9 +10,7 @@ class Define < Linkbot::Plugin
       end
 
       #ugh.
-      definition = definition.gsub "<br />", "\n"
-
-      [definition]
+      definition.gsub "<br />", "\n"
     end
 
     def self.help

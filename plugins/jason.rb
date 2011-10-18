@@ -64,7 +64,7 @@ class Jason < Linkbot::Plugin
           
           messages << url
         end
-        return messages
+        return messages.join("\n")
   end
   
   def self.help

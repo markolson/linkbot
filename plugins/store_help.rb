@@ -10,7 +10,7 @@ class StoreHelp < Linkbot::Plugin
         }
       end
       
-      [mymsg]
+      mymsg
     end
     
     

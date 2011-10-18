@@ -21,7 +21,7 @@ class Imgur < Linkbot::Plugin
     end
     img = imgs[rand(imgs.length)]
 
-    [img]
+    img
   end
   
   def self.help

@@ -24,7 +24,7 @@ class Swanson < Linkbot::Plugin
 "The whole thing is a scam. Birthdays were invented by Hallmark to sell cards.",
 "I won't publicly endorse a product unless I use it exclusively. My only official recommendations are U.S. Army issued mustache trimmers, Morton's salt, and the C.R. Lawrence Fein two inch axe-style scraper oscillating knife blade."             
 	]
-      [quotes[rand(quotes.length)]]
+      quotes[rand(quotes.length)]
     end
 
     def self.help

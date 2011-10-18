@@ -1,6 +1,6 @@
 class Awwyeah < Linkbot::Plugin
     def self.on_message(message, matches, msg)
-      ["http://i.imgur.com/Y3Q0Z.png"]
+      "http://i.imgur.com/Y3Q0Z.png"
     end
 
     Linkbot::Plugin.register('awwwyeah', self,

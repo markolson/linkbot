@@ -15,7 +15,7 @@ class Titles < Linkbot::Plugin
         end
       end
       
-      return [mymsg]
+      mymsg
     end
     
     def self.cost

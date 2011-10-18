@@ -7,7 +7,7 @@ class Snap < Linkbot::Plugin
       		"http://webimages.stephen-wright.net/house-ohsnap.gif",
       		"http://www.gifsoup.com/webroot/animatedgifs/108696_o.gif"
             ]
-      [snaps[rand(snaps.length)]]
+      snaps[rand(snaps.length)]
     end
 
     Linkbot::Plugin.register('snap', self,

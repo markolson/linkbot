@@ -23,8 +23,7 @@ class Linkbot
           messages << v[:ptr].on_dupe(user,url,rows[0][0],rows[0][1]).join("\n") if(v[:ptr].respond_to?(:on_dupe)) 
         }
       end  
-      s = messages.join("\n")
-      [s]
+      messages.join("\n")
     end
   
     if Linkbot.db.table_info('users').empty?

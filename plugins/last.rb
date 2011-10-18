@@ -23,7 +23,7 @@ class Last < Linkbot::Plugin
           mess = "No links"
         end
       end
-      [mess]
+      mess
 
     end
 

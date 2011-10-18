@@ -1,6 +1,6 @@
 class Haha < Linkbot::Plugin
     def self.on_message(message, matches, msg) 
-      ["http://nelsonhaha.com/"]
+      "http://nelsonhaha.com/"
     end
 
     Linkbot::Plugin.register('haha', self,

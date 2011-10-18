@@ -15,7 +15,7 @@ class Popcorn < Linkbot::Plugin
                 'http://i.imgur.com/ZDdhJ.gif',
                 'http://www.threadbombing.com/data/media/2/scarjo_popcorn.gif'
 	]
-      [quotes[rand(quotes.length)]]
+      quotes[rand(quotes.length)]
     end
 
     def self.help

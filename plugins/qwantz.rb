@@ -11,7 +11,7 @@ class Qwantz < Linkbot::Plugin
         link = doc.search("div.randomquote a")[1]
         doc = Hpricot(open(link['href']))
         img = doc.search('img.comic')
-        return [link.inner_html.strip, img.first['src']]
+        "#{link.inner_html.strip}\n#{img.first['src']}"
     end
     
     def self.help
