@@ -4,11 +4,15 @@ class Define < Linkbot::Plugin
       doc = Hpricot(open("http://www.urbandictionary.com/define.php?term=#{word}").read)
       matches = doc.search("#entries td div[@class=definition]")
       if matches.empty?
-        mymessage = "No definition for '#{match[0]}' found"
+        definition = "No definition for '#{match[0]}' found"
       else
-        mymessage = "#{match[0]}: #{matches[0].inner_html}"
+        definition = "#{match[0]}: #{matches[0].inner_html}"
       end
-      [mymessage]
+
+      #ugh.
+      definition = definition.gsub "<br />", "\n"
+
+      [definition]
     end
 
     def self.help
