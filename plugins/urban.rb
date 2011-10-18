@@ -1,5 +1,5 @@
 class Define < Linkbot::Plugin
-    def self.on_message(user, message, match, msg)
+    def self.on_message(message, match, msg)
       word = URI.escape(match[0])
       doc = Hpricot(open("http://www.urbandictionary.com/define.php?term=#{word}").read)
       matches = doc.search("#entries td div[@class=definition]")

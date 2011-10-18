@@ -1,5 +1,5 @@
 class Titles < Linkbot::Plugin
-    def self.on_store(user, args)
+    def self.on_store(args)
       mymsg = nil
       
       if args.length > 1

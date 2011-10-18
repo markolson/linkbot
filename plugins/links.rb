@@ -7,7 +7,7 @@ class Linkbot
       }
     )
   
-    def self.on_message(user, text, matches, msg)
+    def self.on_message(text, matches, msg)
       url = matches[0]
       
       messages = []

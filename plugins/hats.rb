@@ -1,5 +1,5 @@
 class Hats < Linkbot::Plugin
-    def self.on_store(user, args)
+    def self.on_store(args)
       mymsg = nil
       
       if args.length > 0
@@ -24,7 +24,7 @@ class Hats < Linkbot::Plugin
       [mymsg]
     end
     
-    def self.on_message(user, message, matches, msg)
+    def self.on_message(message, matches, msg)
       mymsg = nil
       x = rand(10)
       if x == 0

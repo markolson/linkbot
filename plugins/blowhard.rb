@@ -1,5 +1,5 @@
 class Blowhard < Linkbot::Plugin
-    def self.on_message(user, message, matches, m)
+    def self.on_message(message, matches, m)
       quotes = ['I just blue myself.',
     		"I'll be your wingman. Even if it means I have to take a chubby. I will suck it up.",
     		"Well, yes, but I'm afraid I prematurely shot my wad on what was supposed to be a dry run, if you will, so now I’m afraid I have something of a mess on my hands.",

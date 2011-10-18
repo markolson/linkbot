@@ -1,5 +1,5 @@
 class Haha < Linkbot::Plugin
-    def self.on_message(user, message, matches, msg) 
+    def self.on_message(message, matches, msg) 
       ["http://nelsonhaha.com/"]
     end
 

@@ -8,7 +8,7 @@ class Jason < Linkbot::Plugin
     }
   )
   
-  def self.on_message(user, message, matches, msg) 
+  def self.on_message(message, matches, msg) 
     times = matches[0]
         reddits = {
           "/r/pics/" => 10,

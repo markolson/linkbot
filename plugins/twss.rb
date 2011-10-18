@@ -1,7 +1,7 @@
 require 'twss'
 
 class Twss < Linkbot::Plugin
-    def self.on_message(user, message, matches, msg)
+    def self.on_message(message, matches, msg)
       TWSS.threshold = 2.0 #lower = 'better'
       if TWSS(message)
         ["That's what she said"]

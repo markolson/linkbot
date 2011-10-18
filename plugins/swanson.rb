@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class Swanson < Linkbot::Plugin
-    def self.on_message(user, message, matches, m)
+    def self.on_message(message, matches, m)
       quotes = [
 "http://www.pajiba.com/image/ron-dancing-animated.gif",
 "http://28.media.tumblr.com/tumblr_lgl0ieJ0Z01qzkiy8o1_400.jpg",

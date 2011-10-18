@@ -5,7 +5,7 @@ class MessageLog < Linkbot::Plugin
     }
   )
   
-  def self.on_message(user, message, matches, msg)
+  def self.on_message(message, matches, msg)
     # Pop off a message if we've reached our max
     if @@message_log.length >= 100
       @@message_log.pop

@@ -1,5 +1,5 @@
 class Shutup < Linkbot::Plugin
-    def self.on_message(user, message, matches, msg)
+    def self.on_message(message, matches, msg)
       ["No, YOU #{matches[0]}"]
     end
 

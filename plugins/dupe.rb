@@ -11,7 +11,7 @@ class Dupe < Linkbot::Plugin
     }
   )
   
-  def self.on_message(user, message, matches, msg) 
+  def self.on_message(message, matches, msg) 
     rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma,u.showname from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
     mess = "Link stats:\n--------------------------\n"
 
@@ -26,7 +26,7 @@ class Dupe < Linkbot::Plugin
     [mess]
   end
   
-  def self.on_dupe(user, message, duped_user, duped_timestamp)
+  def self.on_dupe(message, duped_user, duped_timestamp)
     total,dupes = self.stats(user)
     Linkbot.db.execute("update stats set dupes = #{dupes+1} where user_id='#{user['id']}'")
     res = Linkbot.db.execute("select username,showname from users where user_id='#{user['id']}'")[0]
@@ -35,7 +35,7 @@ class Dupe < Linkbot::Plugin
     return ["DUPE: Previously posted by #{duped_user} #{::Util.ago_in_words(Time.now, Time.at(duped_timestamp))}"]
   end
   
-  def self.on_newlink(user, message)
+  def self.on_newlink(message)
     total,dupes = self.stats(user)
     Linkbot.db.execute("update stats set total = #{total+1} where user_id='#{user['id']}'")
   end

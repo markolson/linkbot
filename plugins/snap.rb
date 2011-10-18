@@ -1,5 +1,5 @@
 class Snap < Linkbot::Plugin
-    def self.on_message(user, message, matches, msg)
+    def self.on_message(message, matches, msg)
       snaps = [	"http://i52.tinypic.com/302melk.gif",
       		"http://www.youtube.com/watch?v=qL3TWooBGrI",
       		"http://i51.tinypic.com/2roj8k0.jpg",

@@ -10,7 +10,7 @@ class Imgur < Linkbot::Plugin
     }
   )
   
-  def self.on_message(user, message, matches, msg) 
+  def self.on_message(message, matches, msg) 
     imgs = []
     puts "loading images"
     1.upto(3) do |x|

@@ -7,7 +7,7 @@ class Helper < Linkbot::Plugin
     }
   )
   
-  def self.on_message(user, text, matches, msg)
+  def self.on_message(text, matches, msg)
     messages = [] 
     Linkbot::Plugin.plugins.each {|k,v|
       if(v[:handlers][msg['kind'].to_sym] && v[:handlers][msg['kind'].to_sym][:help])

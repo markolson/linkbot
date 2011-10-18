@@ -5,7 +5,7 @@ class Slap < Linkbot::Plugin
     }
   )
   
-  def self.on_message(user, message, matches, msg)
+  def self.on_message(message, matches, msg)
     ["#{user['username']} slaps #{matches[0]} around a bit with a large trout"]
   end
   

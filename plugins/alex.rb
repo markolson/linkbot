@@ -1,5 +1,5 @@
 class Alex < Linkbot::Plugin
-    def self.on_message(user, message, matches, msg) 
+    def self.on_message(message, matches, msg) 
       ["http://i.imgur.com/2AA7y.png"]
     end
 

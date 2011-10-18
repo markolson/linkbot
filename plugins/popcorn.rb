@@ -1,5 +1,5 @@
 class Popcorn < Linkbot::Plugin
-    def self.on_message(user, message, matches, m)
+    def self.on_message(message, matches, m)
       quotes = ['http://i.imgur.com/qlRu3.gif',
                 'http://i.imgur.com/DDMBW.gif',
                 'http://i.imgur.com/SbyLU.gif',

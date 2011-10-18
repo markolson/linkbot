@@ -1,5 +1,5 @@
 class Awwyeah < Linkbot::Plugin
-    def self.on_message(user, message, matches, msg)
+    def self.on_message(message, matches, msg)
       ["http://i.imgur.com/Y3Q0Z.png"]
     end
 

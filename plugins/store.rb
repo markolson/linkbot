@@ -1,5 +1,5 @@
 class Store < Linkbot::Plugin
-    def self.on_message(user, message, matches, msg)
+    def self.on_message(message, matches, msg)
       mymsg = nil
       
       if matches[0] && matches[0].length > 0
