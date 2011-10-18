@@ -32,7 +32,7 @@ class Linkbot
             begin
               end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message.body, matches, message).join("\n")
             rescue => e
-              end_msg = ["the #{k} plugin threw an exception"] 
+              end_msg = "the #{k} plugin threw an exception: #{e.inspect}"
               puts e.inspect
               puts e.backtrace.join("\n")
             end
