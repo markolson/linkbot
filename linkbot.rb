@@ -40,7 +40,15 @@ class Linkbot
     @typemap = {
       "TextMessage" => MessageType::MESSAGE,
       #stars don't seem to show up in the livestream?
+      #handle DMs
     }
+
+    #load all users' names
+    rows = Linkbot.db.execute("select user_id, username from users")
+    #map ids to names (both as strings)
+    @user_ids = Hash[rows]
+    #map names ids
+    @users = Hash[rows.collect {|a,b| [b,a]}]
   end
 
   def process(message)
@@ -53,20 +61,29 @@ class Linkbot
       #DELETEME
 
       return if message['user_id'] == @my_user["id"]
+
+      #for now, just discard all non-messages. TODO: what else should we accept, and how?
       return if !message['user_id'] || !message['body'] || !message['type']
 
       type = @typemap[message["type"]]
 
       raise "Unknown Message Type #{message["type"]}" if not type
 
-      message = Message.new(message['body'], message['user_id'], type)
-
       # Create the user's info, if it does not exist
-      rows = Linkbot.db.execute("select * from users where user_id = '#{message.user_id}'")
+      rows = Linkbot.db.execute("select * from users where user_id = '#{message['user_id']}'")
       if rows.empty?
-        user = JSON.parse(self.class.get("/users/#{message.user_id}.json").body)["user"]
+        user = JSON.parse(self.class.get("/users/#{message['user_id']}.json").body)["user"]
         Linkbot.db.execute("insert into users (user_id,username) values ('#{user['id']}', '#{user['name']}')")
+
+        #update our user hashes
+        @user_ids[user['id'].to_s] = user['name']
+        @users[user['name']] = user['id'].to_s
       end
+
+      message = Message.new(message['body'],
+                            message['user_id'],
+                            @user_ids[message['user_id'].to_s],
+                            type)
 
       # Handle the message
       messages = Linkbot::Plugin.handle_message(message)
