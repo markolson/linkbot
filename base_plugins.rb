@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'pp'
 require 'db'
 
 class MessageType
@@ -35,11 +36,13 @@ class Linkbot
               puts e.inspect
               puts e.backtrace.join("\n")
             end
-            final_message << end_msg
+            final_message << end_msg if !end_msg.empty?
           end
         end  
       }
-      final_message.join("\n")
+      print "returning msgs from plugins:"
+      pp final_message
+      final_message
     end
 
     def self.message_history
