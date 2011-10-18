@@ -70,19 +70,27 @@ class Linkbot
 
       # Handle the message
       messages = Linkbot::Plugin.handle_message(message)
-      #TODO: send the bastards
+      send_messages(messages)
     })
   end
 
   def send_messages(messages)
-    1
-    #when "message"
-    #  Linkbot.msg("/topics/#{original_message["topic"]["id"]}/messages/create.json", reply)
-    #when "star","unstar"
-    #  Linkbot.msg("/topics/#{LINKCHAT}/messages/create.json", reply)
-    #when "direct-message"
-    #  Linkbot.msg("/messages/#{original_message["conversation_user_id"]}/create.json", reply)
-    #end
+    messages.each do |m|
+      type = m.include?("\n") ? "PasteMessage" : "TextMessage"
+
+      j = {
+        'message' => {
+          'body' => m,
+          'type' => type,
+        }
+      }
+
+      response = self.class.post("/room/#{ROOM_ID}/speak.xml", :body => j.to_json)
+
+      if response.response.code != "201"
+        raise "Unable to send message #{m}, got #{response.response}"
+      end
+    end
   end
 end
 
