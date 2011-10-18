@@ -76,7 +76,9 @@ class Linkbot
 
   def send_messages(messages)
     messages.each do |m|
-      if m.include? "\n":
+      next if m.strip.empty?
+
+      if m.include? "\n"
         return send_messages(m.split("\n"))
       end
 
