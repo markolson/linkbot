@@ -14,13 +14,13 @@ class Linkbot
       rows = Linkbot.db.execute("select user_id,dt from links where url = '#{url}'")
       if rows.empty?
         Linkbot::Plugin.plugins.each {|k,v|
-          messages << v[:ptr].on_newlink(user,url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
+          messages << v[:ptr].on_newlink(msg, url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
         }
         # Add the link to the dupe table
-        Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{user['id']}', '#{Time.now.getgm.to_i}', '#{url}')")
+        Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{msg.user_id}', '#{Time.now.getgm.to_i}', '#{url}')")
       else
         Linkbot::Plugin.plugins.each {|k,v|
-          messages << v[:ptr].on_dupe(user,url,rows[0][0],rows[0][1]).join("\n") if(v[:ptr].respond_to?(:on_dupe)) 
+          messages << v[:ptr].on_dupe(msg, url, rows[0][0], rows[0][1]).join("\n") if(v[:ptr].respond_to?(:on_dupe)) 
         }
       end  
       messages.join("\n")

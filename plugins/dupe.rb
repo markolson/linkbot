@@ -27,26 +27,26 @@ class Dupe < Linkbot::Plugin
   end
   
   def self.on_dupe(message, duped_user, duped_timestamp)
-    total,dupes = self.stats(user)
-    Linkbot.db.execute("update stats set dupes = #{dupes+1} where user_id='#{user['id']}'")
-    res = Linkbot.db.execute("select username,showname from users where user_id='#{user['id']}'")[0]
+    total,dupes = self.stats(message.user_id)
+    Linkbot.db.execute("update stats set dupes = #{dupes+1} where message.user_id='#{message.user_id}'")
+    res = Linkbot.db.execute("select username,showname from users where message.user_id='#{message.user_id}'")[0]
     username = (res[1].nil? || res[1] == '') ? res[0] : res[1]
     puts duped_timestamp
     "DUPE: Previously posted by #{duped_user} #{::Util.ago_in_words(Time.now, Time.at(duped_timestamp))}"
   end
   
-  def self.on_newlink(message)
-    total,dupes = self.stats(user)
-    Linkbot.db.execute("update stats set total = #{total+1} where user_id='#{user['id']}'")
+  def self.on_newlink(message, url)
+    total,dupes = self.stats(message.user_id)
+    Linkbot.db.execute("update stats set total = #{total+1} where user_id='#{message.user_id}'")
   end
   
   
-  def self.stats(user)
+  def self.stats(user_id)
     total = 0
     dupes = 0
-    rows = Linkbot.db.execute("select user_id,total,dupes from stats where user_id = '#{user['id']}'")
+    rows = Linkbot.db.execute("select user_id,total,dupes from stats where user_id = '#{user_id}'")
     if rows.empty?
-      Linkbot.db.execute("insert into stats (user_id,total,dupes) values ('#{user['id']}', 0, 0)")
+      Linkbot.db.execute("insert into stats (user_id,total,dupes) values ('#{user_id}', 0, 0)")
     else
       total = rows[0][1]
       dupes = rows[0][2]

@@ -6,6 +6,7 @@ class Karma < Linkbot::Plugin
     }
   )
   
+  #TODO
   def self.on_starred(text, matches, msg)
     starred_user = msg['star']['message']['user']
     starred_message = msg['star']['message']['message']
@@ -22,6 +23,7 @@ class Karma < Linkbot::Plugin
     msg
   end
   
+  #TODO
   def self.on_unstarred(text, matches, msg)
     starred_user = msg['star']['message']['user']
     starred_message = msg['star']['message']['message']
@@ -38,27 +40,29 @@ class Karma < Linkbot::Plugin
     msg
   end
   
-  def self.on_newlink(message)
-    karma = self.get_karma(user)
-    Linkbot.db.execute("update karma set karma = #{karma + 1} where user_id = '#{user['id']}'")
+  def self.on_newlink(message, url)
+    karma = self.get_karma(message.user_id)
+    Linkbot.db.execute("update karma set karma = #{karma + 1} where user_id = '#{message.user_id}'")
   end
   
   def self.on_dupe(message, duped_user, duped_timestamp)
-    karma = self.get_karma(user)
-    Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{user['id']}'")
+    karma = self.get_karma(message.user_id)
+    Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{message.user_id}'")
     "Removed 5 karma"
   end
   
-  def self.get_karma(user)
+  def self.get_karma(user_id)
     karma = 0
     # Create the user's info, if it does not exist
-    rows = Linkbot.db.execute("select * from users where user_id = '#{user['id']}'")
+    rows = Linkbot.db.execute("select * from users where user_id = '#{user_id}'")
     if rows.empty?
-      Linkbot.db.execute("insert into users (user_id,username) values ('#{user['id']}', '#{user['username']}')")
+      #linkbot should ensure creating a user... bail out here if it hasn't
+      raise "could not find user #{user_id}"
     end
-    rows = Linkbot.db.execute("select user_id,karma from karma where user_id = '#{user['id']}'")
+
+    rows = Linkbot.db.execute("select user_id,karma from karma where user_id = '#{user_id}'")
     if rows.empty?
-      Linkbot.db.execute("insert into karma (user_id,karma) values ('#{user['id']}', 0)")
+      Linkbot.db.execute("insert into karma (user_id,karma) values ('#{user_id}', 0)")
     else
       karma = rows[0][1]
     end
