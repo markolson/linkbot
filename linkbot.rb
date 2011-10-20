@@ -76,13 +76,13 @@ class Linkbot
         Linkbot.db.execute("insert into users (user_id,username) values ('#{user['id']}', '#{user['name']}')")
 
         #update our user hashes
-        @user_ids[user['id'].to_s] = user['name']
-        @users[user['name']] = user['id'].to_s
+        @user_ids[user['id']] = user['name']
+        @users[user['name']] = user['id']
       end
 
       message = Message.new(message['body'],
                             message['user_id'],
-                            @user_ids[message['user_id'].to_s],
+                            @user_ids[message['user_id']],
                             type)
 
       # Handle the message
