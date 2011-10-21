@@ -6,6 +6,7 @@ gem install sqlite3
 gem install hpricot
 gem install activesupport
 gem install twss
+gem install httparty
 
 
 Run: ruby linkbot.rb
