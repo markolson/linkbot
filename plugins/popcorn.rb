@@ -25,7 +25,7 @@ class Popcorn < Linkbot::Plugin
     
     Linkbot::Plugin.register('popcorn', self,
       {
-        :message => {:regex => /popcorn/, :handler => :on_message, :help => :help},
+        :message => {:regex => /!popcorn/, :handler => :on_message, :help => :help},
         :"direct-message" => {:regex => /!popcorn/, :handler => :on_message, :help => :help}
       }
     )
