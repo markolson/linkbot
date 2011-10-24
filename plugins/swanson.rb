@@ -34,7 +34,7 @@ class Swanson < Linkbot::Plugin
     
     Linkbot::Plugin.register('swanson', self,
       {
-        :message => {:regex => /swanson/, :handler => :on_message, :help => :help},
+        :message => {:regex => /!swanson/, :handler => :on_message, :help => :help},
         :"direct-message" => {:regex => /!swanson/, :handler => :on_message, :help => :help}
       }
     )
