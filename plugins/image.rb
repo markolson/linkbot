@@ -5,7 +5,7 @@ class Image < Linkbot::Plugin
   
   Linkbot::Plugin.register('image', self,
     {
-      :message => {:regex => /!image(?: (\w+))?/, :handler => :on_message, :help => :help}
+      :message => {:regex => /!image(?: (.+))?/, :handler => :on_message, :help => :help}
     }
   )
   
