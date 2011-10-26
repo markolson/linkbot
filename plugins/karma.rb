@@ -45,7 +45,7 @@ class Karma < Linkbot::Plugin
     Linkbot.db.execute("update karma set karma = #{karma + 1} where user_id = '#{message.user_id}'")
   end
   
-  def self.on_dupe(message, duped_user, duped_timestamp)
+  def self.on_dupe(message, url, duped_user, duped_timestamp)
     karma = self.get_karma(message.user_id)
     Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{message.user_id}'")
     "Removed 5 karma"

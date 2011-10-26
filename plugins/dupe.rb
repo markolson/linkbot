@@ -26,7 +26,7 @@ class Dupe < Linkbot::Plugin
     mess
   end
   
-  def self.on_dupe(message, duped_user, duped_timestamp)
+  def self.on_dupe(message, url, duped_user, duped_timestamp)
     total,dupes = self.stats(message.user_id)
     Linkbot.db.execute("update stats set dupes = #{dupes+1} where message.user_id='#{message.user_id}'")
     res = Linkbot.db.execute("select username,showname from users where message.user_id='#{message.user_id}'")[0]
