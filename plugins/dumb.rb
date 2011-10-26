@@ -1,5 +1,5 @@
 class Dumb < Linkbot::Plugin
-    def self.on_message(message, matches, msg) 
+    def self.on_message(message, matches) 
       "No, you're dumb"
     end
 

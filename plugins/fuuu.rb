@@ -1,5 +1,5 @@
 class Fuu < Linkbot::Plugin
-    def self.on_message(message, matches, msg)
+    def self.on_message(message, matches)
       "http://imgur.com/M4KFN.jpg"
     end
     

@@ -7,45 +7,45 @@ class Karma < Linkbot::Plugin
   )
   
   #TODO
-  def self.on_starred(text, matches, msg)
-    starred_user = msg['star']['message']['user']
-    starred_message = msg['star']['message']['message']
-    karma = self.get_karma(starred_user)
-    msg = ""
-    if user['id'] == starred_user['id']
-      Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{starred_user['id']}'")
-      msg = "You can't vote for yourself. Lose 5 karma."
-    else
-      Linkbot.db.execute("update karma set karma = #{karma + 5} where user_id = '#{starred_user['id']}'")
-      starred_username = Linkbot.db.execute("select username from users where user_id = '#{starred_user['id']}'")[0][0]
-      username = Linkbot.db.execute("select username from users where user_id = '#{user['id']}'")[0][0]
-    end
-    msg
-  end
+  #def self.on_starred(message, matches)
+  #  starred_user = msg['star']['message']['user']
+  #  starred_message = msg['star']['message']['message']
+  #  karma = self.get_karma(starred_user)
+  #  msg = ""
+  #  if user['id'] == starred_user['id']
+  #    Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{starred_user['id']}'")
+  #    msg = "You can't vote for yourself. Lose 5 karma."
+  #  else
+  #    Linkbot.db.execute("update karma set karma = #{karma + 5} where user_id = '#{starred_user['id']}'")
+  #    starred_username = Linkbot.db.execute("select username from users where user_id = '#{starred_user['id']}'")[0][0]
+  #    username = Linkbot.db.execute("select username from users where user_id = '#{user['id']}'")[0][0]
+  #  end
+  #  msg
+  #end
   
   #TODO
-  def self.on_unstarred(text, matches, msg)
-    starred_user = msg['star']['message']['user']
-    starred_message = msg['star']['message']['message']
-    karma = self.get_karma(starred_user)
-    msg = ""
-    if user['id'] == starred_user['id']
-      Linkbot.db.execute("update karma set karma = #{karma - 20} where user_id = '#{starred_user['id']}'")
-      msg = "That was incredibly stupid. Lose 20 karma."
-    else
-      Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{starred_user['id']}'")
-      starred_username = Linkbot.db.execute("select username from users where user_id = '#{starred_user['id']}'")[0][0]
-      username = Linkbot.db.execute("select username from users where user_id = '#{user['id']}'")[0][0]
-    end
-    msg
-  end
+  #def self.on_unstarred(text, matches)
+  #  starred_user = msg['star']['message']['user']
+  #  starred_message = msg['star']['message']['message']
+  #  karma = self.get_karma(starred_user)
+  #  msg = ""
+  #  if user['id'] == starred_user['id']
+  #    Linkbot.db.execute("update karma set karma = #{karma - 20} where user_id = '#{starred_user['id']}'")
+  #    msg = "That was incredibly stupid. Lose 20 karma."
+  #  else
+  #    Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{starred_user['id']}'")
+  #    starred_username = Linkbot.db.execute("select username from users where user_id = '#{starred_user['id']}'")[0][0]
+  #    username = Linkbot.db.execute("select username from users where user_id = '#{user['id']}'")[0][0]
+  #  end
+  #  msg
+  #end
   
   def self.on_newlink(message, url)
     karma = self.get_karma(message.user_id)
     Linkbot.db.execute("update karma set karma = #{karma + 1} where user_id = '#{message.user_id}'")
   end
   
-  def self.on_dupe(message, duped_user, duped_timestamp)
+  def self.on_dupe(message, url, duped_user, duped_timestamp)
     karma = self.get_karma(message.user_id)
     Linkbot.db.execute("update karma set karma = #{karma - 5} where user_id = '#{message.user_id}'")
     "Removed 5 karma"

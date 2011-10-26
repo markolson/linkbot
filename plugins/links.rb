@@ -7,20 +7,20 @@ class Linkbot
       }
     )
   
-    def self.on_message(text, matches, msg)
+    def self.on_message(message, matches)
       url = matches[0]
       
       messages = []
-      rows = Linkbot.db.execute("select user_id,dt from links where url = '#{url}'")
+      rows = Linkbot.db.execute("select username, dt from links, users where links.user_id=users.user_id and url = '#{url}'")
       if rows.empty?
         Linkbot::Plugin.plugins.each {|k,v|
-          messages << v[:ptr].on_newlink(msg, url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
+          messages << v[:ptr].on_newlink(message, url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
         }
         # Add the link to the dupe table
-        Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{msg.user_id}', '#{Time.now}', '#{url}')")
+        Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{message.user_id}', '#{Time.now}', '#{url}')")
       else
         Linkbot::Plugin.plugins.each {|k,v|
-          messages << v[:ptr].on_dupe(msg, url, rows[0][0], rows[0][1]).join("\n") if(v[:ptr].respond_to?(:on_dupe)) 
+          messages << v[:ptr].on_dupe(message, url, rows[0][0], rows[0][1]) if(v[:ptr].respond_to?(:on_dupe)) 
         }
       end  
       messages.join("\n")

@@ -20,6 +20,9 @@ class Linkbot
     
     def self.handle_message(message)
       print "handle_message got called with #{message}"
+
+      @@message_log << message
+
       final_message = []
 
       Linkbot::Plugin.plugins.each {|k,v|
@@ -30,7 +33,7 @@ class Linkbot
             matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
             p "#{k} processing message type #{message.type}"
             begin
-              end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message.body, matches, message)
+              end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
             rescue => e
               end_msg = "the #{k} plugin threw an exception: #{e.inspect}"
               puts e.inspect

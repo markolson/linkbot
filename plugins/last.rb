@@ -1,5 +1,5 @@
 class Last < Linkbot::Plugin
-    def self.on_message(message, match, msg)
+    def self.on_message(message, match)
       count = match[0] || 5
       rows = nil
       mess = ""

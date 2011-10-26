@@ -11,7 +11,7 @@ class Dupe < Linkbot::Plugin
     }
   )
   
-  def self.on_message(message, matches, msg) 
+  def self.on_message(message, matches) 
     rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma,u.showname from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
     mess = "Link stats:\n--------------------------\n"
 
@@ -26,13 +26,13 @@ class Dupe < Linkbot::Plugin
     mess
   end
   
-  def self.on_dupe(message, duped_user, duped_timestamp)
+  def self.on_dupe(message, url, duped_user, duped_timestamp)
     total,dupes = self.stats(message.user_id)
-    Linkbot.db.execute("update stats set dupes = #{dupes+1} where message.user_id='#{message.user_id}'")
-    res = Linkbot.db.execute("select username,showname from users where message.user_id='#{message.user_id}'")[0]
+    Linkbot.db.execute("update stats set dupes = #{dupes+1} where user_id='#{message.user_id}'")
+    res = Linkbot.db.execute("select username,showname from users where user_id='#{message.user_id}'")[0]
     username = (res[1].nil? || res[1] == '') ? res[0] : res[1]
     puts duped_timestamp
-    "DUPE: Previously posted by #{duped_user} #{::Util.ago_in_words(Time.now, Time.at(duped_timestamp))}"
+    "DUPE: Previously posted by #{duped_user} #{::Util.ago_in_words(Time.now, Time.parse(duped_timestamp.to_s))}"
   end
   
   def self.on_newlink(message, url)

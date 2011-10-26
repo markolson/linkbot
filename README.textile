@@ -7,7 +7,7 @@ gem install hpricot
 gem install activesupport
 gem install twss
 gem install httparty
-
+gem install twitter-stream -s http://gemcutter.org
 
 Run: ruby linkbot.rb
 

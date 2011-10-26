@@ -1,4 +1,4 @@
-USER = 'username'
-PASS = 'password'
-
-LINKCHAT = -1 #topic_id
+BASE_URI = "https://lookingglasscybersolutions.campfirenow.com"
+USER = 'linkbot'
+PASS = 'alinkbot'
+ROOM_ID = '445179'
