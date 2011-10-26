@@ -1,17 +1,15 @@
 require 'rubygems'
+require 'bundler/setup'
 
-#gem install twitter-stream -s http://gemcutter.org
 require 'twitter/json_stream'
-
 require 'httparty'
-
 require 'sanitize'
 require 'htmlentities'
-
+require 'eventmachine'
 require 'json'
+
 require 'pp'
 require 'config.rb'
-
 require 'util'
 require 'db'
 require 'base_plugins'
