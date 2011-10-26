@@ -20,7 +20,7 @@ class Linkbot
         Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{message.user_id}', '#{Time.now}', '#{url}')")
       else
         Linkbot::Plugin.plugins.each {|k,v|
-          messages << v[:ptr].on_dupe(message, url, rows[0][0], rows[0][1]).join("\n") if(v[:ptr].respond_to?(:on_dupe)) 
+          messages << v[:ptr].on_dupe(message, url, rows[0][0], rows[0][1]) if(v[:ptr].respond_to?(:on_dupe)) 
         }
       end  
       messages.join("\n")
