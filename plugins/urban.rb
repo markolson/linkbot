@@ -2,15 +2,16 @@ class Define < Linkbot::Plugin
     def self.on_message(message, match)
       word = URI.escape(match[0])
       doc = Hpricot(open("http://www.urbandictionary.com/define.php?term=#{word}").read)
-      matches = doc.search("#entries td div[@class=definition]")
-      if matches.empty?
-        definition = "No definition for '#{match[0]}' found"
+      definition = doc.search("#entries td div[@class=definition]")
+      if definition.empty?
+        message = "No definition for '#{match[0]}' found"
       else
-        definition = "#{match[0]}: #{matches[0].inner_html}"
+        definition = definition[0].inner_html.gsub("<br />", "\n")
+        definition = Sanitize.clean(definition)
+        message = "#{match[0]}: #{definition}"
       end
 
-      #ugh.
-      definition.gsub "<br />", "\n"
+      message
     end
 
     def self.help
