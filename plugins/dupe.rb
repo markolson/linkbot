@@ -11,7 +11,7 @@ class Dupe < Linkbot::Plugin
     }
   )
   
-  def self.on_message(message, matches, msg) 
+  def self.on_message(message, matches) 
     rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma,u.showname from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
     mess = "Link stats:\n--------------------------\n"
 

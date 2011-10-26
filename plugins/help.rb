@@ -7,11 +7,11 @@ class Helper < Linkbot::Plugin
     }
   )
   
-  def self.on_message(text, matches, msg)
+  def self.on_message(message, matches)
     messages = [] 
     Linkbot::Plugin.plugins.each {|k,v|
-      if(v[:handlers][msg.type] && v[:handlers][msg.type][:help])
-        messages << v[:ptr].send(v[:handlers][msg.type][:help])
+      if(v[:handlers][message.type] && v[:handlers][message.type][:help])
+        messages << v[:ptr].send(v[:handlers][message.type][:help])
       end
     }
     messages.sort! do |x,y|

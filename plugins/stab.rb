@@ -5,8 +5,8 @@ class Stab < Linkbot::Plugin
     }
   )
   
-  def self.on_message(message, matches, msg)
+  def self.on_message(message, matches)
     name = matches[0] || "everyone in the face"
-    "#{msg.user_name} stabs #{name}"
+    "#{message.user_name} stabs #{name}"
   end
 end

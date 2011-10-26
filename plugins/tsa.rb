@@ -5,7 +5,7 @@ class Tsa < Linkbot::Plugin
     }
   )
   
-  def self.on_message(message, matches, msg)
+  def self.on_message(message, matches)
      messages = [
         "I'm going to touch your balls with the back of my hand",
         "We have an opt-out!",

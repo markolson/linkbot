@@ -1,5 +1,5 @@
 class Face < Linkbot::Plugin
-    def self.on_message(message, matches, msg)
+    def self.on_message(message, matches)
       "http://i.imgur.com/ZbfvQ.gif"
     end
 

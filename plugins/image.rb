@@ -9,7 +9,7 @@ class Image < Linkbot::Plugin
     }
   )
   
-  def self.on_message(message, matches, msg) 
+  def self.on_message(message, matches) 
     searchterm = matches[0]
     if searchterm.nil?
       doc = Hpricot(open("http://www.randomword.net").read)

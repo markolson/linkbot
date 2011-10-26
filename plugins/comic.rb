@@ -7,7 +7,7 @@ class Comic < Linkbot::Plugin
     }
   )
 
-  def self.on_message(message, matches, msg)
+  def self.on_message(message, matches)
     times = matches[0] || "1"
     times = times.to_i
     messages = []
