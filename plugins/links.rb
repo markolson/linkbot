@@ -11,7 +11,7 @@ class Linkbot
       url = matches[0]
       
       messages = []
-      rows = Linkbot.db.execute("select user_id,dt from links where url = '#{url}'")
+      rows = Linkbot.db.execute("select username, dt from links, users where links.user_id=users.user_id and url = '#{url}'")
       if rows.empty?
         Linkbot::Plugin.plugins.each {|k,v|
           messages << v[:ptr].on_newlink(message, url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
