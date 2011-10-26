@@ -1,17 +1,8 @@
 class Define < Linkbot::Plugin
     def self.on_message(message, match)
       word = URI.escape(match[0])
-      doc = Hpricot(open("http://www.urbandictionary.com/define.php?term=#{word}").read)
-      definition = doc.search("#entries td div[@class=definition]")
-      if definition.empty?
-        message = "No definition for '#{match[0]}' found"
-      else
-        definition = definition[0].inner_html.gsub("<br />", "\n")
-        definition = Sanitize.clean(definition)
-        message = "#{match[0]}: #{definition}"
-      end
-
-      message
+      doc = JSON.parse(open("http://www.urbandictionary.com/iphone/search/define?term=#{word}").read)
+      "\"#{word}\": " + doc["list"][0]["definition"] + "\n" + "Example usage: " + doc["list"][0]["example"]
     end
 
     def self.help

@@ -1,13 +1,4 @@
-Gems to install
-gem install sanitize
-gem install htmlentities
-gem install json
-gem install sqlite3
-gem install hpricot
-gem install activesupport
-gem install twss
-gem install httparty
-gem install twitter-stream -s http://gemcutter.org
+bundle install
 
 Run: ruby linkbot.rb
 
