@@ -27,16 +27,7 @@ class Linkbot
 
   def initialize
     Linkbot::Plugin.collect
-    @my_user = JSON.load(self.class.get("/users/me.json").body)["user"]
-    self.class.basic_auth @my_user["api_auth_token"], "x"
     
-    joinroom = "/room/#{ROOM_ID}/join.xml"
-    response = self.class.post(joinroom, :body => "_")
-
-    if response.response.code != "200"
-      raise "Unable to join room #{joinroom}, got #{response.response}"
-    end
-
     @typemap = {
       "TextMessage" => MessageType::MESSAGE,
       #stars don't seem to show up in the livestream?
@@ -49,6 +40,18 @@ class Linkbot
     @user_ids = Hash[rows]
     #map names ids
     @users = Hash[rows.collect {|a,b| [b,a]}]
+  end
+
+  def login
+    @my_user = JSON.load(self.class.get("/users/me.json").body)["user"]
+    self.class.basic_auth @my_user["api_auth_token"], "x"
+    
+    joinroom = "/room/#{ROOM_ID}/join.xml"
+    response = self.class.post(joinroom, :body => "_")
+
+    if response.response.code != "200"
+      raise "Unable to join room #{joinroom}, got #{response.response}"
+    end
   end
 
   def process(message)
@@ -115,27 +118,31 @@ class Linkbot
   end
 end
 
-linkbot = Linkbot.new
+if __FILE__ == $0
 
-options = {
-  :path => "/room/#{ROOM_ID}/live.json",
-  :host => "streaming.campfirenow.com",
-  :auth => "#{linkbot.my_user['api_auth_token']}:x"
-}
+  linkbot = Linkbot.new
+  linkbot.login
 
-EventMachine::run do
-  stream = Twitter::JSONStream.connect(options)
+  options = {
+    :path => "/room/#{ROOM_ID}/live.json",
+    :host => "streaming.campfirenow.com",
+    :auth => "#{linkbot.my_user['api_auth_token']}:x"
+  }
 
-  stream.each_item do |item|
-    linkbot.process item
-  end
- 
-  stream.on_error do |message|
-    puts "ERROR:#{message.inspect}"
-  end
- 
-  stream.on_max_reconnects do |timeout, retries|
-    puts "Tried #{retries} times to connect."
-    exit
+  EventMachine::run do
+    stream = Twitter::JSONStream.connect(options)
+
+    stream.each_item do |item|
+      linkbot.process item
+    end
+   
+    stream.on_error do |message|
+      puts "ERROR:#{message.inspect}"
+    end
+   
+    stream.on_max_reconnects do |timeout, retries|
+      puts "Tried #{retries} times to connect."
+      exit
+    end
   end
 end
