@@ -20,6 +20,9 @@ class Linkbot
     
     def self.handle_message(message)
       print "handle_message got called with #{message}"
+
+      @@message_log << message
+
       final_message = []
 
       Linkbot::Plugin.plugins.each {|k,v|
