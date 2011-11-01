@@ -114,6 +114,13 @@ class Linkbot
       end
     end
   end
+
+  def periodic()
+    EventMachine::defer(proc {
+      messages = Linkbot::Plugin.handle_periodic
+      send_messages(messages)
+    })
+  end
 end
 
 if __FILE__ == $0
@@ -142,5 +149,11 @@ if __FILE__ == $0
       puts "Tried #{retries} times to connect."
       exit
     end
+
+    #every 5 seconds, run periodic plugins
+    EventMachine.add_periodic_timer(5) do
+      linkbot.periodic
+    end
+
   end
 end
