@@ -19,6 +19,9 @@
     },
     "boo" : {
       "webhook" : "http://playasoundorsomething.com/boo"
+    },
+    "video" : {
+      "base_uri" : "http://videoplayer.com"
     }
   }
 }
