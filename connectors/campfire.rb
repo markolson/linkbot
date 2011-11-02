@@ -50,7 +50,7 @@ class Campfire < Linkbot::Connector
           # Fetch the user data from campfire, then process the callbacks
           request_options = {
             :head => {
-              'authorization' => [@options['username'], @options['password']],
+              'authorization' => [@user['api_auth_token'], "x"],
               'Content-Type' => 'application/json' 
             }
           }
@@ -80,12 +80,11 @@ class Campfire < Linkbot::Connector
   
 
   def send_messages(messages)
-    messages.each do |m|
+    flattened_messages = []
+    messages.each {|m| flattened_messages = flattened_messages + m.split("\n")}
+    
+    flattened_messages.each_with_index do |m,i|
       next if m.strip.empty?
-
-      if m.include? "\n"
-        return send_messages(m.split("\n"))
-      end
 
       request_options = {
         :head => {
@@ -94,12 +93,8 @@ class Campfire < Linkbot::Connector
         },
         :body => {'message' => {'body' => m, 'type' => "TextMessage"}}.to_json
       }
-      
-      message_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/room/#{@options['room']}/speak.json").post request_options
-      message_http.errback { puts "Yeah trouble with a message." }
-      message_http.callback { puts "Message posted." }
-      
-      response = self.class.post("/room/#{Config["connectors"][0]["room"]}/speak.json", :body => j.to_json)
+
+      request = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/room/#{@options['room']}/speak.json").post request_options
 
     end
   end
