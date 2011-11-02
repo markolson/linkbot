@@ -1,0 +1,11 @@
+{
+  "connectors" : [
+    {
+      "type" : "campfire",
+      "username" : "username",
+      "password" : "password",
+      "room" : "5",
+      "campfire_url" : "https://yourdomain.campfirenow.com"
+    }
+  ]
+}

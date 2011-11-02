@@ -11,9 +11,9 @@ end
 
 #The interface message object between Linkbot::Plugin and the plugins.
 #New axiom: the plugins know nothing about the service they're using!
-Message = Struct.new(:body, :user_id, :user_name, :type)
+Message = Struct.new(:body, :user_id, :user_name)
 
-class Linkbot  
+module Linkbot  
   class Plugin
     @@plugins = {}
     @@message_log = []
