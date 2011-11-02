@@ -2,7 +2,7 @@ class Video < Linkbot::Plugin
   include HTTParty
   
   Linkbot::Plugin.register('video', self, {
-    :message => {:regex => /^!video (.+)/i, :handler => :on_message}
+    :message => {:regex => /^!video (.+)/i, :handler => :on_message, :help => :help}
   })
 
   def self.on_message(message, matches)
