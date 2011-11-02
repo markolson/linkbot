@@ -22,14 +22,18 @@ class PullRequests < Linkbot::Plugin
     min_pull = rows[0][0].to_i if !rows.empty?
     
     response = JSON.load(get("/repos/#{@@config["owner"]}/#{@@config["project"]}/pulls").body)
-    messages = []
-    response.each do |pullreq|
-      next if pullreq["number"].to_i <= min_pull
-      messages << "New pull request:\n#{pullreq['title']}\n#{pullreq['body']}\n#{pullreq['url']}"
-      Linkbot.db.execute("insert into pull_requests (number) VALUES (#{pullreq["number"]})")
+    if response.code >= 200 && response.code < 300
+      messages = []
+      response.each do |pullreq|
+        next if pullreq["number"].to_i <= min_pull
+        messages << "New pull request:\n#{pullreq['title']}\n#{pullreq['body']}\n#{pullreq['url']}"
+        Linkbot.db.execute("insert into pull_requests (number) VALUES (#{pullreq["number"]})")
+      end
+      pp "returning #{messages.join '\n'}"
+      messages.join "\n"
+    else
+      puts "Login error"
     end
-    pp "returning #{messages.join '\n'}"
-    messages.join "\n"
   end
   
   if Linkbot.db.table_info('pull_requests').empty?
