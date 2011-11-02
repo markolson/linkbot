@@ -48,6 +48,29 @@ class Linkbot
       final_message
     end
 
+    def self.handle_periodic
+      final_message = []
+
+      Linkbot::Plugin.plugins.each {|k,v|
+        #pp [k, v, v[:handlers]]
+        if v[:handlers][:periodic] && v[:handlers][:periodic][:handler]
+          
+          p "#{k} processing periodic message"
+          begin
+            end_msg = v[:ptr].send(v[:handlers][:periodic][:handler])
+          rescue => e
+            end_msg = "the #{k} plugin threw an exception: #{e.inspect}"
+            puts e.inspect
+            puts e.backtrace.join("\n")
+          end
+          final_message << end_msg if !end_msg.empty?
+        end
+      }
+      print "returning msgs from periodic plugins:"
+      pp final_message
+      final_message
+    end
+
     def self.message_history
       @@message_log
     end
