@@ -2,6 +2,8 @@ module Linkbot
   class Connector
     @@connectors = {}
     
+    attr_accessor :options
+    
     def initialize(options)
       @options = options
       @callbacks = []

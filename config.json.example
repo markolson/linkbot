@@ -6,7 +6,13 @@
       "password" : "password",
       "room" : "5",
       "campfire_url" : "https://yourdomain.campfirenow.com",
-      "periodic" : "true"
+      "periodic" : "true",
+      "receive_broadcasts" : true
+    },
+    {
+      "type" : "thin",
+      "port" : 4000,
+      "broadcast" : true
     }
   ],
   "plugins" : {

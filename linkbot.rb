@@ -8,6 +8,8 @@ require 'eventmachine'
 require 'em-http-request'
 require 'json'
 require 'httparty'
+require 'rack'
+require 'thin'
 
 require 'pp'
 require 'config.rb'
@@ -44,7 +46,17 @@ if __FILE__ == $0
       connector.onmessage do |message|
         EventMachine::defer(proc {
           messages = Linkbot::Plugin.handle_message(message)
-          message.connector.send_messages(messages)
+          # Check for broadcasts
+          if message.connector.options["broadcast"]
+            # Go through all of the connectors and send to all that accept broadcasts
+            linkbot.connectors.each do |c|
+              if c.options["receive_broadcasts"]
+                c.send_messages(messages)
+              end
+            end
+          else
+            message.connector.send_messages(messages)
+          end
         })
       end
     end
