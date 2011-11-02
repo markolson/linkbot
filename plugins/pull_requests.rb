@@ -24,7 +24,7 @@ class PullRequests < Linkbot::Plugin
     response = JSON.load(get("/repos/#{@@config["owner"]}/#{@@config["project"]}/pulls").body)
     messages = []
     response.each do |pullreq|
-      next if pullreq["number"] <= min_pull
+      next if pullreq["number"].to_i <= min_pull
       messages << "New pull request:\n#{pullreq['title']}\n#{pullreq['body']}\n#{pullreq['url']}"
       Linkbot.db.execute("insert into pull_requests (number) VALUES (#{pullreq["number"]})")
     end
