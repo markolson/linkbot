@@ -16,8 +16,12 @@ GEM
     hpricot (0.8.4)
     htmlentities (4.3.0)
     http_parser.rb (0.5.3)
+    httparty (0.8.1)
+      multi_json
+      multi_xml
     json (1.6.1)
     multi_json (1.0.3)
+    multi_xml (0.4.1)
     nokogiri (1.5.0)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
@@ -40,6 +44,7 @@ DEPENDENCIES
   eventmachine
   hpricot
   htmlentities
+  httparty
   json
   sanitize
   sqlite3

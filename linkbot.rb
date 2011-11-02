@@ -7,6 +7,7 @@ require 'htmlentities'
 require 'eventmachine'
 require 'em-http-request'
 require 'json'
+require 'httparty'
 
 require 'pp'
 require 'config.rb'
@@ -28,6 +29,7 @@ module Linkbot
       Linkbot.load_users
       @connectors = []
     end
+    
   end 
 end
 
@@ -45,6 +47,11 @@ if __FILE__ == $0
           message.connector.send_messages(messages)
         })
       end
+    end
+    
+    #every 5 seconds, run periodic plugins
+    EventMachine.add_periodic_timer(5) do
+      linkbot.connectors.each {|c| c.periodic}
     end
   end
 end

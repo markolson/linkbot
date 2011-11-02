@@ -5,7 +5,20 @@
       "username" : "username",
       "password" : "password",
       "room" : "5",
-      "campfire_url" : "https://yourdomain.campfirenow.com"
+      "campfire_url" : "https://yourdomain.campfirenow.com",
+      "periodic" : "true"
     }
-  ]
+  ],
+  "plugins" : {
+    "pull_requests" : {
+      "base_uri" : "https://api.github.com",
+      "username" : "username",
+      "password" : "password",
+      "owner" : "Lookingglass",
+      "project" : "scoutvision"
+    },
+    "boo" : {
+      "webhook" : "http://playasoundorsomething.com/boo"
+    }
+  }
 }
