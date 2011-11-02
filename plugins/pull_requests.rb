@@ -21,8 +21,10 @@ class PullRequests < Linkbot::Plugin
     rows = Linkbot.db.execute("select max(number) from pull_requests")
     min_pull = rows[0][0].to_i if !rows.empty?
     
-    response = JSON.load(get("/repos/#{@@config["owner"]}/#{@@config["project"]}/pulls").body)
-    if response.code >= 200 && response.code < 300
+    res = get("/repos/#{@@config["owner"]}/#{@@config["project"]}/pulls")
+    response = res.body
+    JSON.load(response)
+    if res.code >= 200 && res.code < 300
       messages = []
       response.each do |pullreq|
         next if pullreq["number"].to_i <= min_pull
