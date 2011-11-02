@@ -42,7 +42,7 @@ if __FILE__ == $0
       connector.onmessage do |message|
         EventMachine::defer(proc {
           messages = Linkbot::Plugin.handle_message(message)
-          linkbot.connectors.each { |connector| connector.send_messages(messages) }
+          message.connector.send_messages(messages)
         })
       end
     end

@@ -26,6 +26,9 @@ module Linkbot
     def process_message(message)
       @callbacks.each { |c| c.call(message) }
     end
+    
+    def send_messages(messages)
+    end
 
   end
 end
