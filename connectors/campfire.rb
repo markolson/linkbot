@@ -31,40 +31,14 @@ class Campfire < Linkbot::Connector
     options = {
       :path => "/room/#{@options["room"]}/live.json",
       :host => "streaming.campfirenow.com",
-      :auth => "#{@user["api_auth_token"]}:x"
+      :auth => "#{@user["api_auth_token"]}:x",
+      :timeout => 6
     }
 
     stream = Twitter::JSONStream.connect(options)
 
     stream.each_item do |item|
-      message = JSON.parse(item)
-
-      if message['type'] == 'TextMessage' && message['user_id'] != @user["id"]
-        # Check if the user who is sending this message exists in the DB yet - if not, load the users details before
-        # processing the message
-        if Linkbot.user_exists?(message['user_id'])
-          # Build the message
-          message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message )
-          invoke_callbacks(message)
-        else
-          # Fetch the user data from campfire, then process the callbacks
-          request_options = {
-            :head => {
-              'authorization' => [@user['api_auth_token'], "x"],
-              'Content-Type' => 'application/json' 
-            }
-          }
-        
-          user_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/users/#{message['user_id']}.json").get request_options
-          user_http.errback { puts "Yeah trouble entering the room." }
-          user_http.callback {
-            user = JSON.parse(user_http.response)["user"]
-            Linkbot.add_user(user["name"],user["id"])
-            message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message )
-            invoke_callbacks(message)
-          }
-        end
-      end
+      process_message(item)
     end
 
     stream.on_error do |message|
@@ -76,6 +50,38 @@ class Campfire < Linkbot::Connector
       exit
     end
     
+  end
+  
+  
+  def process_message(item)
+    message = JSON.parse(item)
+
+    if message['type'] == 'TextMessage' && message['user_id'] != @user["id"]
+      # Check if the user who is sending this message exists in the DB yet - if not, load the users details before
+      # processing the message
+      if Linkbot.user_exists?(message['user_id'])
+        # Build the message
+        message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message )
+        invoke_callbacks(message)
+      else
+        # Fetch the user data from campfire, then process the callbacks
+        request_options = {
+          :head => {
+            'authorization' => [@user['api_auth_token'], "x"],
+            'Content-Type' => 'application/json' 
+          }
+        }
+      
+        user_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/users/#{message['user_id']}.json").get request_options
+        user_http.errback { puts "Yeah trouble entering the room." }
+        user_http.callback {
+          user = JSON.parse(user_http.response)["user"]
+          Linkbot.add_user(user["name"],user["id"])
+          message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message )
+          invoke_callbacks(message)
+        }
+      end
+    end
   end
   
 
