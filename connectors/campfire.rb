@@ -45,7 +45,7 @@ class Campfire < Linkbot::Connector
         if Linkbot.user_exists?(message['user_id'])
           # Build the message
           message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message )
-          process_message(message)
+          invoke_callbacks(message)
         else
           # Fetch the user data from campfire, then process the callbacks
           request_options = {
@@ -61,7 +61,7 @@ class Campfire < Linkbot::Connector
             user = JSON.parse(user_http.response)["user"]
             Linkbot.add_user(user["name"],user["id"])
             message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message )
-            process_message(message)
+            invoke_callbacks(message)
           }
         end
       end

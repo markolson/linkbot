@@ -25,7 +25,7 @@ module Linkbot
       @callbacks << block
     end
     
-    def process_message(message)
+    def invoke_callbacks(message)
       @callbacks.each { |c| c.call(message) }
     end
     
