@@ -28,6 +28,9 @@
     },
     "video" : {
       "base_uri" : "http://videoplayer.com"
+    },
+    "blowhard" : {
+      "webhook" : "http://blowhard"
     }
   }
 }
