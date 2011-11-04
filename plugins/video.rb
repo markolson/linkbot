@@ -10,7 +10,8 @@ class Video < Linkbot::Plugin
       "bear" => "FiARsQSlzDc",
       "das" => "SIt2CdbBo_w",
       "erlang" => "uKfKtXYLG78",
-      "pizza" => "wusGIl3v044"
+      "pizza" => "wusGIl3v044",
+      "ra" => "Tb-gI_pFog0"
     }
     
     url = ""
