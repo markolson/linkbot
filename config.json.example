@@ -31,6 +31,14 @@
     },
     "blowhard" : {
       "webhook" : "http://blowhard"
+    },
+    "party" : {
+      "off_hooks" : [
+        "http://businessinthefront"
+      ],
+      "on_hooks" : [
+        "http://partyintheback"
+      ]
     }
   }
 }
