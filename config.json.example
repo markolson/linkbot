@@ -39,6 +39,9 @@
       "on_hooks" : [
         "http://partyintheback"
       ]
+    },
+    "fail" : {
+      "webhook" : "http://failsound.mp3"
     }
   }
 }
