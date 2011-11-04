@@ -24,6 +24,6 @@ class Party < Linkbot::Plugin
   end
   
   def self.help
-    "!partymode (on|off) - PARTAY."
+    "/partymode (on|off) - PARTAY."
   end
 end
