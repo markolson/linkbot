@@ -12,7 +12,8 @@ class Video < Linkbot::Plugin
       "erlang" => "uKfKtXYLG78",
       "pizza" => "wusGIl3v044",
       "ra" => "Tb-gI_pFog0",
-      "fail" => "1ytCEuuW2_A"
+      "fail" => "1ytCEuuW2_A",
+      "womp womp" => "yJxCdh1Ps48"
     }
     
     url = ""
