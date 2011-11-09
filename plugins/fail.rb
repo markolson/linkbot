@@ -9,7 +9,8 @@ class Fail < Linkbot::Plugin
 
   def self.on_message(message, matches)
     sound = true
-    doc = JSON.parse(open("http://www.failpictures.com/index.php?module=ajax&action=ajax_init&cpaint_function=getimg&cpaint_response_type=JSON").read)
+    url = "http://www.failpictures.com/index.php?module=ajax&action=ajax_init&cpaint_function=getimg&cpaint_response_type=JSON"
+    doc = JSON.parse(open(url).read)
     
     if Linkbot::Config["plugins"]["fail"]["webhook"]
       get("#{Linkbot::Config["plugins"]["fail"]["webhook"]}")
