@@ -1,0 +1,47 @@
+{
+  "connectors" : [
+    {
+      "type" : "campfire",
+      "username" : "username",
+      "password" : "password",
+      "room" : "5",
+      "campfire_url" : "https://yourdomain.campfirenow.com",
+      "periodic" : "true",
+      "receive_broadcasts" : true
+    },
+    {
+      "type" : "thin",
+      "port" : 4000,
+      "broadcast" : true
+    }
+  ],
+  "plugins" : {
+    "pull_requests" : {
+      "base_uri" : "https://api.github.com",
+      "username" : "username",
+      "password" : "password",
+      "owner" : "Lookingglass",
+      "project" : "scoutvision"
+    },
+    "boo" : {
+      "webhook" : "http://playasoundorsomething.com/boo"
+    },
+    "video" : {
+      "base_uri" : "http://videoplayer.com"
+    },
+    "blowhard" : {
+      "webhook" : "http://blowhard"
+    },
+    "party" : {
+      "off_hooks" : [
+        "http://businessinthefront"
+      ],
+      "on_hooks" : [
+        "http://partyintheback"
+      ]
+    },
+    "fail" : {
+      "webhook" : "http://failsound.mp3"
+    }
+  }
+}

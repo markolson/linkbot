@@ -8,8 +8,6 @@ require 'eventmachine'
 require 'em-http-request'
 require 'json'
 require 'httparty'
-require 'rack'
-require 'thin'
 
 require 'pp'
 require 'config.rb'
@@ -31,8 +29,19 @@ module Linkbot
       Linkbot.load_users
       @connectors = []
     end
+<<<<<<< HEAD
+  end
+
+  def periodic()
+    EventMachine::defer(proc {
+      messages = Linkbot::Plugin.handle_periodic
+      send_messages(messages)
+    })
+  end
+=======
     
   end 
+>>>>>>> eventmachine
 end
 
 
@@ -46,17 +55,7 @@ if __FILE__ == $0
       connector.onmessage do |message|
         EventMachine::defer(proc {
           messages = Linkbot::Plugin.handle_message(message)
-          # Check for broadcasts
-          if message.connector.options["broadcast"]
-            # Go through all of the connectors and send to all that accept broadcasts
-            linkbot.connectors.each do |c|
-              if c.options["receive_broadcasts"]
-                c.send_messages(messages)
-              end
-            end
-          else
-            message.connector.send_messages(messages)
-          end
+          message.connector.send_messages(messages)
         })
       end
     end
@@ -65,5 +64,11 @@ if __FILE__ == $0
     EventMachine.add_periodic_timer(5) do
       linkbot.connectors.each {|c| c.periodic}
     end
+
+    #every 5 seconds, run periodic plugins
+    EventMachine.add_periodic_timer(5) do
+      linkbot.periodic
+    end
+
   end
 end
