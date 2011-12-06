@@ -110,16 +110,16 @@ class Meme < Linkbot::Plugin
 
     GENERATORS.sort.each_with_index do |(command, (id, type, name, _)), index|
       out += "%s [ %s ] " % [command, name]
-      out += "--- " unless (index % 3) == 2
-      out += "\r" if (index % 3) == 2
+      out += "--- " unless (index % 3) == 2 or index == GENERATORS.size - 1
+      out += "\n" if (index % 3) == 2
     end
     out
   end
 
   def self.help_text
-    ["!meme, Get random meme image\r",
-     "!meme --help, Get this message...\r",
-     "!meme --list, List all supported memes\r",
+    ["!meme, Get random meme image\n",
+     "!meme --help, Get this message...\n",
+     "!meme --list, List all supported memes\n",
      "!meme MEME line1[; line2], Create a meme image, MEME can be upper or lowercase"].join
   end
 
