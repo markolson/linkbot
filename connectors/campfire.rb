@@ -71,7 +71,7 @@ class Campfire < Linkbot::Connector
             'Content-Type' => 'application/json' 
           }
         }
-      
+
         user_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/users/#{message['user_id']}.json").get request_options
         user_http.errback { puts "Yeah trouble entering the room." }
         user_http.callback {
@@ -83,12 +83,11 @@ class Campfire < Linkbot::Connector
       end
     end
   end
-  
 
   def send_messages(messages)
     flattened_messages = []
     messages.each {|m| flattened_messages = flattened_messages + m.split("\n")}
-    
+
     flattened_messages.each_with_index do |m,i|
       next if m.strip.empty?
 
@@ -101,7 +100,7 @@ class Campfire < Linkbot::Connector
       }
 
       request = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/room/#{@options['room']}/speak.json").post request_options
-
+      sleep 0.15
     end
   end
 end
