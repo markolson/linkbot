@@ -68,7 +68,7 @@ class Campfire < Linkbot::Connector
         request_options = {
           :head => {
             'authorization' => [@user['api_auth_token'], "x"],
-            'Content-Type' => 'application/json' 
+            'Content-Type' => 'application/json'
           }
         }
 
@@ -100,7 +100,6 @@ class Campfire < Linkbot::Connector
       }
 
       request = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/room/#{@options['room']}/speak.json").post request_options
-      sleep 0.15
     end
   end
 end
