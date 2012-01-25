@@ -4,7 +4,11 @@ class Define < Linkbot::Plugin
     def self.on_message(message, match)
       word = URI.escape(match[0])
       doc = JSON.parse(open("http://www.urbandictionary.com/iphone/search/define?term=#{word}").read)
-      "\"#{URI.decode(word)}\": " + doc["list"][0]["definition"] + "\n" + "Example usage: " + doc["list"][0]["example"]
+      if doc["result_type"] == "exact" 
+        "\"#{URI.decode(word)}\": " + doc["list"][0]["definition"] + "\n" + "Example usage: " + doc["list"][0]["example"]
+      else
+        "No match!"
+      end
     end
 
     def self.help
