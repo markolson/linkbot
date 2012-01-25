@@ -8,7 +8,7 @@ class JabberConnector < Linkbot::Connector
   def initialize(options)
     super(options)
         
-    @fullname = @options["fullname"]
+    @fullname = @options["fullname"] ? @options["fullname"] : @options["username"]
     @username = @options["username"]
     @password = @options["password"]
     @resource = @options["resource"]
@@ -36,7 +36,7 @@ class JabberConnector < Linkbot::Connector
     
     @muc.on_message do |time,nick,text|
       begin
-        if Time.now.to_i - @start_time > 3
+        if Time.now.to_i - @start_time > 3 && nick != @options["fullname"]
           process_message(time,nick,text)
         end
       rescue
@@ -64,7 +64,9 @@ class JabberConnector < Linkbot::Connector
 
   def send_messages(messages)
     messages.each do |message|
-      @muc.send(::Jabber::Message.new(nil,message),nil)
+      if message && message.strip.length > 0
+        @muc.send(::Jabber::Message.new(nil,message),nil)
+      end
     end
   end
 end
