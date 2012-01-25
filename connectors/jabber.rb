@@ -63,7 +63,10 @@ class JabberConnector < Linkbot::Connector
   
 
   def send_messages(messages)
-    messages.each do |message|
+    final_messages = []
+    messages.each {|m| final_messages = final_messages + m.split("\n")}
+    
+    final_messages.each do |message|
       if message && message.strip.length > 0
         @muc.send(::Jabber::Message.new(nil,message),nil)
       end
