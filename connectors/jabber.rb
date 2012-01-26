@@ -71,7 +71,7 @@ class JabberConnector < Linkbot::Connector
         @muc.send(::Jabber::Message.new(nil,message),nil)
         
         # I don't like this, but hipchat has problems receiving a lot of messages at once in-order and keeping them in order.
-        sleep(1.0/100.0)
+        sleep(1.0/25.0)
       end
     end
   end
