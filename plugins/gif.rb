@@ -11,6 +11,6 @@ class Gif < Linkbot::Plugin
   end
 
   Linkbot::Plugin.register('gif', self, {
-    :message => {:regex => /^!gif$/i, :handler => :on_message, :help => :help}
+    :message => {:regex => /!gif/i, :handler => :on_message, :help => :help}
   })
 end
