@@ -1,3 +1,5 @@
+require 'uri'
+
 class Links < Linkbot::Plugin
     Linkbot::Plugin.register('links', self,
     {
@@ -8,15 +10,16 @@ class Links < Linkbot::Plugin
 
   def self.on_message(message, matches)
     url = matches[0]
+    url = URI.decode(uri)
     
     messages = []
-    rows = Linkbot.db.execute("select username, dt from links, users where links.user_id=users.user_id and url = '#{url}'")
+    rows = Linkbot.db.execute("select username, dt from links, users where links.user_id=users.user_id and url = '#{url.gsub("'", "''")}'")
     if rows.empty?
       Linkbot::Plugin.plugins.each {|k,v|
         messages << v[:ptr].on_newlink(message, url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
       }
       # Add the link to the dupe table
-      Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{message.user_id}', '#{Time.now}', '#{url}')")
+      Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{message.user_id}', '#{Time.now}', '#{url.gsub("'", "''")}')")
     else
       Linkbot::Plugin.plugins.each {|k,v|
         messages << v[:ptr].on_dupe(message, url, rows[0][0], rows[0][1]) if(v[:ptr].respond_to?(:on_dupe)) 

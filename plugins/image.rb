@@ -17,7 +17,7 @@ class Image < Linkbot::Plugin
     end
     doc = JSON.parse(open("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=#{URI.encode(searchterm)}&rsz=8&safe=off", "Referer" => "http://lgscout.com").read)
     if doc["responseData"]["results"].length > 0
-      doc["responseData"]["results"][rand(doc["responseData"]["results"].length)]["url"]
+      URI.decode(doc["responseData"]["results"][rand(doc["responseData"]["results"].length)]["url"])
     else
       "No pictures found! Nuts!"
     end
