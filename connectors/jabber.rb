@@ -18,7 +18,7 @@ class JabberConnector < Linkbot::Connector
     @muc = nil
     @connection = nil
     
-    @start_time = Time.now.to_i
+    @start_time = Time.now
     
     listen
   end
@@ -36,7 +36,7 @@ class JabberConnector < Linkbot::Connector
     
     @muc.on_message do |time,nick,text|
       begin
-        if time.to_i - @start_time > 3 && nick != @options["fullname"]
+        if Time.now.to_i > @start_time.to_i + 10 && nick != @options["fullname"]
           process_message(time,nick,text)
         end
       rescue
