@@ -10,7 +10,7 @@ class Links < Linkbot::Plugin
 
   def self.on_message(message, matches)
     url = matches[0]
-    url = URI.decode(uri)
+    url = URI.decode(url)
     
     messages = []
     rows = Linkbot.db.execute("select username, dt from links, users where links.user_id=users.user_id and url = '#{url.gsub("'", "''")}'")
