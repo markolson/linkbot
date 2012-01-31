@@ -31,18 +31,18 @@ module Linkbot
       Linkbot.load_users
       @connectors = []
     end
-    
-  end 
+
+  end
 end
 
 
 if __FILE__ == $0
   linkbot = Linkbot::Bot.new
-  
+
   EventMachine::run do
     Linkbot::Config["connectors"].each { |config| linkbot.connectors << Linkbot::Connector[config["type"]].new(config) if Linkbot::Connector[config["type"]] }
-    
-    linkbot.connectors.each do |connector| 
+
+    linkbot.connectors.each do |connector|
       connector.onmessage do |message|
         EventMachine::defer(proc {
           messages = Linkbot::Plugin.handle_message(message)
@@ -60,7 +60,7 @@ if __FILE__ == $0
         })
       end
     end
-    
+
     #every 5 seconds, run periodic plugins
     EventMachine.add_periodic_timer(5) do
       linkbot.connectors.each {|c| c.periodic}
