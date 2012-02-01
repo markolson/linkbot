@@ -141,6 +141,9 @@ class Meme < Linkbot::Plugin
         index = rand(1000)
         url = URI.parse "http://version1.api.memegenerator.net/Instances_Select_ByPopular?languageCode=en&pageIndex=#{index}&pageSize=1&urlName="
         res = Net::HTTP.get_response(url)
+
+        return "MemeGenerator is herpin and derpin..." if res.code == '503'
+
         body = JSON(res.body)
         id = body['result'][0]['instanceID']
         return "http://images.memegenerator.net/instances/400x/#{id}.jpg"
