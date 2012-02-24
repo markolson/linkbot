@@ -146,7 +146,8 @@ class Meme < Linkbot::Plugin
 
         body = JSON(res.body)
         id = body['result'][0]['instanceID']
-        return "http://images.memegenerator.net/instances/400x/#{id}.jpg"
+        meme = body['result'][0]['displayName']
+        return ["http://images.memegenerator.net/instances/400x/#{id}.jpg", meme].join("\n")
       end
 
       begin
