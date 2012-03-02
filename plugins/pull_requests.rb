@@ -4,17 +4,20 @@ require 'pp'
 require 'config.rb'
 
 class PullRequests < Linkbot::Plugin
-  include HTTParty
   @@config = Linkbot::Config["plugins"]["pull_requests"]
-  base_uri @@config["base_uri"]
-  basic_auth @@config["username"], @@config["password"]
-  debug_output $stderr
 
-  Linkbot::Plugin.register('pullrequest', self,
-    {
-      :periodic => {:handler => :periodic},
-    }
-  )
+  if @@config
+    include HTTParty
+    base_uri @@config["base_uri"]
+    basic_auth @@config["username"], @@config["password"]
+    debug_output $stderr
+
+    Linkbot::Plugin.register('pullrequest', self,
+      {
+        :periodic => {:handler => :periodic},
+      }
+    )
+  end
 
   def self.periodic()
     min_pull = 0
@@ -38,7 +41,9 @@ class PullRequests < Linkbot::Plugin
     end
   end
   
-  if Linkbot.db.table_info('pull_requests').empty?
-    Linkbot.db.execute('CREATE TABLE pull_requests (number INTEGER)');
+  if @@config
+    if Linkbot.db.table_info('pull_requests').empty?
+      Linkbot.db.execute('CREATE TABLE pull_requests (number INTEGER)');
+    end
   end
 end
