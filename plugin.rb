@@ -19,7 +19,7 @@ module Linkbot
     @@message_log = []
     
     def self.handle_message(message)
-      print "handle_message got called with #{message}"
+      puts "handle_message got called with #{message}"
 
       @@message_log << message
 
@@ -43,7 +43,7 @@ module Linkbot
           end
         end  
       }
-      print "returning msgs from plugins:"
+      puts "returning msgs from plugins:"
       pp final_message
       final_message
     end
