@@ -6,6 +6,7 @@ class TestConsole
     @user_id = 0
     @user_name = "UserName"
     @type = MessageType::MESSAGE
+    @connector = "debug"
     puts "Commands - !!set  - set message vars"
     puts "         - !!show - show message vars" 
     puts "         - !!exit" 
@@ -40,10 +41,7 @@ class TestConsole
     puts "Input:"
     msg = gets.chomp
     if !check_commands(msg)
-      message = Message.new(  msg,
-                              @user_id,
-                              @user_name,
-                              @type)
+      message = Message.new(msg, @user_id, @user_name, @connector, @type)
       puts Linkbot::Plugin.handle_message(message)
     end
     send_body
@@ -67,5 +65,3 @@ end
 app = TestConsole.new()
 Linkbot::Plugin.collect
 app.send_body
-
-
