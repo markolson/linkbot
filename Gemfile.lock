@@ -20,6 +20,7 @@ GEM
     httparty (0.8.1)
       multi_json
       multi_xml
+    imagesize (0.1.1)
     json (1.6.1)
     multi_json (1.0.3)
     multi_xml (0.4.1)
@@ -56,6 +57,7 @@ DEPENDENCIES
   hpricot
   htmlentities
   httparty
+  imagesize
   json
   rack
   sanitize
