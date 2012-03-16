@@ -56,7 +56,7 @@ class Image < Linkbot::Plugin
       end
       
       if @@resolutions.has_key?("#{d[0]}x#{d[1]}")
-        url = "#{url}\nWALLPAPER WALLPAPER WALLPAPER WALLPAPER WALLPAPER"
+        url = "#{url}\n(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
       end
       url
     else

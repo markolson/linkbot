@@ -1,7 +1,8 @@
 require 'uri'
-
+  
 class Links < Linkbot::Plugin
-    Linkbot::Plugin.register('links', self,
+  
+  Linkbot::Plugin.register('links', self,
     {
       :message => {:regex => Regexp.new('(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))'), 
                   :handler => :on_message}
