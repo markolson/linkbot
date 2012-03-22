@@ -1,4 +1,54 @@
+require 'open-uri'
+require 'image_size'
+require 'uri'
+require 'cgi'
+
 module Util
+  
+  @@resolutions = {
+    "800x600" => true,
+    "1024x600" => true,
+    "1024x768" => true,
+    "1152x864" => true,
+    "1280x720" => true,
+    "1280x768" => true,
+    "1280x800" => true,
+    "1280x960" => true,
+    "1280x1024" => true,
+    "1360x768" => true,
+    "1366x768" => true,
+    "1440x900" => true,
+    "1600x900" => true,
+    "1600x1200" => true,
+    "1680x1050" => true,
+    "1920x1080" => true,
+    "1920x1200" => true,
+    "2560x1440" => true
+  }
+  
+  @@extensions = {
+    "jpg" => true,
+    "jpeg" => true,
+    "png" => true,
+    "gif" => true
+  }
+  
+  def self.wallpaper?(url)
+    d = nil
+    
+    if @@extensions.has_key?(url.split(".").last)
+      open(url) do |fh|
+        d = ImageSize.new(fh.read).get_size
+      end
+    
+      if @@resolutions.has_key?("#{d[0]}x#{d[1]}")
+        return true
+      end
+    end
+    
+    false
+  end
+  
   def self.ago_in_words(time1, time2)
     diff = time1.to_i - time2.to_i
 

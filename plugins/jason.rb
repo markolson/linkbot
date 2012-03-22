@@ -14,7 +14,6 @@ class Jason < Linkbot::Plugin
           "/r/pics/" => 10,
           "/r/comics/" => 10,
           "/r/wallpaper/" => 10,
-          "/r/gonewild/" => 2,
           "/r/funny/" => 10,
           "/r/fffffffuuuuuuuuuuuu/" => 10,
           "/r/reddit.com/" => 10,
@@ -61,7 +60,9 @@ class Jason < Linkbot::Plugin
             doc = Hpricot(open(url).read)
             url = doc.search("img")[1]['src']
           end
-          
+          if ::Util.wallpaper?(url)
+            url = "#{url}\n(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
+          end
           messages << url
         end
         return messages.join("\n")
