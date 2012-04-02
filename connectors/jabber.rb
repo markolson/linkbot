@@ -13,9 +13,9 @@ class JabberConnector < Linkbot::Connector
     @password = @options["password"]
     @resource = @options["resource"]
     @server = @options["server"]
-    @room = @options["room"]
+    @rooms = @options["rooms"]
     @conference = @options["conference"]
-    @muc = nil
+    @mucs = {}
     @connection = nil
 
     listen
@@ -29,25 +29,31 @@ class JabberConnector < Linkbot::Connector
     puts "Authenticating..."
     @connection.auth(@password)
     @connection.send(::Jabber::Presence.new.set_type(:available))
+
+    @rooms.each do |room|
+      muc = ::Jabber::MUC::SimpleMUCClient.new(@connection)
     
-    @muc = ::Jabber::MUC::SimpleMUCClient.new(@connection)
-    
-    @muc.on_message do |time,nick,text|
-      begin
-        if nick != @options["fullname"]
-          process_message(time,nick,text)
+      muc.add_message_callback do |m|
+        begin
+          room = m.from.node
+          nick = m.from.resource
+          if nick != @options["fullname"]
+            process_message(Time.now,nick,m.body,{:room => room})
+          end
+        rescue
+          puts $!.message
         end
-      rescue
-        puts $!.message
       end
+      
+      muc.join("#{room}@#{@conference}/#{@fullname}")
+      
+      @mucs[room] = muc
     end
-    
-    @muc.join("#{@room}@#{@conference}/#{@fullname}")
   end
   
   
   
-  def process_message(time,nick,text)
+  def process_message(time,nick,text,options = {})
     # Attempt to get the user from the roster
     
     if !Linkbot.user_exists?(nick)
@@ -55,21 +61,23 @@ class JabberConnector < Linkbot::Connector
     end
     
     message = Message.new( text, nick, nick, self, :message )
-    invoke_callbacks(message)
+    invoke_callbacks(message,options)
   end
   
   
 
-  def send_messages(messages)
+  def send_messages(messages,options = {})
     final_messages = []
     messages.each {|m| final_messages = final_messages + m.split("\n")}
     
     final_messages.each do |message|
       if message && message.strip.length > 0
-        @muc.send(::Jabber::Message.new(nil,message),nil)
+        if options[:room] && @mucs[options[:room]]
+          @mucs[options[:room]].send(::Jabber::Message.new(nil,message),nil)
         
-        # I don't like this, but hipchat has problems receiving a lot of messages at once in-order and keeping them in order.
-        sleep(1.0/25.0)
+          # I don't like this, but hipchat has problems receiving a lot of messages at once in-order and keeping them in order.
+          sleep(1.0/25.0)
+        end
       end
     end
   end

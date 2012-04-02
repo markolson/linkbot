@@ -84,7 +84,7 @@ class Campfire < Linkbot::Connector
     end
   end
 
-  def send_messages(messages)
+  def send_messages(messages,options = {})
     flattened_messages = []
     messages.each {|m| flattened_messages = flattened_messages + m.split("\n")}
 
