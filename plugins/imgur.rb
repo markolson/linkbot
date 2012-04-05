@@ -19,9 +19,12 @@ class Imgur < Linkbot::Plugin
         m.attributes["src"].gsub("b.jpg", ".jpg")
       end
     end
-    img = imgs[rand(imgs.length)]
+    url = imgs[rand(imgs.length)]
 
-    img
+    if ::Util.wallpaper?(url)
+      url = "#{url}\n(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
+    end
+    url
   end
   
   def self.help

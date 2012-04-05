@@ -43,7 +43,7 @@ if __FILE__ == $0
     Linkbot::Config["connectors"].each { |config| linkbot.connectors << Linkbot::Connector[config["type"]].new(config) if Linkbot::Connector[config["type"]] }
 
     linkbot.connectors.each do |connector|
-      connector.onmessage do |message|
+      connector.onmessage do |message,options|
         EventMachine::defer(proc {
           messages = Linkbot::Plugin.handle_message(message)
           # Check for broadcasts
@@ -55,7 +55,7 @@ if __FILE__ == $0
               end
             end
           else
-            message.connector.send_messages(messages)
+            message.connector.send_messages(messages,options)
           end
         })
       end

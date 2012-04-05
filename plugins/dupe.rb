@@ -59,6 +59,6 @@ class Dupe < Linkbot::Plugin
   end
   
   if Linkbot.db.table_info('stats').empty?
-    Linkbot.db.execute('CREATE TABLE stats (user_id INTEGER, dupes INTEGER, total INTEGER)');
+    Linkbot.db.execute('CREATE TABLE stats (user_id STRING, dupes INTEGER, total INTEGER)');
   end
 end

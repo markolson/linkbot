@@ -25,11 +25,11 @@ module Linkbot
       @callbacks << block
     end
     
-    def invoke_callbacks(message)
-      @callbacks.each { |c| c.call(message) }
+    def invoke_callbacks(message,options = {})
+      @callbacks.each { |c| c.call(message,options) }
     end
     
-    def send_messages(messages)
+    def send_messages(messages,options = {})
     end
     
     def periodic()
