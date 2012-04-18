@@ -12,11 +12,11 @@ class Timer < Linkbot::Plugin
     elsif matches[0].to_i > 300
       "Timers cannot be longer than 5 minutes"
     else
-      @@active++
+      @@active = @@active + 1
       seconds = matches[0].to_i
       message = matches[1].length > 0 ? matches[1] : "NURRRRRR ALARM NURRRRR"
       sleep(seconds)
-      @@active--
+      @@active = @@active - 1
       message
     end
   end
