@@ -17,3 +17,6 @@ gem "thin"
 gem "sinatra"
 gem "xmpp4r"
 gem "imagesize"
+
+# for /plugins/bitly.rb
+gem 'url_shortener'
