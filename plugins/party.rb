@@ -12,7 +12,7 @@ class Party < Linkbot::Plugin
           get(hook)
         end
       end
-      '(boom) (dance) (dealwithit) PARTAAAAAAAAAAAY (boom) (dance) (dealwithit)'
+      '(boom) (dance) (dealwithit) PARTAAAAAAAAAAAY (dealwithit) (dance) (boom)'
     else
       if Linkbot::Config["plugins"]["party"] && Linkbot::Config["plugins"]["party"]["off_hooks"]
         Linkbot::Config["plugins"]["party"]["off_hooks"].each do |hook|
