@@ -25,12 +25,10 @@ class Issues < Linkbot::Plugin
     limit = 100
     res = get("/issues.json?offset=#{offset}&limit=#{limit}&status_id=open")
     issues = JSON.load(res.body)["issues"]
-    pp issues.length, limit
 
     issues_found = []
 
     while issues.length > 0
-      puts "----------- #{offset} #{limit}"
       for issue in issues
         if (issue["subject"] + issue["description"]).match /#{needle}/i
           issues_found << issue
@@ -44,12 +42,36 @@ class Issues < Linkbot::Plugin
     issues_found
   end
 
+  def self.get_details(issue_number)
+    begin
+      res = get("http://redmine.corp.lgscout.com/issues/#{issue_number}.json")
+      issue = JSON.load(res.body)
+    rescue
+      #probably invalid permissions. issuebot only has access to some tickets.
+      return "unable to load issue #{issue_number}"
+    end
+
+    if !issue.has_key? "issue"
+      return "issue #{issue_number} not found"
+    end
+    issue = issue["issue"]
+
+    "#{issue['id']}: #{issue['subject']}\n#{issue['description']}\nstatus: #{issue['status']['name']}"
+  end
+
   def self.on_message(message, matches)
-    issues = self.issue_search(matches[0])
+    query = matches[0]
 
     msg = ""
-    for issue in issues
-      msg += "#{issue["id"]}: #{issue["subject"]}\n"
+
+    #if query's a number, print details on the issue
+    if query.match /^\d+$/
+      msg = self.get_details(query)
+    else
+      issues = self.issue_search(query)
+      for issue in issues
+        msg += "#{issue['id']}: #{issue['subject']}\n"
+      end
     end
 
     msg
