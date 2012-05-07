@@ -143,6 +143,7 @@ class Meme < Linkbot::Plugin
         res = Net::HTTP.get_response(url)
 
         return "MemeGenerator is herpin and derpin..." if res.code == '503'
+        return "MemeGenerator blows..." if res.code == '500'
 
         body = JSON(res.body)
         id = body['result'][0]['instanceID']
