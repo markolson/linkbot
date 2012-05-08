@@ -17,3 +17,7 @@ gem "thin"
 gem "sinatra"
 gem "xmpp4r"
 gem "imagesize"
+
+group :dev do
+  gem "ruby-debug"
+end
