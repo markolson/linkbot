@@ -91,9 +91,7 @@ class JabberConnector < Linkbot::Connector
     end
   end
   
-  
-  
-  def process_message(time,nick,text,options = {})
+  def process_message(time, nick, text, options={})
     # Attempt to get the user from the roster
     
     if !Linkbot.user_exists?(nick)
@@ -102,16 +100,21 @@ class JabberConnector < Linkbot::Connector
     
     if Linkbot.user_exists?(nick)
       message = Message.new( text, Linkbot.user_id(nick), nick, self, :message )  
-      invoke_callbacks(message,options)
+      invoke_callbacks(message, options)
     end
   end
   
-  
-
-  def send_messages(messages,options = {})
+  def send_messages(messages, options={})
     final_messages = []
-    messages.each {|m| final_messages = final_messages + m.split("\n")}
-    
+
+    for message in messages
+      if message.options.has_key?('preformatted') && !message.options['preformatted']
+        final_messages << m.message.split("\n")
+      else
+        final_messages << m.message
+      end
+    end
+
     final_messages.each do |message|
       if message && message.strip.length > 0
         if options[:room] && @mucs[options[:room]]
