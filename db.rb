@@ -55,6 +55,9 @@ module Linkbot
       Linkbot.db.execute("insert into users (user_id,username) values ('#{user_id}', '#{username}')")
       @@user_ids[user_id] = username
       @@users[username] = user_id
+    #if we didn't find the user's id, but we found their name, update their id
+    elsif user_id
+      Linkbot.db.execute("update users set user_id='#{user_id}' where username='#{username}'")
     end
   end
   
