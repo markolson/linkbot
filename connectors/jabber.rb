@@ -105,17 +105,7 @@ class JabberConnector < Linkbot::Connector
   end
   
   def send_messages(messages, options={})
-    final_messages = []
-
-    for message in messages
-      if message.options.has_key?('preformatted') && !message.options['preformatted']
-        final_messages << m.message.split("\n")
-      else
-        final_messages << m.message
-      end
-    end
-
-    final_messages.each do |message|
+    messages.each do |message|
       if message && message.strip.length > 0
         if options[:room] && @mucs[options[:room]]
           @mucs[options[:room]].send(::Jabber::Message.new(nil,message),nil)
