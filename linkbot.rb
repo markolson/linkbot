@@ -51,7 +51,13 @@ if __FILE__ == $0
             # Go through all of the connectors and send to all that accept broadcasts
             linkbot.connectors.each do |c|
               if c.options["receive_broadcasts"]
-                c.send_messages(messages)
+                begin
+                  c.send_messages(messages)
+                rescue => e
+                  end_msg = "the #{c} connector threw an exception: #{e.inspect}"
+                  puts e.inspect
+                  puts e.backtrace.join("\n")
+                end
               end
             end
           else
