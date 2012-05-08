@@ -17,10 +17,10 @@ class Jason < Linkbot::Plugin
           "/r/funny/" => 10,
           "/r/fffffffuuuuuuuuuuuu/" => 10,
           "/r/reddit.com/" => 10,
-        	"/r/WTF/" => 10,
-        	"/r/bestof/" => 10,
-        	"/r/videos/" => 10,
-        	"/r/aww" => 10,
+          "/r/WTF/" => 10,
+          "/r/bestof/" => 10,
+          "/r/videos/" => 10,
+          "/r/aww" => 10,
         }
  
         # Build out a weighted range
@@ -60,12 +60,15 @@ class Jason < Linkbot::Plugin
             doc = Hpricot(open(url).read)
             url = doc.search("img")[1]['src']
           end
-          if ::Util.wallpaper?(url)
-            url = "#{url}\n(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
-          end
+
           messages << url
+
+          if ::Util.wallpaper?(url)
+            messages << "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
+          end
         end
-        return messages.join("\n")
+
+        messages
   end
   
   def self.help

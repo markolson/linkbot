@@ -17,12 +17,11 @@ class Awwww < Linkbot::Plugin
         url = doc.search("img")[1]['src']
         
         if ::Util.wallpaper?(url)
-          url = "#{url}\n(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
+          url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
         end
-        url
       end
       
-      return url
+      url
     end
 
 end

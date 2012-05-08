@@ -26,13 +26,16 @@ class Image < Linkbot::Plugin
       color = parts.shift
       searchterm = parts.join(" ")
     end
+
     doc = JSON.parse(open("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=#{URI.encode(searchterm)}&rsz=8&#{color.nil? ? '' : '&imcolor=' + color}", "Referer" => "http://lgscout.com").read)
+
     if doc["responseData"]["results"].length > 0
       url = URI.decode(doc["responseData"]["results"][rand(doc["responseData"]["results"].length)]["url"])
       
       if ::Util.wallpaper?(url)
-        url = "#{url}\n(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
+        url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
       end
+
       url
     else
       "No pictures found! Nuts!"
