@@ -56,7 +56,9 @@ class Issues < Linkbot::Plugin
     end
     issue = issue["issue"]
 
-    "#{issue['id']}: #{issue['subject']}\n#{issue['description']}\nstatus: #{issue['status']['name']}"
+    time_link = "http://redmine.corp.lgscout.com/issues/#{issue['id']}/time_entries/new"
+
+    "#{issue['id']}: #{issue['subject']}\n#{issue['description']}\nstatus: #{issue['status']['name']}\n\nLog time: #{time_link}"
   end
 
   def self.on_message(message, matches)
