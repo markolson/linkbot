@@ -37,17 +37,18 @@ module Linkbot
             begin
               end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
 
-              if end_msg.is_a? Array
-                response = Response.new(end_msg[0], end_msg[1])
-              else
-                response = Response.new(end_msg, {})
+              if !end_msg.empty?
+                if end_msg.is_a? Array
+                  final_message.concat(end_msg)
+                else
+                  final_message << end_msg
+                end
               end
             rescue => e
               end_msg = "the #{k} plugin threw an exception: #{e.inspect}"
               puts e.inspect
               puts e.backtrace.join("\n")
             end
-            final_message << response if !response.message.empty?
           end
         end  
       }
