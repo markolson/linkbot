@@ -30,7 +30,12 @@ class Issues < Linkbot::Plugin
 
     while issues.length > 0
       for issue in issues
-        if (issue["subject"] + issue["description"]).match /#{needle}/i
+        haystack = issue["subject"] + issue["description"]
+        if issue.has_key? "assigned_to"
+          haystack += issue["assigned_to"]["name"]
+        end
+
+        if haystack.match /#{needle}/i
           issues_found << issue
         end
       end
