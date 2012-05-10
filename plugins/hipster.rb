@@ -35,8 +35,13 @@ class Hipster < Linkbot::Plugin
       res = Net::HTTP.get(url)
       meme = res.split("\n").first
 
-      img = rand(@@himages.size)
-      "#{@@himages[img]}\n" + meme
+      page = rand(150)
+      url = "http://lookatthisfuckinhipster.com"
+      doc = Hpricot(open("#{url}?p=#{page}").read)
+      imgs = doc.search("div[@class=imagewrap] img")
+      img = url + imgs[rand(imgs.length)].attributes["src"]
+
+      [img, meme]
     end
 
     def self.help
