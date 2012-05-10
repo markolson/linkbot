@@ -1,6 +1,4 @@
 class Hipster < Linkbot::Plugin
-    @@hipster_regex = Regexp.new(/^!hipster$/)
-
     def self.on_message(message, matches)
       url = URI.parse('http://api.automeme.net/text?vocab=hipster')
 
