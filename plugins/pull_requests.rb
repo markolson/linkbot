@@ -34,8 +34,8 @@ class PullRequests < Linkbot::Plugin
         messages << "New pull request:\n#{pullreq['title']}\n#{pullreq['body']}\n#{pullreq['url']}"
         Linkbot.db.execute("insert into pull_requests (number) VALUES (#{pullreq["number"]})")
       end
-      pp "returning #{messages.join '\n'}"
-      messages.join "\n"
+      pp "returning #{messages}"
+      messages
     else
       puts "Login error"
     end
