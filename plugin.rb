@@ -63,17 +63,15 @@ module Linkbot
       Linkbot::Plugin.plugins.each {|k,v|
         if v[:handlers][:periodic] && v[:handlers][:periodic][:handler]
 
-          p "#{k} porcessing periodic message"
+          p "#{k} processing periodic message"
           begin
+            #messages should be a hash {:messages => [<message:string>],
+            #                           :options => {"room": <room:string>}
+            #                          }
             messages = v[:ptr].send(v[:handlers][:periodic][:handler])
 
-            if !messages.empty?
-              puts "array is a: #{messages.is_a? Array}"
-              if messages.is_a? Array
-                final_messages.concat(messages)
-              else
-                final_messages << messages 
-              end
+            if !messages[:messages].empty?
+              final_messages << messages
             end
           rescue => e
             final_messages << "the #{k} plugin threw an exception: #{e.inspect}"
@@ -82,6 +80,7 @@ module Linkbot
           end
         end
       }
+
       print "returning msgs from periodic plugins:"
       pp final_messages
       final_messages
