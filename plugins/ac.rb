@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'json'
-require 'httparty'
 require 'pp'
 require 'time'
+require 'cgi'
 
 class ActiveCollab < Linkbot::Plugin
 
@@ -12,6 +12,31 @@ class ActiveCollab < Linkbot::Plugin
     Linkbot::Plugin.register('activecollab', self, {
       :periodic => {:handler => :periodic}
     })
+  end
+
+  def self.api_send(message)
+    puts "message is:"
+    pp message
+    message = CGI.escape(message)
+    color = @@config['color'] || "purple"
+    from = @@config['from'] || "activecollab"
+    puts " requesting https://api.hipchat.com/v1/rooms/message?" \
+        +"auth_token=#{@@config['hipchat_api_token']}&" \
+        +"message=#{message}&" \
+        +"color=#{color}&" \
+        +"room_id=#{@@config['room']}&" \
+        +"from=#{from}"
+    begin
+      open("https://api.hipchat.com/v1/rooms/message?" \
+          +"auth_token=#{@@config['hipchat_api_token']}&" \
+          +"message=#{message}&" \
+          +"color=#{color}&" \
+          +"room_id=#{@@config['room']}&" \
+          +"from=#{from}")
+    rescue => e
+      puts e.inspect
+      puts e.backtrace.join("\n")
+    end
   end
 
   def self.periodic
@@ -25,13 +50,15 @@ class ActiveCollab < Linkbot::Plugin
     max_item_time = min_pull
     
     doc = Hpricot(open("#{@@config['url']}/rss?token=#{@@config['token']}"))
-    doc.search("item").each do |item|
+
+    #never push more than 10 items
+    doc.search("item").slice(0,10).each do |item|
       item_time = Time.parse((item/"pubdate").text)
       next if item_time <= min_pull
 
-      messages << (item/"title").text
-      #unclear why item/"link" doesn't parse properly? Using guid instead.
-      messages << (item/"guid").text
+      linkurl = (item/"guid").text
+      link = " <a href=\"#{linkurl}\">#{linkurl}</a>"
+      self.api_send((item/"title").text + link)
 
       if item_time > max_item_time
         max_item_time = item_time
@@ -40,7 +67,8 @@ class ActiveCollab < Linkbot::Plugin
 
     Linkbot.db.execute("insert into activecollab (dt) VALUES ('#{max_item_time}')")
 
-    messages
+    {:messages => [], :options => {}}
+    #{:messages => messages, :options => {:room => @@config['room']}}
   end
 
   if @@config
