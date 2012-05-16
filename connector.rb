@@ -35,8 +35,9 @@ module Linkbot
     def periodic()
       if @options["periodic"]
         EventMachine::defer(proc {
-          messages = Linkbot::Plugin.handle_periodic
-          send_messages(messages)
+          Linkbot::Plugin.handle_periodic.each do |message|
+            send_messages(message[:messages], message[:options])
+          end
         })
       end
     end
