@@ -58,48 +58,33 @@ module Linkbot
     end
     
     def self.handle_periodic
-      final_message = []
+      final_messages = []
 
       Linkbot::Plugin.plugins.each {|k,v|
         if v[:handlers][:periodic] && v[:handlers][:periodic][:handler]
 
-          p "#{k} processing periodic message"
+          p "#{k} porcessing periodic message"
           begin
-            end_msg = v[:ptr].send(v[:handlers][:periodic][:handler])
+            messages = v[:ptr].send(v[:handlers][:periodic][:handler])
+
+            if !messages.empty?
+              puts "array is a: #{messages.is_a? Array}"
+              if messages.is_a? Array
+                final_messages.concat(messages)
+              else
+                final_messages << messages 
+              end
+            end
           rescue => e
-            end_msg = "the #{k} plugin threw an exception: #{e.inspect}"
+            final_messages << "the #{k} plugin threw an exception: #{e.inspect}"
             puts e.inspect
             puts e.backtrace.join("\n")
           end
-          final_message << end_msg if !end_msg.empty?
         end
       }
       print "returning msgs from periodic plugins:"
-      pp final_message
-      final_message
-    end
-
-    def self.handle_periodic
-      final_message = []
-
-      Linkbot::Plugin.plugins.each {|k,v|
-        #pp [k, v, v[:handlers]]
-        if v[:handlers][:periodic] && v[:handlers][:periodic][:handler]
-          
-          p "#{k} processing periodic message"
-          begin
-            end_msg = v[:ptr].send(v[:handlers][:periodic][:handler])
-          rescue => e
-            end_msg = "the #{k} plugin threw an exception: #{e.inspect}"
-            puts e.inspect
-            puts e.backtrace.join("\n")
-          end
-          final_message << end_msg if !end_msg.empty?
-        end
-      }
-      print "returning msgs from periodic plugins:"
-      pp final_message
-      final_message
+      pp final_messages
+      final_messages
     end
 
     def self.message_history
