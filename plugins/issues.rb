@@ -58,22 +58,6 @@ class Issues < Linkbot::Plugin
       end
     end
 
-    #while issues.length > 0
-    #  for issue in issues
-    #    haystack = issue["subject"] + issue["description"]
-    #    if issue.has_key? "assigned_to"
-    #      haystack += issue["assigned_to"]["name"]
-    #    end
-
-    #    if haystack.match /#{needle}/i
-    #      issues_found << issue
-    #    end
-    #  end
-    #  offset += limit
-    #  res = get("/issues.json?offset=#{offset}&limit=#{limit}")
-    #  issues = JSON.load(res.body)["issues"]
-    #end
-
     issues_found
   end
 
