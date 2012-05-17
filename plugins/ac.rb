@@ -58,7 +58,9 @@ class ActiveCollab < Linkbot::Plugin
 
       linkurl = (item/"guid").text
       link = " <a href=\"#{linkurl}\">#{linkurl}</a>"
-      self.api_send((item/"title").text + link)
+      desc = (item/"description").text
+      desc.gsub!(/div.*?>/, "br>")
+      self.api_send(desc)
 
       if item_time > max_item_time
         max_item_time = item_time
