@@ -5,12 +5,11 @@ require 'pp'
 
 class Issues < Linkbot::Plugin
 
-  @@config = Linkbot::Config["plugins"]["redmine"]
+  @@config = Linkbot::Config["plugins"]["activecollab"]
 
   if @@config
     include HTTParty
     base_uri @@config["url"]
-    basic_auth @@config["user"], @@config["pass"]
     debug_output $stderr
 
     Linkbot::Plugin.register('issues', self, {
@@ -20,29 +19,60 @@ class Issues < Linkbot::Plugin
     })
   end
 
+  def self.api_send(message)
+    puts "message is:"
+    pp message
+    message = CGI.escape(message)
+    color = @@config['color'] || "purple"
+    from = @@config['from'] || "activecollab"
+    puts " requesting https://api.hipchat.com/v1/rooms/message?" \
+        +"auth_token=#{@@config['hipchat_api_token']}&" \
+        +"message=#{message}&" \
+        +"color=#{color}&" \
+        +"room_id=#{@@config['room']}&" \
+        +"from=#{from}"
+    begin
+      open("https://api.hipchat.com/v1/rooms/message?" \
+          +"auth_token=#{@@config['hipchat_api_token']}&" \
+          +"message=#{message}&" \
+          +"color=#{color}&" \
+          +"room_id=#{@@config['room']}&" \
+          +"from=#{from}")
+    rescue => e
+      puts e.inspect
+      puts e.backtrace.join("\n")
+    end
+  end
+
   def self.issue_search(needle)
-    offset = 0
-    limit = 100
-    res = get("/issues.json?offset=#{offset}&limit=#{limit}&status_id=open")
-    issues = JSON.load(res.body)["issues"]
+    res = get("/projects/1/tickets?format=json&token=#{@@config['token']}")
+    issues = JSON.load(res.body)
 
     issues_found = []
 
-    while issues.length > 0
-      for issue in issues
-        haystack = issue["subject"] + issue["description"]
-        if issue.has_key? "assigned_to"
-          haystack += issue["assigned_to"]["name"]
-        end
+    issues.each do |issue|
+      haystack = issue["name"] + issue["body"]
 
-        if haystack.match /#{needle}/i
-          issues_found << issue
-        end
+      if haystack.match /#{needle}/i
+        issues_found << issue
       end
-      offset += limit
-      res = get("/issues.json?offset=#{offset}&limit=#{limit}")
-      issues = JSON.load(res.body)["issues"]
     end
+
+    #while issues.length > 0
+    #  for issue in issues
+    #    haystack = issue["subject"] + issue["description"]
+    #    if issue.has_key? "assigned_to"
+    #      haystack += issue["assigned_to"]["name"]
+    #    end
+
+    #    if haystack.match /#{needle}/i
+    #      issues_found << issue
+    #    end
+    #  end
+    #  offset += limit
+    #  res = get("/issues.json?offset=#{offset}&limit=#{limit}")
+    #  issues = JSON.load(res.body)["issues"]
+    #end
 
     issues_found
   end
@@ -82,11 +112,12 @@ class Issues < Linkbot::Plugin
     else
       issues = self.issue_search(query)
       for issue in issues
-        msg += "#{issue['id']}: #{issue['subject']}\n"
+        msg += "<a href=\"#{issue['permalink']}\">#{issue['ticket_id']}</a>: #{issue['name']}<br>"
       end
     end
 
-    msg
+    self.api_send(msg)
+    ""
   end
 
   def self.help
