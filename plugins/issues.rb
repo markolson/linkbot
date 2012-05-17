@@ -61,43 +61,14 @@ class Issues < Linkbot::Plugin
     issues_found
   end
 
-  def self.get_details(issue_number)
-    begin
-      res = get("http://redmine.corp.lgscout.com/issues/#{issue_number}.json")
-      issue = JSON.load(res.body)
-    rescue
-      #probably invalid permissions. issuebot only has access to some tickets.
-      return "unable to load issue #{issue_number}"
-    end
-
-    if !issue.has_key? "issue"
-      return "issue #{issue_number} not found"
-    end
-    issue = issue["issue"]
-
-    time_link = "track time: http://redmine.corp.lgscout.com/issues/#{issue['id']}/time_entries/new"
-    issue_link = "issue link: http://redmine.corp.lgscout.com/issues/#{issue['id']}"
-
-    return [
-      issue_link,
-      time_link,
-    "#{issue['id']}: #{issue['subject']}\n#{issue['description']}\nstatus: #{issue['status']['name']}"
-    ]
-  end
-
   def self.on_message(message, matches)
     query = matches[0]
 
     msg = ""
 
-    #if query's a number, print details on the issue
-    if query.match /^\d+$/
-      msg = self.get_details(query)
-    else
-      issues = self.issue_search(query)
-      for issue in issues
-        msg += "<a href=\"#{issue['permalink']}\">#{issue['ticket_id']}</a>: #{issue['name']}<br>"
-      end
+    issues = self.issue_search(query)
+    for issue in issues
+      msg += "<a href=\"#{issue['permalink']}\">#{issue['ticket_id']}</a>: #{issue['name']}<br>"
     end
 
     self.api_send(msg)
