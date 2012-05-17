@@ -19,31 +19,6 @@ class Issues < Linkbot::Plugin
     })
   end
 
-  def self.api_send(message)
-    puts "message is:"
-    pp message
-    message = CGI.escape(message)
-    color = @@config['color'] || "purple"
-    from = @@config['from'] || "activecollab"
-    puts " requesting https://api.hipchat.com/v1/rooms/message?" \
-        +"auth_token=#{@@config['hipchat_api_token']}&" \
-        +"message=#{message}&" \
-        +"color=#{color}&" \
-        +"room_id=#{@@config['room']}&" \
-        +"from=#{from}"
-    begin
-      open("https://api.hipchat.com/v1/rooms/message?" \
-          +"auth_token=#{@@config['hipchat_api_token']}&" \
-          +"message=#{message}&" \
-          +"color=#{color}&" \
-          +"room_id=#{@@config['room']}&" \
-          +"from=#{from}")
-    rescue => e
-      puts e.inspect
-      puts e.backtrace.join("\n")
-    end
-  end
-
   def self.issue_search(needle)
     res = get("/projects/1/tickets?format=json&token=#{@@config['token']}")
     issues = JSON.load(res.body)
@@ -64,15 +39,15 @@ class Issues < Linkbot::Plugin
   def self.on_message(message, matches)
     query = matches[0]
 
-    msg = ""
+    msg = []
 
     issues = self.issue_search(query)
     for issue in issues
-      msg += "<a href=\"#{issue['permalink']}\">#{issue['ticket_id']}</a>: #{issue['name']}<br>"
+      msg << "#{issue['permalink']}: #{issue['name']}"
     end
 
-    self.api_send(msg)
-    ""
+    #self.api_send(msg)
+    msg
   end
 
   def self.help
