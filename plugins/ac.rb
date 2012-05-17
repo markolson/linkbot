@@ -42,7 +42,7 @@ class ActiveCollab < Linkbot::Plugin
   def self.periodic
     #by default, grab all entries since one day ago
     min_pull = Time.now - 60*60*24
-    rows = Linkbot.db.execute("select max(dt) from activecollab")
+    rows = Linkbot.db.execute("select dt from activecollab")
     min_pull = Time.parse(rows[0][0]) if !rows.empty? && rows[0][0]
 
     messages = []
@@ -65,6 +65,7 @@ class ActiveCollab < Linkbot::Plugin
       end
     end
 
+    Linkbot.db.execute("delete from activecollab")
     Linkbot.db.execute("insert into activecollab (dt) VALUES ('#{max_item_time}')")
 
     {:messages => [], :options => {}}
