@@ -49,6 +49,7 @@ class ActiveCollab < Linkbot::Plugin
 
     max_item_time = min_pull
     
+    puts "requesting #{@@config['url']}/rss?token=#{@@config['token']}"
     doc = Hpricot(open("#{@@config['url']}/rss?token=#{@@config['token']}"))
 
     #never push more than 10 items
