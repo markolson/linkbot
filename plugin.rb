@@ -81,8 +81,10 @@ module Linkbot
         end
       }
 
-      print "returning msgs from periodic plugins:"
-      pp final_messages
+      if final_messages.length
+        print "returning msgs from periodic plugins:"
+        pp final_messages
+      end
       final_messages
     end
 

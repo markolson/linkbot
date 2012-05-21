@@ -20,12 +20,6 @@ class ActiveCollab < Linkbot::Plugin
     message = CGI.escape(message)
     color = @@config['color'] || "purple"
     from = @@config['from'] || "activecollab"
-    puts " requesting https://api.hipchat.com/v1/rooms/message?" \
-        +"auth_token=#{@@config['hipchat_api_token']}&" \
-        +"message=#{message}&" \
-        +"color=#{color}&" \
-        +"room_id=#{@@config['room']}&" \
-        +"from=#{from}"
     begin
       open("https://api.hipchat.com/v1/rooms/message?" \
           +"auth_token=#{@@config['hipchat_api_token']}&" \
