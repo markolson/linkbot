@@ -7,12 +7,18 @@ class Stock < Linkbot::Plugin
 
   def self.on_message(message, matches)
     ticker = matches[0]
-    doc = Hpricot(open("http://finance.yahoo.com/q?s=#{ticker}&ql=1"));
+    doc = Hpricot(open("http://finance.yahoo.com/q?s=#{ticker}&ql=1"))
     price = (doc/".time_rtq_ticker").text
     name =  (doc/".title h2").text
-    msg = "#{name} #{price}"
 
-    puts "mes str len: ", msg.strip.length
+    movement = (doc/".time_rtq_content")
+    wentdown = !!movement.first.attributes["class"].match(/down/)
+    upordown = wentdown ? '↓' : '↑'
+    diff     = movement.text.strip.sub /\(/, " ("
+    movetext = "#{upordown} #{diff}"
+
+    msg = "#{name} #{price} #{movetext}"
+
     if !msg.strip.empty?
       [msg]
     else
