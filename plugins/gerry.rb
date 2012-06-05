@@ -3,7 +3,7 @@ require 'uri'
 class Gerry < Linkbot::Plugin
   include HTTParty
   
-  Linkbot::Plugin.register('tts', self, {
+  Linkbot::Plugin.register('gerry', self, {
     :message => {:regex => /^\/gerry/i, :handler => :on_message, :help => :help}
   })
 
