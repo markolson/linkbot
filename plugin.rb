@@ -73,7 +73,7 @@ module Linkbot
             if !messages[:messages].empty?
               final_messages << messages
             end
-          rescue => e
+          rescue Exception => e
             final_messages << "the #{k} plugin threw an exception: #{e.inspect}"
             puts e.inspect
             puts e.backtrace.join("\n")
@@ -100,7 +100,14 @@ module Linkbot
     def self.plugins; @@plugins; end;
 
     def self.collect
-      Dir["plugins/*.rb"].each {|file| load file }
+      Dir["plugins/*.rb"].each do |file| 
+        begin
+          load file
+        rescue Exception => e
+          puts "unable to load plugin #{file}"
+          puts e
+        end
+      end
     end
   
     def self.register(name, s, handlers)

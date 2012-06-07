@@ -69,7 +69,14 @@ if __FILE__ == $0
 
     #every 5 seconds, run periodic plugins
     EventMachine.add_periodic_timer(5) do
-      linkbot.connectors.each {|c| c.periodic}
+      linkbot.connectors.each do |c|
+        begin
+          c.periodic
+        rescue Exception => e
+          puts "error in call to #{c}"
+          puts e
+        end
+      end
     end
   end
 end
