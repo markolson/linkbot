@@ -4,12 +4,16 @@ class TTS < Linkbot::Plugin
   include HTTParty
   
   Linkbot::Plugin.register('tts', self, {
-    :message => {:regex => /^!tts (.+)/i, :handler => :on_message, :help => :help}
+    :message => {:regex => /^!tts(?: (.+))?/i, :handler => :on_message, :help => :help}
   })
 
   def self.on_message(message, matches)
+    statement = matches[0]
     if Linkbot::Config['plugins']['tts']['webhook']
-      get("#{Linkbot::Config['plugins']['tts']['webhook']}/#{URI.encode(matches[0])}")
+      if statement.nil?
+        statement = message_history[1]['body']
+      end
+      get("#{Linkbot::Config['plugins']['tts']['webhook']}/#{URI.encode(statement)}")
     end
     ''
   end
