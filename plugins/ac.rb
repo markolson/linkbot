@@ -43,8 +43,15 @@ class ActiveCollab < Linkbot::Plugin
 
     max_item_time = min_pull
     
-    puts "requesting #{@@config['url']}/rss?token=#{@@config['token']}"
-    doc = Hpricot(open("#{@@config['url']}/rss?token=#{@@config['token']}"))
+    url = "#{@@config['url']}/rss?token=#{@@config['token']}"
+
+    puts "requesting #{url}"
+    begin
+      doc = Hpricot(open(url))
+    rescue SocketError => e
+      puts "could not retrieve #{url}"
+      return {:messages => [], :options => {}}
+    end
 
     #never push more than 10 items
     doc.search("item").slice(0,10).each do |item|
