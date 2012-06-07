@@ -45,6 +45,7 @@ class Confused < Linkbot::Plugin
       "http://i.imgur.com/dnj5I.gif",
       "http://i.imgur.com/gZfK8.gif",
       "http://i.imgur.com/v3KaH.gif",
+      "http://media.tumblr.com/tumblr_lxr6jyQrLb1r3zat8.gif",
       "http://gifs.gifbin.com/122011/1323882446_dog_confused_by_video.gif"]
 
     imgs[rand(imgs.length)]
