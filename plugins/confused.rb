@@ -46,7 +46,20 @@ class Confused < Linkbot::Plugin
       "http://i.imgur.com/gZfK8.gif",
       "http://i.imgur.com/v3KaH.gif",
       "http://media.tumblr.com/tumblr_lxr6jyQrLb1r3zat8.gif",
-      "http://gifs.gifbin.com/122011/1323882446_dog_confused_by_video.gif"]
+      "http://gifs.gifbin.com/122011/1323882446_dog_confused_by_video.gif",
+      "http://media.tumblr.com/tumblr_m3owc6eTvy1qcv6is.gif",
+      "http://media.tumblr.com/tumblr_m55to6Aho81r3rys2.gif",
+      "http://media.tumblr.com/tumblr_m55touaOvQ1r3rys2.gif",
+      "http://media.tumblr.com/tumblr_lwsbr58fJA1qht847.gif",
+      "http://24.media.tumblr.com/tumblr_m4urzbTNQh1ql7adco4_250.gif",
+      "http://media.tumblr.com/tumblr_m4m5kozJih1qdfept.gif",
+      "http://media.tumblr.com/tumblr_m4az7ta2BW1robwvc.gif",
+      "http://media.tumblr.com/tumblr_m1dqzccB3E1qlk46r.gif",
+      "http://media.tumblr.com/tumblr_m3w22h97Pi1r1biix.gif",
+      "http://media.tumblr.com/tumblr_m3w1x4LYDp1r1biix.gif",
+      "http://media.tumblr.com/tumblr_m29p06JMii1qhj4zv.gif",
+      "http://media.tumblr.com/tumblr_lvfkdpwHxa1ql85u5.gif",
+      "http://media.tumblr.com/tumblr_m29ozq9wOR1qhj4zv.gif"]
 
     imgs[rand(imgs.length)]
   end
