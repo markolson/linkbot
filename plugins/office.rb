@@ -21,6 +21,9 @@ class Office < Linkbot::Plugin
         messages = matches.map {|e| e[0] }
       end
     end
+    if messages.empty?
+      messages << "No one is in the office currently with that name."
+    end
     messages.join(", ")
   end
   
