@@ -21,7 +21,7 @@ class Office < Linkbot::Plugin
         messages = matches.map {|e| e[0] }
       end
     end
-    messages
+    messages.join(", ")
   end
   
   def self.help
