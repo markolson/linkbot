@@ -48,6 +48,8 @@ class Confused < Linkbot::Plugin
       "http://i.imgur.com/c9D6x.gif",
       "http://i.imgur.com/UzTta.gif",
       "http://i.imgur.com/M0EKn.gif",
+      "http://i.imgur.com/eK2eR.gif",
+      "http://i.imgur.com/t9kzu.gif",
       "http://media.tumblr.com/tumblr_lm8m7jqb7s1qza6y2.gif",
       "http://media.tumblr.com/tumblr_lxr6jyQrLb1r3zat8.gif",
       "http://gifs.gifbin.com/122011/1323882446_dog_confused_by_video.gif",
