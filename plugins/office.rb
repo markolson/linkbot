@@ -14,20 +14,30 @@ class Office < Linkbot::Plugin
       Linkbot.db.execute("update presence set user_id='#{message.user_id}' where ip='#{$1}'")
     else
       if matches[0] && matches[0].length > 0
-        matches = Linkbot.db.execute("select distinct(u.username) from users u,presence p where u.user_id=p.user_id AND p.present=1 AND u.username LIKE '%#{matches[0]}%'")
-        messages = matches.map {|e| e[0] }
+        users = Linkbot.db.execute("select distinct(u.username) from users u,presence p where u.user_id=p.user_id AND p.present=1 AND u.username LIKE '%#{matches[0]}%'")
+        messages = users.map {|e| e[0] }
+
+        if messages.empty?
+          messages = ["Sorry, I couldn't find #{matches[0]} in the office"]
+        end
       else
-        matches = Linkbot.db.execute("select distinct(u.username) from users u,presence p where u.user_id=p.user_id AND p.present=1")
-        messages = matches.map {|e| e[0] }
+        users = Linkbot.db.execute("select distinct(u.username) from users u,presence p where u.user_id=p.user_id AND p.present=1")
+        messages = users.map {|e| e[0] }
+
+        if messages.empty?
+          messages = ["Nobody is currently in the office"]
+        end
       end
     end
-    if messages.empty?
-      messages << "No one is in the office currently with that name."
-    end
+
     messages.join(", ")
   end
   
   def self.help
     "!office <user> - show who is currently in the office, or see if the specified user is in the office"
+  end
+
+  if Linkbot.db.table_info('presence').empty?
+    Linkbot.db.execute('CREATE TABLE presence (user_id STRING, present INTEGER)')
   end
 end
