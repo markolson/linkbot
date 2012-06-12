@@ -38,6 +38,6 @@ class Office < Linkbot::Plugin
   end
 
   if Linkbot.db.table_info('presence').empty?
-    Linkbot.db.execute('CREATE TABLE presence (user_id STRING, present INTEGER)')
+    Linkbot.db.execute('CREATE TABLE presence (user_id STRING, mac STRING, ip STRING, last_seen INTEGER, present INTEGER, hostname STRING)')
   end
 end
