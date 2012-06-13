@@ -5,7 +5,7 @@ module Linkbot
   def self.db
     @@db ||= SQLite3::Database.new('data.sqlite3')
     @@db.type_translation = true
-    @@db
+    @@db.busy_timeout(1000)
   end
   
   def self.load_users
