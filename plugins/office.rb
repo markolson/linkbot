@@ -10,27 +10,35 @@ class Office < Linkbot::Plugin
     # Check to see if the user is setting their own IP address
     command = matches[0]
     messages = []
+    message = ''
     if command =~ /setip (.*)/
       Linkbot.db.execute("update presence set user_id='#{message.user_id}' where ip='#{$1}'")
     else
       if matches[0] && matches[0].length > 0
-        users = Linkbot.db.execute("select distinct(u.username) from users u,presence p where u.user_id=p.user_id AND p.present=1 AND u.username LIKE '%#{matches[0]}%'")
-        messages = users.map {|e| e[0] }
-
+        users = Linkbot.db.execute("select u.username,max(p.present),max(p.last_seen) from users u,presence p where u.user_id=p.user_id AND u.username LIKE '%#{matches[0]}%' GROUP BY u.username ORDER BY p.present DESC")
+        messages = users.map {|e| 
+          if e[1].to_i == 0
+            "#{e[0]} (out of office, last seen #{Time.at(e[2].to_i)})"
+          else
+            "#{e[0]} (in office)"
+          end 
+        }
         if messages.empty?
-          messages = ["Sorry, I couldn't find #{matches[0]} in the office"]
+          messages << "No one is in the office currently with that name."
         end
+        message = messages.join("\n")
       else
         users = Linkbot.db.execute("select distinct(u.username) from users u,presence p where u.user_id=p.user_id AND p.present=1")
         messages = users.map {|e| e[0] }
-
         if messages.empty?
-          messages = ["Nobody is currently in the office"]
+          messages << "No one is in the office."
         end
+        message = messages.join(", ")
       end
     end
-
-    messages.join(", ")
+    
+    message
+    
   end
   
   def self.help
