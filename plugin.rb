@@ -21,8 +21,6 @@ module Linkbot
     @@message_log = []
     
     def self.handle_message(message)
-      puts "handle_message got called with #{message}"
-
       @@message_log << message
 
       final_message = []
