@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'hpricot'
 
 class Fail < Linkbot::Plugin
   include HTTParty
@@ -9,14 +10,14 @@ class Fail < Linkbot::Plugin
 
   def self.on_message(message, matches)
     sound = true
-    url = "http://www.failpictures.com/index.php?module=ajax&action=ajax_init&cpaint_function=getimg&cpaint_response_type=JSON"
-    doc = JSON.parse(open(url).read)
+    doc = Hpricot(open("http://www.failpictures.com").read)
+    img = "http://www.failpictures.com/" + doc.search("img[@alt='following next photo']").first.attributes['src']
     
     if Linkbot::Config["plugins"]["fail"]["webhook"]
       get("#{Linkbot::Config["plugins"]["fail"]["webhook"]}")
     end
     
-    doc["code"][0]["data"]
+    img
   end
 
 end
