@@ -1,7 +1,7 @@
 class Tsa < Linkbot::Plugin
   Linkbot::Plugin.register('tsa', self,
     {
-      :message => {:regex => Regexp.new('tsa', 'g'), :handler => :on_message}
+      :message => {:regex => Regexp.new('\btsa\b', 'g'), :handler => :on_message}
     }
   )
   
