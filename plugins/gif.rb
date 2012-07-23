@@ -4,7 +4,7 @@ require 'hpricot'
 class Gif < Linkbot::Plugin
 
   def self.help
-    "!gif - get a random animated gif from gif.tv"
+    "!gif [search term] - get a gif from reddit based on the optional search term"
   end
 
   def self.on_message(message, matches)
