@@ -29,10 +29,6 @@ class Gif < Linkbot::Plugin
       # Fetch the imgur page and pull out the image
       doc = Hpricot(open(url).read)
       url = doc.search("img")[1]['src']
-
-      if ::Util.wallpaper?(url)
-        url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
-      end
     end
 
     url
