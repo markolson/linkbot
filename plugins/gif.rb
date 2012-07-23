@@ -9,9 +9,8 @@ class Gif < Linkbot::Plugin
 
   def self.on_message(message, matches)
     searchterm = matches[0]
-    searchterm = message_history[1]['body'] if searchterm.nil?
 
-    if searchterm == "!gif" or searchterm == "!image"
+    if searchterm.nil?
       reddit = "http://reddit.com/r/gifs.json"
     else
       searchterm = URI.encode(searchterm)
