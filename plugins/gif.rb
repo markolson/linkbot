@@ -17,8 +17,12 @@ class Gif < Linkbot::Plugin
     end
 
     doc = ActiveSupport::JSON.decode(open(reddit).read)
-    url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
-    puts url
+    if doc["data"]["children"].length == 0
+      url = "Dangit! No results found..."
+    else
+      url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
+      puts url
+    end
 
     # Check if it's an imgur link without an image extension
     if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
