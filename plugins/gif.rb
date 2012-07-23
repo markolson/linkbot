@@ -9,7 +9,9 @@ class Gif < Linkbot::Plugin
 
   def self.on_message(message, matches)
     searchterm = matches[0]
-    if searchterm.nil?
+    searchterm = message_history[1]['body'] if searchterm.nil?
+
+    if searchterm == "!gif" or searchterm == "!image"
       reddit = "http://reddit.com/r/gifs.json"
     else
       searchterm = URI.encode(searchterm)
@@ -18,10 +20,9 @@ class Gif < Linkbot::Plugin
 
     doc = ActiveSupport::JSON.decode(open(reddit).read)
     if doc["data"]["children"].length == 0
-      url = "Dangit! No results found..."
+      url = "Oh poop! No gifs found..."
     else
       url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
-      puts url
     end
 
     # Check if it's an imgur link without an image extension
