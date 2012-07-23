@@ -12,6 +12,7 @@ class Gif < Linkbot::Plugin
     if searchterm.nil?
       reddit = "http://reddit.com/r/gifs.json"
     else
+      searchterm = URI.encode(searchterm)
       reddit = "http://www.reddit.com/r/gifs/search.json?q=#{searchterm}&restrict_sr=on"
     end
 
