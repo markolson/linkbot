@@ -14,14 +14,18 @@ class Gif < Linkbot::Plugin
       reddit = "http://reddit.com/r/gifs.json"
     else
       searchterm = URI.encode(searchterm)
-      reddit = "http://www.reddit.com/r/gifs/search.json?q=#{searchterm}&restrict_sr=on"
+      reddit = "http://www.reddit.com/r/gifs+hifw/search.json?q=#{searchterm}&restrict_sr=on"
     end
 
     doc = ActiveSupport::JSON.decode(open(reddit).read)
-    if doc["data"]["children"].length == 0
+
+    #reject anything with nsfw in the title
+    doc = doc["data"]["children"].reject {|x| x["data"]["title"] =~ /nsfw/i}
+
+    if doc.empty?
       url = "Oh poop! No gifs found..."
     else
-      url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
+      url = doc[rand(doc.length)]["data"]["url"]
     end
 
     # Check if it's an imgur link without an image extension
