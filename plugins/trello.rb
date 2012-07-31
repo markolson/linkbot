@@ -12,18 +12,22 @@ class Trello < Linkbot::Plugin
   end
 
   def self.api_send(message)
-    puts "message is:"
+    return if message.empty?
+
     pp message
     message = CGI.escape(message)
     color = @@config['hipchat_color'] || "purple"
-    from = @@config['hipchat_from'] || "trello"
+    from = @@config['hipchat_from'] || "Trello"
     begin
-      open("https://api.hipchat.com/v1/rooms/message?" \
-          +"auth_token=#{@@config['hipchat_api_token']}&" \
-          +"message=#{message}&" \
-          +"color=#{color}&" \
-          +"room_id=#{@@config['hipchat_room']}&" \
-          +"from=#{from}")
+      url = "https://api.hipchat.com/v1/rooms/message?" \
+          + "auth_token=#{@@config['hipchat_api_token']}&" \
+          + "message=#{message}&" \
+          + "color=#{color}&" \
+          + "room_id=#{@@config['hipchat_room']}&" \
+          + "from=#{from}"
+
+      puts "sending message to hipchat url #{url}"
+      open(url)
     rescue => e
       puts e.inspect
       puts e.backtrace.join("\n")
@@ -115,7 +119,7 @@ class Trello < Linkbot::Plugin
         puts item_time
 
         message = self.process_item(item)
-        self.api_send(message)
+        self.api_send(message) if !message.empty?
 
         if item_time > max_item_time
           max_item_time = item_time
