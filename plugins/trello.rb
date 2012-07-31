@@ -77,31 +77,45 @@ class Trello < Linkbot::Plugin
     # need to increment a second so that we don't pull up dupes
     since_time = (min_pull + 1).strftime '%Y-%m-%dT%H:%M:%S'
 
-    #TODO: need to add board config support
-    board = "4fda1dbcf2f3123b180e0f09"
-    url = "https://trello.com/1/boards/#{board}/actions?" \
+    url = "https://trello.com/1/members/#{@@config["admin_user"]}/boards?" \
           "key=#{@@config['key']}&" \
-          "token=#{@@config['token']}&" \
-          "limit=10&" \
-          "since=#{since_time}"
+          "token=#{@@config['token']}"
 
-    puts "requesting #{url}"
+    puts "requesting boards #{url}"
     begin
-      items = ActiveSupport::JSON.decode(open(url).read)
+      boards = ActiveSupport::JSON.decode(open(url).read)
     rescue SocketError => e
       puts "could not retrieve #{url}"
       return {:messages => [], :options => {}}
     end
 
-    items.reverse.each do |item|
-      item_time = Time.parse(item["date"])
-      puts item_time
+    boards = boards.map {|board| board["id"]}
 
-      message = self.process_item(item)
-      self.api_send(message)
+    boards.each do |board|
+      url = "https://trello.com/1/boards/#{board}/actions?" \
+            "key=#{@@config['key']}&" \
+            "token=#{@@config['token']}&" \
+            "limit=10&" \
+            "since=#{since_time}"
 
-      if item_time > max_item_time
-        max_item_time = item_time
+      puts "requesting #{url}"
+      begin
+        items = ActiveSupport::JSON.decode(open(url).read)
+      rescue SocketError => e
+        puts "could not retrieve #{url}"
+        return {:messages => [], :options => {}}
+      end
+
+      items.reverse.each do |item|
+        item_time = Time.parse(item["date"])
+        puts item_time
+
+        message = self.process_item(item)
+        self.api_send(message)
+
+        if item_time > max_item_time
+          max_item_time = item_time
+        end
       end
     end
 
