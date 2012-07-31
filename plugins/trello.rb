@@ -37,25 +37,29 @@ class Trello < Linkbot::Plugin
       "commentCard" => Proc.new{ |item|
         card = item["data"]["card"]["name"]
         board = item["data"]["board"]["id"]
+        boardname = item["data"]["board"]["name"]
         cardid = item["data"]["card"]["id"]
-        "#{user} commented on card <a href=\"http://trello.com/card/#{board}/#{cardid}\">#{card}</a>"
+        "#{user} commented on card <a href=\"http://trello.com/card/#{board}/#{cardid}\">#{card}</a> on #{boardname}"
       },
       "updateCard" => Proc.new{ |item|
         card = item["data"]["card"]["name"]
         board = item["data"]["board"]["id"]
+        boardname = item["data"]["board"]["name"]
         cardid = item["data"]["card"]["id"]
-        "#{user} updated card <a href=\"http://trello.com/card/#{board}/#{cardid}\">#{card}</a>"
+        "#{user} updated card <a href=\"http://trello.com/card/#{board}/#{cardid}\">#{card}</a> on #{boardname}"
       },
       "createCard" => Proc.new{ |item|
         card = item["data"]["card"]["name"]
         board = item["data"]["board"]["id"]
         cardid = item["data"]["card"]["id"]
-        "#{user} created card <a href=\"http://trello.com/card/#{board}/#{cardid}\">#{card}</a>"
+        boardname = item["data"]["board"]["name"]
+        "#{user} created card <a href=\"http://trello.com/card/#{board}/#{cardid}\">#{card}</a> on #{boardname}"
       },
       "createList" => Proc.new{ |item|
         list = item["data"]["list"]["name"]
         board = item["data"]["board"]["id"]
-        "#{user} created list <a href=\"http://trello.com/board/#{board}\">#{list}</a>"
+        boardname = item["data"]["board"]["name"]
+        "#{user} created list <a href=\"http://trello.com/board/#{board}\">#{list}</a> on #{boardname}"
       },
     }
 
