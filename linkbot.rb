@@ -67,8 +67,8 @@ if __FILE__ == $0
       end
     end
 
-    #every 5 seconds, run periodic plugins
-    EventMachine.add_periodic_timer(5) do
+    #every 30 seconds, run periodic plugins
+    EventMachine.add_periodic_timer(30) do
       linkbot.connectors.each do |c|
         begin
           c.periodic

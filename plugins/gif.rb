@@ -4,24 +4,41 @@ require 'hpricot'
 class Gif < Linkbot::Plugin
 
   def self.help
-    "!gif - get a random animated gif from gif.tv"
+    "!gif [search term] - get a gif from reddit based on the optional search term"
   end
 
   def self.on_message(message, matches)
-    if rand(2) == 1
-      url = URI.parse('http://www.gif.tv/gifs/get.php')
-      res = Net::HTTP.get(url)
-      "http://www.gif.tv/gifs/#{res}.gif"
+    searchterm = matches[0]
+
+    if searchterm.nil?
+      reddit = "http://reddit.com/r/gifs.json"
     else
-      page = rand(46)
-      doc = Hpricot(open("http://iwdrm.tumblr.com/page/#{page}").read)
-      imgs = doc.search("div[@class=post] img")
-      imgs = imgs.find_all { |x| x.attributes["src"].match /media.tumblr/ }
-      imgs[rand(imgs.length)].attributes["src"]
+      searchterm = URI.encode(searchterm)
+      reddit = "http://www.reddit.com/r/gifs+hifw/search.json?q=#{searchterm}&restrict_sr=on"
     end
+
+    doc = ActiveSupport::JSON.decode(open(reddit).read)
+
+    #reject anything with nsfw in the title
+    doc = doc["data"]["children"].reject {|x| x["data"]["title"] =~ /nsfw/i}
+
+    if doc.empty?
+      url = "Oh poop! No gifs found..."
+    else
+      url = doc[rand(doc.length)]["data"]["url"]
+    end
+
+    # Check if it's an imgur link without an image extension
+    if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
+      # Fetch the imgur page and pull out the image
+      doc = Hpricot(open(url).read)
+      url = doc.search("img")[1]['src']
+    end
+
+    url
   end
 
   Linkbot::Plugin.register('gif', self, {
-    :message => {:regex => /!gif/i, :handler => :on_message, :help => :help}
+    :message => {:regex => /!gif(?: (.+))?/i, :handler => :on_message, :help => :help}
   })
 end
