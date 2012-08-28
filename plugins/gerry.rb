@@ -9,10 +9,12 @@ class Gerry < Linkbot::Plugin
 
   def self.on_message(message, matches)
     statement = "gerry gerry gerry gerry gerry gerry gerry gerry gerry gerry gerry"
-    if Linkbot::Config['plugins']['tts']['webhook']
+    pics = "(gerry) (gerry) (gerry) (gerry) (gerry) (gerry) (gerry) (gerry) (gerry) (gerry) (gerry) "
+    if Linkbot::Config['plugins']['tts'] &&
+      Linkbot::Config['plugins']['tts']['webhook']
       get("#{Linkbot::Config['plugins']['tts']['webhook']}/#{URI.encode(statement)}")
     end
-    ''
+    pics
   end
   
   def self.help
