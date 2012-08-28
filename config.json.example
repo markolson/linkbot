@@ -42,6 +42,11 @@
     },
     "fail" : {
       "webhook" : "http://failsound.mp3"
+    },
+    "weather" : {
+      "key" : "yourkey",
+      "icons" : false,
+      "default-zip" : "21224"
     }
   }
 }
