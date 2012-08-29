@@ -20,7 +20,7 @@ class Gif < Linkbot::Plugin
     doc = ActiveSupport::JSON.decode(open(reddit).read)
 
     #reject anything with nsfw in the title
-    doc = doc["data"]["children"].reject {|x| x["data"]["title"] =~ /nsfw/i}
+    doc = doc["data"]["children"].reject {|x| x["data"]["title"] =~ /nsfw/i || x["data"]["over_18"]}
 
     if doc.empty?
       url = "Oh poop! No gifs found..."
