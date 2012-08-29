@@ -30,16 +30,21 @@ class Meme < Linkbot::Plugin
 
   # keep generators in alphabetical order
   advice_dog 'AFATHER',         111,    'High Expectations Asian Father', 1436
+  advice_dog 'ALLTHE',          6013,   'X ALL THE THINGS',               1121885
+  advice_dog 'BEAR',            92,     'Bear Grylls',                    89714
   advice_dog 'CHUCK',           5588,   'Chuck Norris',                   52021
   advice_dog 'CWOLF',           303,    'Courage Wolf',                   24
   advice_dog 'FA',              116,    'Forever Alone',                  142442
   advice_dog 'FBF',             3,      'Foul Bachelor Frog',             203
   advice_dog 'FRY',             305,    'Futurama Fry',                   84688
+  advice_dog 'FWP',             340895, 'First World Problems',           2055789
   advice_dog 'GGG',             534,    'Good Guy Greg',                  699717
   advice_dog 'HKITTY',          360,    'Hipster Kitty',                  9351
+  advice_dog 'HUSBAND',         1585,   'Internet Husband',               880976
   advice_dog 'IWOLF',           45,     'Insanity Wolf',                  20
   advice_dog 'JDUKE',           54,     'Joseph Ducreux',                 42
   advice_dog 'JOBS',            1210,   'Steve Jobs Says',                17967
+  advice_dog 'LIMES',           1101,   'Limes Guy',                      15311
   advice_dog 'PEDOBEAR',        235,    'Pedobear',                       564288
   advice_dog 'RAPTOR',          17,     'Philosoraptor',                  984
   advice_dog 'SAP',             29,     'Socially Awkward Penguin',       983
@@ -49,8 +54,9 @@ class Meme < Linkbot::Plugin
   advice_dog 'SUCCESS',         121,    'Success',                        1031
   advice_dog 'TMIMITW',         74,     'The Most Interesting Man in the World', 2485
   advice_dog 'TROLLFACE',       68,     'Troll-Face',                     269
+  advice_dog 'WONKA',           542616, 'Willy Wonka',                    2729805
   advice_dog 'YODAWG',          79,     'Yo Dawg Xzibit',                 108785
-  advice_dog 'YUNO',            2,      'Y-U-NO',                         166088,         'Y U NO'
+  advice_dog 'YUNO',            2,      'Y-U-NO',                         166088,         'Y U NO'              
   # keep generators in alphabetical order
 
   ##
