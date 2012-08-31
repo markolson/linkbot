@@ -56,9 +56,7 @@ class Jason < Linkbot::Plugin
           
           # Check if it's an imgur link without an image extension
           if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
-            # Fetch the imgur page and pull out the image
-            doc = Hpricot(open(url).read)
-            url = doc.search("img")[1]['src']
+            url += '.jpg'
           end
 
           messages << url
