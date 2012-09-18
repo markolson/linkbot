@@ -1,7 +1,7 @@
 class Cats < Linkbot::Plugin
   Linkbot::Plugin.register('cats', self,
     {
-      :message => {:regex=> /^!cats$/i, :handler=> :on_message}
+      :message => {:regex=> /^!cats$/i, :handler=> :on_message, :help => :help}
     }
   )
 
@@ -17,6 +17,6 @@ class Cats < Linkbot::Plugin
   end
 
   def self.help
-    "!cats = show a random cat gif"
+    "!cats - show a random cat gif"
   end
 end
