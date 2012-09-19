@@ -11,7 +11,7 @@ class TTS < Linkbot::Plugin
     statement = matches[0]
     if Linkbot::Config['plugins']['tts']['webhook']
       if statement.nil?
-        statement = message_history[1]['body']
+        statement = message_history(message)[1]['body']
       end
       get("#{Linkbot::Config['plugins']['tts']['webhook']}/#{URI.encode(statement)}")
     end

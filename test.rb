@@ -41,7 +41,7 @@ class TestConsole
     puts "Input:"
     msg = gets.chomp
     if !check_commands(msg)
-      message = Message.new(msg, @user_id, @user_name, @connector, @type)
+      message = Message.new(msg, @user_id, @user_name, @connector, @type, {})
       puts Linkbot::Plugin.handle_message(message)
     end
     send_body

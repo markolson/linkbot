@@ -11,17 +11,30 @@ end
 
 #The interface message object between Linkbot::Plugin and the plugins.
 #New axiom: the plugins know nothing about the service they're using!
-Message = Struct.new(:body, :user_id, :user_name, :connector, :type)
+Message = Struct.new(:body, :user_id, :user_name, :connector, :type, :options)
 
 Response = Struct.new(:message, :options)
 
 module Linkbot  
   class Plugin
     @@plugins = {}
-    @@message_log = []
+    @@message_logs = {}
+    @@message_logs[:global] = []
     
     def self.handle_message(message)
-      @@message_log << message
+      @@message_logs[:global] << message
+      
+      # Check for a room-wide message
+      if message[:options][:room]
+        @@message_logs[message[:options][:room]] ||= []
+        @@message_logs[message[:options][:room]] << message
+      end
+      
+      # Check for a user-specific message
+      if message[:options][:user]
+         @@message_logs[message[:options][:user]] ||= []
+         @@message_logs[message[:options][:user]] << message 
+      end
 
       final_message = []
 
@@ -86,8 +99,14 @@ module Linkbot
       final_messages
     end
 
-    def self.message_history
-      @@message_log
+    def self.message_history(message)
+      if message[:options][:room]
+        @@message_logs[message[:options][:room]]
+      elsif message[:options][:user]
+        @@message_logs[message[:options][:user]]
+      else
+        @@message_logs[:global]
+      end
     end
     
     def self.registered_methods

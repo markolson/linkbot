@@ -99,7 +99,7 @@ class JabberConnector < Linkbot::Connector
     end
     
     if Linkbot.user_exists?(nick)
-      message = Message.new( text, Linkbot.user_id(nick), nick, self, :message )  
+      message = Message.new( text, Linkbot.user_id(nick), nick, self, :message, options )  
       invoke_callbacks(message, options)
     end
   end
