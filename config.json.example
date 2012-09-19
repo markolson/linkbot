@@ -48,7 +48,6 @@
       "icons" : false,
       "default-zip" : "21224"
     },
-    ,
     "build" : {
       "webhook" : "http://buildserver/build"
     }
