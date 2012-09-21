@@ -110,7 +110,7 @@ module Linkbot
     end
     
     def self.create_log(log_name)
-      @@message_logs[log_name] = []
+      @@message_logs[log_name] ||= []
     end
     
     def self.log(log_name, message)
