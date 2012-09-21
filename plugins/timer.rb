@@ -9,8 +9,8 @@ class Timer < Linkbot::Plugin
   def self.on_message(message, matches)
     if @@active >= 5
       "There are currently 5 timers running. Wait your turn."
-    elsif matches[0].to_i > 300
-      "Timers cannot be longer than 5 minutes"
+    elsif matches[0].to_i > 900
+      "Timers cannot be longer than 15 minutes"
     else
       @@active = @@active + 1
       seconds = matches[0].to_i
