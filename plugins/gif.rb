@@ -6,6 +6,8 @@ class Gif < Linkbot::Plugin
   def self.help
     "!gif [search term] - get a gif from reddit based on the optional search term"
   end
+  
+  create_log(:images)
 
   def self.on_message(message, matches)
     searchterm = matches[0]
@@ -32,6 +34,8 @@ class Gif < Linkbot::Plugin
     if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
       url += ".gif"
     end
+
+    log(:images, url)
 
     url
   end

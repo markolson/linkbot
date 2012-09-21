@@ -11,6 +11,8 @@ class Image < Linkbot::Plugin
     }
   )
   
+  create_log(:images)
+  
   def self.on_message(message, matches) 
     searchterm = matches[0]
     color = nil
@@ -43,6 +45,8 @@ class Image < Linkbot::Plugin
       if ::Util.wallpaper?(url)
         url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
       end
+
+      log(:images, url)
 
       url
     else
