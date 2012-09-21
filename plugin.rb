@@ -109,6 +109,17 @@ module Linkbot
       end
     end
     
+    def self.create_log(log_name)
+      @@message_logs[log_name] = []
+    end
+    
+    def self.log(log_name, message)
+      if @@message_logs[log_name].length >= 100
+        @@message_logs[log_name].pop
+      end
+      @@message_logs[log_name].unshift(message)
+    end
+    
     def self.registered_methods
       @registered_methods ||= {}
       @registered_methods
