@@ -27,9 +27,17 @@ class Image < Linkbot::Plugin
       searchterm = parts.join(" ")
     end
 
-    doc = JSON.parse(open("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=#{URI.encode(searchterm)}&rsz=8&#{color.nil? ? '' : '&imcolor=' + color}", "Referer" => "http://lgscout.com").read)
+    begin
+      # Give google 2 seconds to respond (and for us to parse it!)
+      Timeout::timeout(2) do
+        doc = JSON.parse(open("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=#{URI.encode(searchterm)}&rsz=8&#{color.nil? ? '' : '&imcolor=' + color}", "Referer" => "http://lgscout.com").read)
+      end
+    rescue Timeout::Error
+      return "Google is slow! No images for you."
+    end
+      
 
-    if doc["responseData"]["results"].length > 0
+    if doc && doc["responseData"] && doc["responseData"]["results"].length > 0
       url = URI.decode(doc["responseData"]["results"][rand(doc["responseData"]["results"].length)]["url"])
       
       if ::Util.wallpaper?(url)
