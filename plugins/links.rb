@@ -9,6 +9,12 @@ class Links < Linkbot::Plugin
     }
   )
   
+  Linkbot::Config["plugins"]["links"] = {} if Linkbot::Config["plugins"]["links"].nil?
+  Linkbot::Config["plugins"]["links"]["whitelist"] = [] if Linkbot::Config["plugins"]["links"]["whitelist"].nil?
+  Linkbot::Config["plugins"]["links"]["whitelist"] = Linkbot::Config["plugins"]["links"]["whitelist"].map do |link|
+    uri = URI.parse(link)
+    Regexp.new("^#{uri.host}#{uri.path}")
+  end
 
   def self.on_message(message, matches)
     url = matches[0]
@@ -17,6 +23,13 @@ class Links < Linkbot::Plugin
     
     # First, make sure this is a HTTP or HTTPS scheme
     if uri.scheme.downcase == "http" || uri.scheme.downcase == "https"
+      
+      # Make sure this link has not been whitelisted
+      Linkbot::Config["plugins"]["links"]["whitelist"].each do |whitelist_regex|
+        if whitelist_regex.match("#{uri.host}#{uri.path}")
+          return ''
+        end
+      end
       messages = []
     
       rows = Linkbot.db.execute("select username, dt from links, users where links.user_id=users.user_id and url = '#{url.gsub("'", "''")}'")

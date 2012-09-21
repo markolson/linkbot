@@ -16,6 +16,12 @@
     }
   ],
   "plugins" : {
+    "links" : {
+      "whitelist" : [
+        "http://google.com",
+        "http://youtube.com"
+      ]
+    },
     "pull_requests" : {
       "base_uri" : "https://api.github.com",
       "username" : "username",
