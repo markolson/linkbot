@@ -8,25 +8,33 @@ class Links < Linkbot::Plugin
                   :handler => :on_message}
     }
   )
+  
 
   def self.on_message(message, matches)
     url = matches[0]
     url = URI.decode(url)
+    uri = URI.parse(url)
     
-    messages = []
-    rows = Linkbot.db.execute("select username, dt from links, users where links.user_id=users.user_id and url = '#{url.gsub("'", "''")}'")
-    if rows.empty?
-      Linkbot::Plugin.plugins.each {|k,v|
-        messages << v[:ptr].on_newlink(message, url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
-      }
-      # Add the link to the dupe table
-      Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{message.user_id}', '#{Time.now}', '#{url.gsub("'", "''")}')")
+    # First, make sure this is a HTTP or HTTPS scheme
+    if uri.scheme.downcase == "http" || uri.scheme.downcase == "https"
+      messages = []
+    
+      rows = Linkbot.db.execute("select username, dt from links, users where links.user_id=users.user_id and url = '#{url.gsub("'", "''")}'")
+      if rows.empty?
+        Linkbot::Plugin.plugins.each {|k,v|
+          messages << v[:ptr].on_newlink(message, url).join("\n") if(v[:ptr].respond_to?(:on_newlink)) 
+        }
+        # Add the link to the dupe table
+        Linkbot.db.execute("insert into links (user_id, dt, url) VALUES ('#{message.user_id}', '#{Time.now}', '#{url.gsub("'", "''")}')")
+      else
+        Linkbot::Plugin.plugins.each {|k,v|
+          messages << v[:ptr].on_dupe(message, url, rows[0][0], rows[0][1]) if(v[:ptr].respond_to?(:on_dupe)) 
+        }
+      end  
+      messages.join("\n")
     else
-      Linkbot::Plugin.plugins.each {|k,v|
-        messages << v[:ptr].on_dupe(message, url, rows[0][0], rows[0][1]) if(v[:ptr].respond_to?(:on_dupe)) 
-      }
-    end  
-    messages.join("\n")
+      ''
+    end
   end
 
   if Linkbot.db.table_info('users').empty?
