@@ -1,3 +1,5 @@
 config.json
 data.sqlite3
 .rvmrc
+
+Gemfile.lock

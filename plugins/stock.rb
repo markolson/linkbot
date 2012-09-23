@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class Stock < Linkbot::Plugin
 
   Linkbot::Plugin.register('stock', self, {

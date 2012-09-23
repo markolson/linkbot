@@ -19,5 +19,5 @@ gem "xmpp4r"
 gem "imagesize"
 
 group :dev do
-  gem "ruby-debug"
+  gem "ruby-debug19"
 end

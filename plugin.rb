@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'pp'
-require 'db'
+require './db'
 
 class MessageType
   MESSAGE       = :message

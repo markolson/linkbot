@@ -5,7 +5,7 @@ class Blowhard < Linkbot::Plugin
       quotes = {
         'I just blue myself.' => 'BznwsT6r_tM',
     		"I'll be your wingman. Even if it means I have to take a chubby. I will suck it up." => 'VmugfdhSzJs',
-    		"Well, yes, but I'm afraid I prematurely shot my wad on what was supposed to be a dry run, if you will, so now I’m afraid I have something of a mess on my hands." => "xRHxuB1SXvc",
+    		"Well, yes, but I'm afraid I prematurely shot my wad on what was supposed to be a dry run, if you will, so now I'm afraid I have something of a mess on my hands." => "xRHxuB1SXvc",
     		"I can already taste those meaty leading man parts." => "fiEQARKXWYo",
     		"I just can't seem to get one in the can..." => nil,
     		"I will pack your mouth with your sweet, pink mouth with so much ice cream, you'll be the envy of every Jerry and Jane on the block." => nil,
