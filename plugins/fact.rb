@@ -11,7 +11,7 @@ class Fact < Linkbot::Plugin
     elsif factnumber.to_i > 2000
       factnumber = rand(2001)
     else
-      factnumer = factnumber.to_i
+      factnumber = factnumber.to_i
     end
 
     mentalfloss = "http://mentalfloss.com/amazingfactgenerator/load-fact.php?id=#{factnumber}"
