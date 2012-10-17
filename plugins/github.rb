@@ -6,23 +6,22 @@ class Github < Linkbot::Plugin
 
   if @@config
     Linkbot::Plugin.register('github', self, {
-      :message => {:regex => /!gh (\w+) (.*)/, :handler => :on_message, :help => help}
+      :message => {:regex => /!hub (\w+)(.*)/, :handler => :on_message, :help => :help}
     })
   end
 
-  def self.hipchat_send(message)
+  def self.hipchat_send(message, from)
     return if message.empty?
 
     pp message
     message = CGI.escape(message)
-    color = @@config['hipchat_color'] || "purple"
-    from = @@config['hipchat_from'] || "Trello"
+    color = @@hipchat['color'] || "purple"
     begin
       url = "https://api.hipchat.com/v1/rooms/message?" \
-          + "auth_token=#{@@config['hipchat_api_token']}&" \
+          + "auth_token=#{@@hipchat['api_token']}&" \
           + "message=#{message}&" \
           + "color=#{color}&" \
-          + "room_id=#{@@config['hipchat_room']}&" \
+          + "room_id=#{@@hipchat['room']}&" \
           + "from=#{from}"
 
       puts "sending message to hipchat url #{url}"
@@ -34,19 +33,21 @@ class Github < Linkbot::Plugin
   end
 
   def self.on_message(message, matches)
-    command = matches[1]
-    args = matches[2..-1].split " "
+    command = matches[0]
+    args = matches[1]
     client = Octokit::Client.new(:login => @@config['username'], :password => @@config['password'])
 
     if command == "pull"
       pull_reqs = client.pull_requests("Lookingglass/scoutvision")
-      pull_reqs.each |req| do
-        self.hipchat_send "#{req.number}: <a href=\"#{req.url}\">#{req.title}</a>"
-      end
+      pull_reqs.sort! { |req| req.number.to_i }
+      msg = pull_reqs.map{ |req| "#{req.number}: <a href=\"#{req.html_url}\">#{req.title}</a>" }
+      self.hipchat_send msg.join("<br>"), "hub"
     end
+
+    return []
   end
 
   def self.help
-    "!github <command> <args> - interact with github"
+    "!hub <command> <args> - interact with github"
   end
 end
