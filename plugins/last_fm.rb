@@ -105,7 +105,7 @@ class LastFm < Linkbot::Plugin
           track = track.first
           (track['date'] ||= {})['#text'] = "now playing"
         end
-        "#{track['artist']['#text']} - #{track['name']}, from #{u}, #{track['date']['#text']}"
+        "#{u}: #{track['name']} - #{track['artist']['#text']}, #{track['date']['#text']}"
       end
 
       return recent.join("\n")
