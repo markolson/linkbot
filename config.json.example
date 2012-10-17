@@ -1,12 +1,15 @@
 {
   "connectors" : [
     {
-      "type" : "campfire",
-      "username" : "username",
-      "password" : "password",
-      "room" : "5",
-      "campfire_url" : "https://yourdomain.campfirenow.com",
-      "periodic" : "true",
+      "type" : "jabber",
+      "username" : "",
+      "fullname" : "Linkbot",
+      "password" : "",
+      "rooms" : [],
+      "resource" : "bot",
+      "server" : "chat.hipchat.com",
+      "conference" : "conf.hipchat.com",
+      "periodic" : true,
       "receive_broadcasts" : true
     },
     {
