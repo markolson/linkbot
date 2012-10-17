@@ -96,16 +96,16 @@ class LastFm < Linkbot::Plugin
 
         begin
           tracks = ActiveSupport::JSON.decode(open(url).read)
-        rescue Exception => e
-          return "Error retrieving tracks for #{u}."
-        end
 
-        track = tracks['recenttracks']['track']
-        if track.is_a? Array
-          track = track.first
-          (track['date'] ||= {})['#text'] = "now playing"
+          track = tracks['recenttracks']['track']
+          if track.is_a? Array
+            track = track.first
+            (track['date'] ||= {})['#text'] = "now playing"
+          end
+          "#{u}: #{track['name']} - #{track['artist']['#text']}, #{track['date']['#text']}"
+        rescue Exception => e
+          "#{u}: Error retrieving track data..."
         end
-        "#{u}: #{track['name']} - #{track['artist']['#text']}, #{track['date']['#text']}"
       end
 
       return recent.join("\n")
