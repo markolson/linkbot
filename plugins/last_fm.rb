@@ -50,7 +50,7 @@ class LastFm < Linkbot::Plugin
 
   def self.get_users
     users = Linkbot.db.execute("select username, last_fm_username from users where last_fm_username not null")
-    users.map {|u| "#{u[0]} - #{u[1]}"}
+    users.map {|u| "#{u[0]} - #{u[1]}"}.join("\n")
   end
 
   def self.register_user(username, user)
@@ -116,7 +116,7 @@ class LastFm < Linkbot::Plugin
     ["!fm, Get tracks currently being listened to...\n",
      "!fm <username>|<name>, Get track currently being listened to by user.\n",
      "!fm register <username>, Register/update your last.fm username with Linkbot.\n",
-     "!fm remove <username>, Unregister your last.fm username from Linkbot.\n",
+     "!fm remove, Unregister your last.fm username from Linkbot.\n",
      "!fm users, Get the list of registered Last.fm users\n",
      "!fm help, Get this message...\n"].join
   end
