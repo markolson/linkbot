@@ -6,12 +6,9 @@ class MessageLog < Linkbot::Plugin
   )
   
   def self.on_message(message, matches)
-    # Pop off a message if we've reached our max
-    if @@message_log.length >= 100
-      @@message_log.pop
-    end
-    
-    @@message_log.unshift(message)
+    log(:global, message)
+    log(message[:options][:room], message) if message[:options][:room]
+    log(message[:options][:user], message) if message[:options][:user]
     ""
   end
 end

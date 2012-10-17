@@ -5,7 +5,7 @@ require 'cgi'
 class Translate < Linkbot::Plugin
     def self.on_message(message, matches)
       res = Net::HTTP.post_form(URI.parse('http://www.cs.utexas.edu/users/jbc/bork/bork.cgi'),
-                                 {'input'=> CGI.unescapeHTML(message_history[1]['body']), 'type'=>'chef'})
+                                 {'input'=> CGI.unescapeHTML(message_history(message)[1]['body']), 'type'=>'chef'})
       CGI::unescape(res.body.to_s.gsub("&epus;","'"))
     end
     

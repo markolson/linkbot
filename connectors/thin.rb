@@ -23,7 +23,7 @@ class ThinConnector < Linkbot::Connector
             Linkbot.add_user(data['username'])
           end
 
-          message = Message.new( data["message"], Linkbot.users[data['username']], data['username'], self, :message )
+          message = Message.new( data["message"], Linkbot.users[data['username']], data['username'], self, :message, {} )
           invoke_callbacks(message)
 
           [202, {'Content-Type'=>'text/plain'}, StringIO.new("Message accepted\n")]
