@@ -32,22 +32,60 @@ class Github < Linkbot::Plugin
     end
   end
 
+  def self.get_pull_requests(client, command, args)
+    if args.empty?
+      return ["error: no repository specified. !hub pull <repo> to show pull requests for <repo>"]
+    end
+    puts "getting pull requests for repo #{args}"
+
+    pull_reqs = client.pull_requests("Lookingglass/#{args[0]}")
+    pull_reqs.sort! { |req| req.number.to_i }
+    msg = pull_reqs.map{ |req| "#{req.number}: <a href=\"#{req.html_url}\">#{req.title}</a>" }
+    self.hipchat_send msg.join("<br>"), "hub"
+    []
+  end
+
+  def self.get_repos(client, command, args)
+    repolinks = client.org_repos(@@config["organization"]).map {|x| "<a href=\"#{x.html_url}\">#{x.name}</a>" }
+    self.hipchat_send repolinks.join("<br>"), "hub"
+    []
+  end
+
+  def self.get_stale_branches(client, command, args)
+    repo = "#{@@config['organization']}/#{args[0]}"
+    stale = client.branches(repo).map do |branch|
+      abranch = client.branch("Lookingglass/scoutvision", branch.name)
+
+      #crazily, this appears to be the simplest way to get the date
+      [abranch.commit.commit.committer.date, abranch.name, abranch._links.html]
+    end
+    stale.sort!
+    msg = stale[0..5].map{ |dt, name, link| "<a href=\"#{link}\">#{name}</a> #{dt}" }
+    self.hipchat_send msg.join("<br>"), "hub"
+  end
+
   def self.on_message(message, matches)
     command = matches[0]
-    args = matches[1]
+    args = matches[1].split " "
+    puts command, args
     client = Octokit::Client.new(:login => @@config['username'], :password => @@config['password'])
 
-    if command == "pull"
-      pull_reqs = client.pull_requests("Lookingglass/scoutvision")
-      pull_reqs.sort! { |req| req.number.to_i }
-      msg = pull_reqs.map{ |req| "#{req.number}: <a href=\"#{req.html_url}\">#{req.title}</a>" }
-      self.hipchat_send msg.join("<br>"), "hub"
+    if command.start_with? "pull"
+      return self.get_pull_requests(client, command, args)
+    elsif command.start_with? "repos"
+      return self.get_repos(client, command, args)
+    elsif command.start_with? "stale"
+      return self.get_stale_branches(client, command, args)
+    elsif command.start_with? "help"
+      return [%{!hub pull <repo> - show open pull requests for repository <repo>
+!hub repos - show all Lookingglass repos
+!hub stale <repo> - show stale branches in repo}]
     end
 
-    return []
+    []
   end
 
   def self.help
-    "!hub <command> <args> - interact with github"
+    "!hub <command> <args> - interact with github. Use the help command for more."
   end
 end
