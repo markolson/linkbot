@@ -4,7 +4,7 @@ class Github < Linkbot::Plugin
   @@config  = Linkbot::Config["plugins"]["github"]
   @@hipchat = Linkbot::Config["plugins"]["hipchat"]
 
-  if @@config
+  if @@config && @@hipchat
     Linkbot::Plugin.register('github', self, {
       :message => {:regex => /!hub (\w+)(.*)/, :handler => :on_message, :help => :help}
     })
