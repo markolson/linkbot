@@ -35,13 +35,20 @@ class Github < Linkbot::Plugin
 
   def self.get_pull_requests(client, command, args)
     if args.empty?
-      return ["error: no repository specified. !hub pull <repo> to show pull requests for <repo>"]
+      repos = client.org_repos(@@config["organization"]).map{|x| x.name}
+    else
+      repos = [args[0]]
     end
-    puts "getting pull requests for repo #{args}"
 
-    pull_reqs = client.pull_requests("Lookingglass/#{args[0]}")
-    pull_reqs.sort! { |req| req.number.to_i }
-    msg = pull_reqs.map{ |req| "#{req.number}: <a href=\"#{req.html_url}\">#{req.title}</a>" }
+    msg = []
+    repos.each do |repo|
+      pull_reqs = client.pull_requests("Lookingglass/#{repo}")
+      pull_reqs.sort! { |req| req.number.to_i }
+      if pull_reqs.length > 0
+        msg += ["<b>#{repo}</b>"]
+        msg += pull_reqs.map{ |req| "#{req.number}: <a href=\"#{req.html_url}\">#{req.title}</a>" }
+      end
+    end
     self.hipchat_send msg.join("<br>"), "hub"
     []
   end
@@ -65,7 +72,7 @@ class Github < Linkbot::Plugin
     stale_branches = branches_info.select{ |x| x[0] > 90 }
     stale_branches.sort!.reverse!
 
-    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a href=\"#{link}\">#{name}</a> last commit: #{author}" }
+k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a href=\"#{link}\">#{name}</a> last commit: #{author}" }
 
     self.hipchat_send msg.join("<br>"), "hub"
   end
@@ -83,7 +90,7 @@ class Github < Linkbot::Plugin
     elsif command.start_with? "stale"
       return self.get_stale_branches(client, command, args)
     elsif command.start_with? "help"
-      return [%{!hub pull <repo> - show open pull requests for repository <repo>
+      return [%{!hub pull [<repo>] - show open pull requests for repository <repo> or all repos if omitted
 !hub repos - show all Lookingglass repos
 !hub stale <repo> - show stale branches in repo}]
     end
