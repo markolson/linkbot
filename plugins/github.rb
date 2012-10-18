@@ -1,3 +1,4 @@
+require 'date'
 require 'octokit'
 
 class Github < Linkbot::Plugin
@@ -53,14 +54,19 @@ class Github < Linkbot::Plugin
 
   def self.get_stale_branches(client, command, args)
     repo = "#{@@config['organization']}/#{args[0]}"
-    stale = client.branches(repo).map do |branch|
+    branches_info = client.branches(repo).map do |branch|
       abranch = client.branch("Lookingglass/scoutvision", branch.name)
+      most_recent = abranch.commit.commit
+      days_old = (Date.today-Date.parse(most_recent.committer.date)).to_i
 
-      #crazily, this appears to be the simplest way to get the date
-      [abranch.commit.commit.committer.date, abranch.name, abranch._links.html]
+      [days_old, abranch.name, most_recent.author.name, abranch._links.html]
     end
-    stale.sort!
-    msg = stale[0..5].map{ |dt, name, link| "<a href=\"#{link}\">#{name}</a> #{dt}" }
+
+    stale_branches = branches_info.select{ |x| x[0] > 90 }
+    stale_branches.sort!.reverse!
+
+    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a href=\"#{link}\">#{name}</a> last commit: #{author}" }
+
     self.hipchat_send msg.join("<br>"), "hub"
   end
 
