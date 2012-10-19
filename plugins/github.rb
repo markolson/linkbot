@@ -74,28 +74,36 @@ class Github < Linkbot::Plugin
 
 k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a href=\"#{link}\">#{name}</a> last commit: #{author}" }
 
-    self.hipchat_send msg.join("<br>"), "hub"
-    []
+    if msg.length > 0
+      self.hipchat_send msg.join("<br>"), "hub"
+      []
+    else
+      ["no stale branches found for repo <#{args[0]}>"]
+    end
   end
 
   def self.get_issues(client, command, args)
     if not args.length > 0
       return ["Missing query. To search for an issue, use: !hub issue <query>"]
     end
-    user = args[0]
+    query = args[0]
     repos = client.org_repos(@@config["organization"]).map{|x| x.name}
 
     msg = []
     repos.each do |repo|
-      issues = client.search_issues("#{@@config["organization"]}/#{repo}", user)
+      issues = client.search_issues("#{@@config["organization"]}/#{repo}", query)
       if issues.length > 0
         msg += ["<b>#{repo}</b>"]
         msg += issues.map{|issue| "#{issue.number}: <a href=\"#{issue.html_url}\">#{issue.title}</a>"}  
       end
     end
 
-    self.hipchat_send msg.join("<br>"), "hub"
-    []
+    if msg.length > 0
+      self.hipchat_send msg.join("<br>"), "hub"
+      []
+    else
+      ["no issues found for query <#{query}>"]
+    end
   end
 
   def self.on_message(message, matches)
