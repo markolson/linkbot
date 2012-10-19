@@ -92,7 +92,7 @@ class LastFm < Linkbot::Plugin
       return "No Last.fm users registered."
     else
       recent = usernames.uniq.map do |u|
-        url = "#{@@recent_tracks}&limit=1&user=#{u}"
+        url = "#{@@recent_tracks}&limit=1&user=#{u[0]}"
 
         begin
           tracks = ActiveSupport::JSON.decode(open(url).read)
@@ -102,9 +102,9 @@ class LastFm < Linkbot::Plugin
             track = track.first
             (track['date'] ||= {})['#text'] = "now playing"
           end
-          "#{u}: #{track['name']} - #{track['artist']['#text']}, #{track['date']['#text']}"
+          "#{u[0]}: #{track['name']} - #{track['artist']['#text']}, #{track['date']['#text']}"
         rescue Exception => e
-          "#{u}: Error retrieving track data..."
+          "#{u[0]}: Error retrieving track data..."
         end
       end
 
