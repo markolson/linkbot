@@ -75,6 +75,27 @@ class Github < Linkbot::Plugin
 k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a href=\"#{link}\">#{name}</a> last commit: #{author}" }
 
     self.hipchat_send msg.join("<br>"), "hub"
+    []
+  end
+
+  def self.get_issues(client, command, args)
+    if not args.length > 0
+      return ["Missing query. To search for an issue, use: !hub issue <query>"]
+    end
+    user = args[0]
+    repos = client.org_repos(@@config["organization"]).map{|x| x.name}
+
+    msg = []
+    repos.each do |repo|
+      issues = client.search_issues("#{@@config["organization"]}/#{repo}", user)
+      if issues.length > 0
+        msg += ["<b>#{repo}</b>"]
+        msg += issues.map{|issue| "#{issue.number}: <a href=\"#{issue.html_url}\">#{issue.title}</a>"}  
+      end
+    end
+
+    self.hipchat_send msg.join("<br>"), "hub"
+    []
   end
 
   def self.on_message(message, matches)
@@ -89,10 +110,13 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
       return self.get_repos(client, command, args)
     elsif command.start_with? "stale"
       return self.get_stale_branches(client, command, args)
+    elsif command.start_with? "issue"
+      return self.get_issues(client, command, args)
     elsif command.start_with? "help"
       return [%{!hub pull [<repo>] - show open pull requests for repository <repo> or all repos if omitted
 !hub repos - show all Lookingglass repos
-!hub stale <repo> - show stale branches in repo}]
+!hub stale <repo> - show stale branches in repo
+!hub issue <query> - search for issues}]
     end
 
     []
