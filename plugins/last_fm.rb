@@ -5,8 +5,35 @@ class LastFm < Linkbot::Plugin
 
   if @@config
     Linkbot::Plugin.register('last_fm', self, {
+      :periodic => {:handler => :periodic},
       :message => {:regex => /!fm(.*)/, :handler => :on_message, :help => :help}
     })
+  end
+
+  def self.api_send(message)
+    return if message.nil?
+
+    message = CGI.escape(message)
+    from = @@config['hipchat_from'] || "Last.fm"
+    begin
+      url = "https://api.hipchat.com/v1/rooms/message?" \
+          + "auth_token=#{@@config['hipchat_api_token']}&" \
+          + "message=#{message}&" \
+          + "room_id=#{@@config['hipchat_room']}&" \
+          + "from=#{from}"
+
+      puts "sending message to hipchat url #{url}"
+      open(url)
+    rescue => e
+      puts e.inspect
+      puts e.backtrace.join("\n")
+    end
+  end
+
+  def self.periodic
+    output = get_recent_tracks(:now_playing => true)
+    output.each {|m| api_send(m) unless m.nil?}
+    {:messages => [], :options => {}}
   end
 
   def self.on_message(message, matches)
@@ -16,7 +43,7 @@ class LastFm < Linkbot::Plugin
     unless input[0].nil?
       #Get all recent tracks
       if input[0][0].nil?
-        output = get_recent_tracks
+        output = get_recent_tracks.join("\n")
       else
         command, username = input[0][0].strip.split
 
@@ -40,7 +67,7 @@ class LastFm < Linkbot::Plugin
 
         #Get recent tracks for a user
         else
-          output = get_recent_tracks(command)
+          output = get_recent_tracks(command).join("\n")
         end
       end
     end
@@ -61,6 +88,7 @@ class LastFm < Linkbot::Plugin
     rescue SQLite3::Exception => e
       output = "Failed to register/update username for #{user}."
       puts e
+      puts e.backtrace
     end
   end
 
@@ -72,10 +100,15 @@ class LastFm < Linkbot::Plugin
     rescue SQLite3::Exception => e
       output = "Failed to unregister username for #{user}."
       puts e
+      puts e.backtrace
     end
   end
 
-  def self.get_recent_tracks(user=nil, from=nil)
+  def self.get_recent_tracks(options = {})
+    user = options[:user] || nil
+    from = options[:from] || nil
+    now  = options[:now_playing] || false
+
     usernames = []
     if user
       users_query = Linkbot.db.prepare("select last_fm_username from users where lower(username) like (?)")
@@ -94,6 +127,10 @@ class LastFm < Linkbot::Plugin
       recent = usernames.uniq.map do |u|
         url = "#{@@recent_tracks}&limit=1&user=#{u[0]}"
 
+        current = ""
+        if now
+          current = Linkbot.db.execute("select now_playing from users where last_fm_username = '#{u[0]}'")[0][0] || ":("
+        end
         begin
           tracks = ActiveSupport::JSON.decode(open(url).read)
 
@@ -102,13 +139,25 @@ class LastFm < Linkbot::Plugin
             track = track.first
             (track['date'] ||= {})['#text'] = "now playing"
           end
-          "#{u[0]}: #{track['name']} - #{track['artist']['#text']}, #{track['date']['#text']}"
+
+          # Set last/most recently played track
+          update = Linkbot.db.prepare('update users set now_playing = (?) where last_fm_username = (?)')
+          update.execute("#{track['name']} - #{track['artist']['#text']}", u[0])
+
+          out = "#{u[0]}: #{track['name']} - #{track['artist']['#text']}, #{track['date']['#text']}"
+
+          next if now and out.include?(current)
+          next if now and track['date']['#text'] != 'now playing'
+
+          out
         rescue Exception => e
           "#{u[0]}: Error retrieving track data..."
+          puts e
+          puts e.backtrace
         end
       end
 
-      return recent.join("\n")
+      return recent
     end
   end
 
