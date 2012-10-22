@@ -46,7 +46,7 @@ class Github < Linkbot::Plugin
       pull_reqs.sort! { |req| req.number.to_i }
       if pull_reqs.length > 0
         msg += ["<b>#{repo}</b>"]
-        msg += pull_reqs.map{ |req| "#{req.number}: <a href=\"#{req.html_url}\">#{req.title}</a>" }
+        msg += pull_reqs.map{ |req| "#{req.number}: <a href=\"#{req.html_url}\">#{req.title}</a> by #{req.user.login}" }
       end
     end
     self.hipchat_send msg.join("<br>"), "hub"
