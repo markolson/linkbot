@@ -8,15 +8,16 @@ class Stock < Linkbot::Plugin
 
   def self.on_message(message, matches)
     ticker = matches[0]
-    doc = Hpricot(open("http://finance.yahoo.com/q?s=#{ticker}&ql=1"))
-    price = (doc/".time_rtq_ticker").text
-    name =  (doc/".title h2").text
+    doc = Hpricot(open("http://www.google.com/ig/api?stock=#{ticker}"))
+    price = (doc/"last").first.attributes["data"]
+    name =  (doc/"company").first.attributes["data"]
 
-    movement = (doc/".time_rtq_content")
-    wentdown = !!movement.first.attributes["class"].match(/down/)
-    upordown = wentdown ? '↓' : '↑'
-    diff     = movement.text.strip.sub /\(/, " ("
-    movetext = "#{upordown} #{diff}"
+    return [] if name.empty?
+
+    movement = (doc/"change").first.attributes["data"].to_f
+    pct = (doc/"perc_change").first.attributes["data"].to_f
+    upordown = movement < 0 ? '↓' : '↑'
+    movetext = "#{upordown} #{movement.abs} #{pct}%"
 
     msg = "#{name} #{price} #{movetext}"
 
