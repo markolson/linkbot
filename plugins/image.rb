@@ -17,7 +17,7 @@ class Image < Linkbot::Plugin
     searchterm = matches[0]
     color = nil
     if searchterm.nil?
-      searchterm = message_history(message)[1]['body']
+      searchterm = message_history(message)[0]['body']
       if searchterm == "!image"
         doc = Hpricot(open("http://www.randomword.net").read)
         searchterm = doc.search("#word h2").text.strip
