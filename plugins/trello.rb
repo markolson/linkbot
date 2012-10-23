@@ -14,7 +14,6 @@ class Trello < Linkbot::Plugin
   def self.api_send(message)
     return if message.empty?
 
-    pp message
     message = CGI.escape(message)
     color = @@config['hipchat_color'] || "purple"
     from = @@config['hipchat_from'] || "Trello"
@@ -26,7 +25,6 @@ class Trello < Linkbot::Plugin
           + "room_id=#{@@config['hipchat_room']}&" \
           + "from=#{from}"
 
-      puts "sending message to hipchat url #{url}"
       open(url)
     rescue => e
       puts e.inspect
@@ -89,7 +87,6 @@ class Trello < Linkbot::Plugin
           "key=#{@@config['key']}&" \
           "token=#{@@config['token']}"
 
-    puts "requesting boards #{url}"
     begin
       boards = ActiveSupport::JSON.decode(open(url).read)
     rescue SocketError => e
@@ -106,7 +103,6 @@ class Trello < Linkbot::Plugin
             "limit=10&" \
             "since=#{since_time}"
 
-      puts "requesting #{url}"
       begin
         items = ActiveSupport::JSON.decode(open(url).read)
       rescue SocketError => e
@@ -116,7 +112,6 @@ class Trello < Linkbot::Plugin
 
       items.reverse.each do |item|
         item_time = Time.parse(item["date"])
-        puts item_time
 
         message = self.process_item(item)
         self.api_send(message) if !message.empty?
