@@ -77,3 +77,11 @@ module Util
     ago
   end
 end
+
+class IO
+  alias_method :orig_puts, :puts
+  def puts(*terms)
+    terms[0] = Time.now.strftime("[%Y-%m-%d %H:%M:%S] ") + terms[0]
+    orig_puts(*terms)
+  end
+end
