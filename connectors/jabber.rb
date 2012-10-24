@@ -62,7 +62,7 @@ class JabberConnector < Linkbot::Connector
         if m.type.to_s == "chat" && m.body
           user_id = m.from.node
           if !Linkbot.user_exists?(user_id)
-            puts "Encountered new user from an incoming message"
+            puts "Encountered new user #{user_id} from an incoming message"
             update_users
           end
           nick = Linkbot.username(user_id)
@@ -99,7 +99,7 @@ class JabberConnector < Linkbot::Connector
     # Attempt to get the user from the roster
     
     if !Linkbot.user_exists?(nick)
-      puts "Encountered new user while processing message"
+      puts "Encountered new user #{nick} while processing message"
       update_users
     end
     

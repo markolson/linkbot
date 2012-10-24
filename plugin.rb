@@ -74,7 +74,7 @@ module Linkbot
       Linkbot::Plugin.plugins.each {|k,v|
         if v[:handlers][:periodic] && v[:handlers][:periodic][:handler]
 
-          p "#{k} processing periodic message"
+          puts "#{k} processing periodic message"
           begin
             #messages should be a hash {:messages => [<message:string>],
             #                           :options => {"room": <room:string>}
