@@ -37,13 +37,15 @@ class JabberConnector < Linkbot::Connector
     
   end
   
+  def connect(conn)
+    conn.connect
+    conn.auth(@password)
+  end
 
   def listen
-    puts "Attempting to login..."
     @connection = ::Jabber::Client.new(Jabber::JID.new("#{@username}@#{@server}/#{@resource}"))
-    @connection.connect
-    puts "Authenticating..."
-    @connection.auth(@password)
+    connect(@connection)
+    @connection.on_exception { sleep 2; connect(@connection) }
     
     @roster = Jabber::Roster::Helper.new(@connection)
     @roster.wait_for_roster
