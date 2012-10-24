@@ -46,7 +46,7 @@ class JabberConnector < Linkbot::Connector
 
   def listen
     connect
-    @connection.on_exception { sleep 5; connect }
+    @connection.on_exception { sleep 5; puts "Reconnecting..."; connect }
     
     @roster = Jabber::Roster::Helper.new(@connection)
     @roster.wait_for_roster
@@ -99,7 +99,7 @@ class JabberConnector < Linkbot::Connector
     # Attempt to get the user from the roster
     
     if !Linkbot.user_exists?(nick)
-      puts "Encountered new user #{nick} while processing message"
+      puts "Encountered new user '#{nick}' while processing message '#{text}'"
       update_users
     end
     
