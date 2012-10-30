@@ -84,14 +84,16 @@ class JabberConnector < Linkbot::Connector
       muc = ::Jabber::MUC::SimpleMUCClient.new(@connection)
   
       muc.add_message_callback do |m|
-        begin
-          room = m.from.node
-          nick = m.from.resource
-          if nick != @options["fullname"]
-            process_message(Time.now,nick,m.body,{:room => room})
+        if m.type.to_s == "groupchat" && m.body
+          begin
+            room = m.from.node
+            nick = m.from.resource
+            if nick != @options["fullname"]
+              process_message(Time.now,nick,m.body,{:room => room})
+            end
+          rescue
+            puts $!.message
           end
-        rescue
-          puts $!.message
         end
       end
       
