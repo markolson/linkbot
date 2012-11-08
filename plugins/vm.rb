@@ -58,7 +58,7 @@ class Vm < Linkbot::Plugin
       Net::HTTP.get_response(uri)
     when "destroy"
       return "The virtual machine name must be supplied. Destruction cancelled." if args[1].nil?
-      return "Request to destroy virtual machine '#{args[0]}' - to confirm, please enter !vm confirm #{args[0]}"
+      return "Request to destroy virtual machine '#{args[0]}' - to confirm, please enter !vm confirm #{args[1]}"
     when "confirm"
       return "The virtual machine name must be supplied. Destruction cancelled." if args[1].nil?
       old_message = @@message_logs[:vm][1]
