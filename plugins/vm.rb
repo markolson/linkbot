@@ -10,12 +10,15 @@ class Vm < Linkbot::Plugin
     }
   )
   
+  create_log(:vm)
+  
   def self.on_message(message, matches) 
     if Linkbot::Config["plugins"]["vm"].nil? || Linkbot::Config["plugins"]["vm"]["webhook"].nil?
       return "The vm plugin must be configured for use"
     end
 
     full_command = matches[0]
+    log(:vm, full_command)
     args = full_command.split(" ").map{|e| e.strip}
     
     options = {
@@ -43,7 +46,7 @@ class Vm < Linkbot::Plugin
         options[:cpu] = v
       end
     end
-    o.parse(args)
+    o.parse!(args)
     
     message = ''
     
@@ -54,20 +57,31 @@ class Vm < Linkbot::Plugin
       uri = URI.parse(url)
       Net::HTTP.get_response(uri)
     when "destroy"
-      return "The virtual machine name must be supplied" if args[1].nil?
-      uri = URI.parse("#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/delete/#{args[1]}")
-      Net::HTTP.get_response(uri)
+      return "The virtual machine name must be supplied. Destruction cancelled." if args[1].nil?
+      return "Request to destroy virtual machine '#{args[0]}' - to confirm, please enter !vm confirm #{args[0]}"
+    when "confirm"
+      return "The virtual machine name must be supplied. Destruction cancelled." if args[1].nil?
+      old_message = @@message_logs[:vm][1]
+      old_args = old_message.split(" ").map{|e| e.strip}
+      o.parse!(old_args)
+      if old_args[0] != "destroy"
+        return "The previous command was not a destroy command."
+      elsif old_args[1] != args[1]
+        return "The VM names do not match. Destruction cancelled."
+      else
+        uri = URI.parse("#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/delete/#{args[1]}")
+        Net::HTTP.get_response(uri)
+      end
     when "list"
       url = "#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/list"
       uri = URI.parse("#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/list")
-      puts url
-      resp = Net::HTTP.get_response(uri)
-      puts resp
+      Net::HTTP.get_response(uri)
     when "help"
       m = []
       m << "The available commands are:"
       m << "  !vm create <vm name> [options] - Create a new virtual machine"
-      m << "  !vm destroy <vm name> - Destroy an existing virtual machine"
+      m << "  !vm destroy <vm name> - Destroy an existing virtual machine (requires confirmation, see below)"
+      m << "  !vm confirm <vm name> - Confirms the destruction of a virtual machine"
       m << "  !vm list - List currently managed virtual machines"
       m << "  !vm help - This message"
       m << "Available options for the 'create' command are:"
