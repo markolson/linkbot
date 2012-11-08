@@ -64,17 +64,18 @@ class Vm < Linkbot::Plugin
       resp = Net::HTTP.get_response(uri)
       puts resp
     when "help"
-      message = []
-      message << "The available commands are:"
-      message << "  !vm create <vm name> [options] - Create a new virtual machine"
-      message << "  !vm destroy <vm name> - Destroy an existing virtual machine"
-      message << "  !vm list - List currently managed virtual machines"
-      message << "  !vm help - This message"
-      message << "Available options for the 'create' command are:"
+      m = []
+      m << "The available commands are:"
+      m << "  !vm create <vm name> [options] - Create a new virtual machine"
+      m << "  !vm destroy <vm name> - Destroy an existing virtual machine"
+      m << "  !vm list - List currently managed virtual machines"
+      m << "  !vm help - This message"
+      m << "Available options for the 'create' command are:"
       
       help_options = o.help.split("\n")
       help_options.shift
-      message = message + help_options
+      m = m + help_options
+      message = [m.join("\n")]
     end
     
     message
