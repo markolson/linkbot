@@ -34,7 +34,7 @@ class Vm < Linkbot::Plugin
         options[:env] = v
       end
       opts.on("-m", "--memory N", Integer, "Size of VM memory (in GB). Default is 4.") do |v|
-        options[:memory] = v * 1024
+        options[:memory] = v
       end
       opts.on("-D", "--disk N", Integer, "Size of VM disk (in GB). Default is 100.") do |v|
         options[:disk] = v
