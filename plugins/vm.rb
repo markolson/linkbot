@@ -55,7 +55,7 @@ class Vm < Linkbot::Plugin
       Net::HTTP.get_response(uri)
     when "destroy"
       return "The virtual machine name must be supplied" if args[1].nil?
-      uri = URI.parse("#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/destroy/#{args[1]}")
+      uri = URI.parse("#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/delete/#{args[1]}")
       Net::HTTP.get_response(uri)
     when "list"
       url = "#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/list"
