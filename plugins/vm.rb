@@ -74,7 +74,29 @@ class Vm < Linkbot::Plugin
       end
     when "list"
       url = "#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/list"
-      uri = URI.parse("#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm-manage/list")
+      uri = URI.parse(url)
+      Net::HTTP.get_response(uri)
+    when "snapshot"
+      return "The virtual machine name must be supplied." if args[1].nil?
+      url = "#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm/manage/snapshot/#{args[1]}/create"
+      uri = URI.parse(url)
+      Net::HTTP.get_response(uri)
+    when "snapshot-list"
+      return "The virtual machine name must be supplied." if args[1].nil?
+      url = "#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm/manage/snapshot/#{args[1]}/list"
+      uri = URI.parse(url)
+      Net::HTTP.get_response(uri)
+    when "snapshot-destroy"
+      return "The virtual machine name must be supplied." if args[1].nil?
+      return "The snapshot name must be supplied." if args[2].nil?
+      url = "#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm/manage/snapshot/#{args[1]}/delete/#{args[2]}"
+      uri = URI.parse(url)
+      Net::HTTP.get_response(uri)
+    when "snapshot-load"
+      return "The virtual machine name must be supplied." if args[1].nil?
+      return "The snapshot name must be supplied." if args[2].nil?
+      url = "#{Linkbot::Config["plugins"]["vm"]["webhook"]}/vm/manage/snapshot/#{args[1]}/revert/#{args[2]}"
+      uri = URI.parse(url)
       Net::HTTP.get_response(uri)
     when "help"
       m = []
@@ -83,6 +105,10 @@ class Vm < Linkbot::Plugin
       m << "  !vm destroy <vm name> - Destroy an existing virtual machine (requires confirmation, see below)"
       m << "  !vm confirm <vm name> - Confirms the destruction of a virtual machine"
       m << "  !vm list - List currently managed virtual machines"
+      m << "  !vm snapshot <vm name> - Create a new snapshot of a virtual machine"
+      m << "  !vm snapshot-list <vm name> - List all snapshots for a virtual machine"
+      m << "  !vm snapshot-destroy <vm name> <snapshot> - Destroy a snapshot for a virtual machine"
+      m << "  !vm snapshot-load <vm name> <snapshot> - Load a snapshot for a virtual machine"
       m << "  !vm help - This message"
       m << "Available options for the 'create' command are:"
       
