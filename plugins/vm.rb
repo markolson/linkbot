@@ -22,7 +22,7 @@ class Vm < Linkbot::Plugin
     args = full_command.split(" ").map{|e| e.strip}
     
     options = {
-      :memory => 4096,
+      :memory => 4,
       :disk => 100,
       :cpu => 1,
       :runlist => nil,
