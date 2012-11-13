@@ -20,6 +20,11 @@ require './connector'
 
 Linkbot::Config.load
 
+### I DO NOT LIKE THIS
+# But REXML is having some serious problems whenever a UTF-8 encoded string is received from hipchat.
+# Sigh.
+Encoding.default_external = "ASCII-8BIT"
+
 module Linkbot
   class Bot
     attr_accessor :connectors
