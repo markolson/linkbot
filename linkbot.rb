@@ -20,37 +20,8 @@ require './connector'
 
 Linkbot::Config.load
 
-### I DO NOT LIKE THIS
-# But REXML is having some serious problems whenever a UTF-8 encoded string is received from hipchat.
-# Sigh.
-unless RUBY_VERSION < "1.9"
-    # Encoding patch
-    require 'socket'
-    class TCPSocket
-        def external_encoding
-            Encoding::BINARY
-        end
-    end
-
-    require 'rexml/source'
-    class REXML::IOSource
-        alias_method :encoding_assign, :encoding=
-        def encoding=(value)
-            encoding_assign(value) if value
-        end
-    end
-
-    begin
-        # OpenSSL is optional and can be missing
-        require 'openssl'
-        class OpenSSL::SSL::SSLSocket
-            def external_encoding
-                Encoding::BINARY
-            end
-        end
-    rescue
-    end
-end
+# I'm just stabbing at this point
+Encoding.default_internal = Encoding.default_external = "UTF-8"
 
 module Linkbot
   class Bot
