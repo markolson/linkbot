@@ -26,7 +26,7 @@ class Vm < Linkbot::Plugin
       :disk => 100,
       :cpu => 1,
       :runlist => nil,
-      :env => "branch-vm"
+      :env => "dev"
     }
     o = OptionParser.new do |opts|
       opts.banner = "Usage: vm-manage [options]"
