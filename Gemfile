@@ -15,7 +15,7 @@ gem "eventmachine"
 gem "rack"
 gem "thin"
 gem "sinatra"
-gem "xmpp4r"
+gem "xmpp4r", :git => "git://github.com/hoxworth/xmpp4r.git"
 gem "imagesize"
 gem "octokit"
 
