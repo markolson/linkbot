@@ -1,7 +1,7 @@
 class Flip < Linkbot::Plugin
   Linkbot::Plugin.register('flip', self,
     {
-      :message => {:regex => Regexp.new('!flip(?: (\d+)|([\d\w\s,]+))?'), :handler => :on_message, :help => :help},
+      :message => {:regex => Regexp.new('!flip(?: (\d+)|([\d\w\s,\-\']+))?'), :handler => :on_message, :help => :help},
       :"direct-message" => {:regex => Regexp.new('!flip(?: (\d+)|([\w\s,]+))?'), :handler => :on_message, :help => :help}
     }
   )
