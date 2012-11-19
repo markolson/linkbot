@@ -89,7 +89,7 @@ class Trello < Linkbot::Plugin
 
     begin
       boards = ActiveSupport::JSON.decode(open(url).read)
-    rescue SocketError => e
+    rescue
       puts "could not retrieve #{url}"
       return {:messages => [], :options => {}}
     end
@@ -105,7 +105,7 @@ class Trello < Linkbot::Plugin
 
       begin
         items = ActiveSupport::JSON.decode(open(url).read)
-      rescue SocketError => e
+      rescue
         puts "could not retrieve #{url}"
         return {:messages => [], :options => {}}
       end

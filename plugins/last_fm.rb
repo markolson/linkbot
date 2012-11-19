@@ -150,10 +150,10 @@ class LastFm < Linkbot::Plugin
           next if now and track['date']['#text'] != 'now playing'
 
           out
-        rescue Exception => e
+        rescue
           "#{u[0]}: Error retrieving track data..."
-          puts e
-          puts e.backtrace
+          puts $!
+          puts $!.backtrace
         end
       end
 

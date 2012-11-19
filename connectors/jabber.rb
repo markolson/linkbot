@@ -37,13 +37,21 @@ class JabberConnector < Linkbot::Connector
     
   end
   
-
-  def listen
-    puts "Attempting to login..."
+  def reconnect
+    puts "Connecting and authenticating..."
     @connection = ::Jabber::Client.new(Jabber::JID.new("#{@username}@#{@server}/#{@resource}"))
     @connection.connect
-    puts "Authenticating..."
     @connection.auth(@password)
+  end
+
+  def listen
+    reconnect
+    @connection.on_exception do |exception,stream,sym|
+      sleep 5
+      puts "Connection failed: #{exception} at #{sym}"
+      puts "Reconnecting..."
+      reconnect 
+    end
     
     @roster = Jabber::Roster::Helper.new(@connection)
     @roster.wait_for_roster
@@ -59,6 +67,7 @@ class JabberConnector < Linkbot::Connector
         if m.type.to_s == "chat" && m.body
           user_id = m.from.node
           if !Linkbot.user_exists?(user_id)
+            puts "Encountered new user #{user_id} from an incoming message"
             update_users
           end
           nick = Linkbot.username(user_id)
@@ -75,14 +84,16 @@ class JabberConnector < Linkbot::Connector
       muc = ::Jabber::MUC::SimpleMUCClient.new(@connection)
   
       muc.add_message_callback do |m|
-        begin
-          room = m.from.node
-          nick = m.from.resource
-          if nick != @options["fullname"]
-            process_message(Time.now,nick,m.body,{:room => room})
+        if m.type.to_s == "groupchat" && m.body
+          begin
+            room = m.from.node
+            nick = m.from.resource
+            if nick != @options["fullname"]
+              process_message(Time.now,nick,m.body,{:room => room})
+            end
+          rescue
+            puts $!.message
           end
-        rescue
-          puts $!.message
         end
       end
       
@@ -95,6 +106,7 @@ class JabberConnector < Linkbot::Connector
     # Attempt to get the user from the roster
     
     if !Linkbot.user_exists?(nick)
+      puts "Encountered new user '#{nick}' while processing message '#{text}'"
       update_users
     end
     

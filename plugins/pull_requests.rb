@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'json'
 require 'pp'
-require 'config.rb'
 
 class PullRequests < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["pull_requests"]

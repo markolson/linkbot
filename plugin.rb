@@ -44,7 +44,7 @@ module Linkbot
           if ((v[:handlers][message.type][:regex] && v[:handlers][message.type][:regex].match(message.body)) || v[:handlers][message.type][:regex].nil?)
             
             matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
-            p "#{k} processing message type #{message.type}"
+            puts "#{k} processing message type #{message.type}"
             begin
               end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
 
@@ -74,7 +74,7 @@ module Linkbot
       Linkbot::Plugin.plugins.each {|k,v|
         if v[:handlers][:periodic] && v[:handlers][:periodic][:handler]
 
-          p "#{k} processing periodic message"
+          puts "#{k} processing periodic message"
           begin
             #messages should be a hash {:messages => [<message:string>],
             #                           :options => {"room": <room:string>}
@@ -93,7 +93,7 @@ module Linkbot
       }
 
       if final_messages.length
-        print "returning msgs from periodic plugins:"
+        puts "returning msgs from periodic plugins:"
         pp final_messages
       end
       final_messages

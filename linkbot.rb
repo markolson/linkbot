@@ -20,6 +20,9 @@ require './connector'
 
 Linkbot::Config.load
 
+# I'm just stabbing at this point
+Encoding.default_internal = Encoding.default_external = "UTF-8"
+
 module Linkbot
   class Bot
     attr_accessor :connectors
