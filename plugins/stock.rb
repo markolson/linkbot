@@ -21,11 +21,7 @@ class Stock < Linkbot::Plugin
 
     msg = "#{name} #{price} #{movetext}"
 
-    if !msg.strip.empty?
-      [msg]
-    else
-      []
-    end
+    [msg]
   end
 
   def self.help
