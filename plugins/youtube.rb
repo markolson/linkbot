@@ -5,12 +5,19 @@ require 'cgi'
 class Youtube < Linkbot::Plugin
   Linkbot::Plugin.register('youtube', self,
     {
-      :message => {:regex => Regexp.new('!youtube(?: (.+))'), :handler => :on_message, :help => :help},
+      :message => {:regex => Regexp.new('!youtube(?: (.+))?'), :handler => :on_message, :help => :help},
     }
   )
 
   def self.on_message(message, matches)
-    searchterm = CGI.escape(matches[0])
+    searchterm = matches[0]
+
+    if searchterm.nil?
+      searchterm = message_history(message)[1]['body']
+    end
+
+    searchterm = CGI.escape(searchterm)
+
     url = "https://gdata.youtube.com/feeds/api/videos?q=#{searchterm}&orderBy=relevance&alt=json"
     doc = ActiveSupport::JSON.decode(open(url).read)
     first = doc["feed"]["entry"][0]
