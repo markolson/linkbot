@@ -4,16 +4,16 @@ require 'uri'
 require 'cgi'
 
 class Image < Linkbot::Plugin
-  
+
   Linkbot::Plugin.register('image', self,
     {
       :message => {:regex => /!image(?: (.+))?/, :handler => :on_message, :help => :help}
     }
   )
-  
+
   create_log(:images)
-  
-  def self.on_message(message, matches) 
+
+  def self.on_message(message, matches)
     searchterm = matches[0]
     color = nil
     if searchterm.nil?
@@ -37,11 +37,11 @@ class Image < Linkbot::Plugin
     rescue Timeout::Error
       return "Google is slow! No images for you."
     end
-      
+
 
     if doc && doc["responseData"] && doc["responseData"]["results"].length > 0
       url = URI.decode(doc["responseData"]["results"][rand(doc["responseData"]["results"].length)]["url"])
-      
+
       if ::Util.wallpaper?(url)
         url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
       end
@@ -53,7 +53,7 @@ class Image < Linkbot::Plugin
       "No pictures found! Nuts!"
     end
   end
-  
+
   def self.help
     "!image [searchity search] - Return a relevant picture"
   end
