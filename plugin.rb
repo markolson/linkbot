@@ -15,34 +15,34 @@ Message = Struct.new(:body, :user_id, :user_name, :connector, :type, :options)
 
 Response = Struct.new(:message, :options)
 
-module Linkbot  
+module Linkbot
   class Plugin
     @@plugins = {}
     @@message_logs = {}
     @@message_logs[:global] = []
-    
+
     def self.handle_message(message)
       @@message_logs[:global] << message
-      
+
       # Check for a room-wide message
       if message[:options][:room]
         @@message_logs[message[:options][:room]] ||= []
         @@message_logs[message[:options][:room]] << message
       end
-      
+
       # Check for a user-specific message
       if message[:options][:user]
          @@message_logs[message[:options][:user]] ||= []
-         @@message_logs[message[:options][:user]] << message 
+         @@message_logs[message[:options][:user]] << message
       end
 
       final_message = []
 
       Linkbot::Plugin.plugins.each {|k,v|
         if v[:handlers][message.type] && v[:handlers][message.type][:handler]
-          
+
           if ((v[:handlers][message.type][:regex] && v[:handlers][message.type][:regex].match(message.body)) || v[:handlers][message.type][:regex].nil?)
-            
+
             matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
             puts "#{k} processing message type #{message.type}"
             begin
@@ -61,13 +61,13 @@ module Linkbot
               puts e.backtrace.join("\n")
             end
           end
-        end  
+        end
       }
       puts "returning msgs from plugins:"
       pp final_message
       final_message
     end
-    
+
     def self.handle_periodic
       final_messages = []
 
@@ -108,27 +108,27 @@ module Linkbot
         @@message_logs[:global]
       end
     end
-    
+
     def self.create_log(log_name)
       @@message_logs[log_name] ||= []
     end
-    
+
     def self.log(log_name, message)
       if @@message_logs[log_name].length >= 100
         @@message_logs[log_name].pop
       end
       @@message_logs[log_name].unshift(message)
     end
-    
+
     def self.registered_methods
       @registered_methods ||= {}
       @registered_methods
     end
-    
+
     def self.plugins; @@plugins; end;
 
     def self.collect
-      Dir["plugins/*.rb"].each do |file| 
+      Dir["plugins/*.rb"].each do |file|
         begin
           load file
         rescue Exception => e
@@ -137,10 +137,10 @@ module Linkbot
         end
       end
     end
-  
+
     def self.register(name, s, handlers)
       @@plugins[name] = {:ptr => s, :handlers => handlers}
     end
   end
-  
+
 end
