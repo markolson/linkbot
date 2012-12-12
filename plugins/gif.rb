@@ -6,7 +6,7 @@ class Gif < Linkbot::Plugin
   def self.help
     "!gif [search term] - get a gif from reddit based on the optional search term"
   end
-  
+
   create_log(:images)
 
   def self.on_message(message, matches)
