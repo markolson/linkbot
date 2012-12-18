@@ -89,7 +89,7 @@ class JabberConnector < Linkbot::Connector
             room = m.from.node
             nick = m.from.resource
             if nick != @options["fullname"]
-              process_message(Time.now,nick,m.body,{:user => m.from, :roster => @roster})
+              process_message(Time.now,nick,m.body,{:room => room, :roster => @roster})
             end
           rescue
             puts $!.message
