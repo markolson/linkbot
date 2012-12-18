@@ -97,6 +97,32 @@ class Groups < Linkbot::Plugin
     ["Removed user #{user} from group #{group}"]
   end
 
+  def self.notify(groups)
+    group_ids = []
+    response = []
+
+    groups.each do |group|
+      begin
+        group_ids << find_group(group)
+      rescue GroupNotFoundException => e
+        response << "Could not find group #{group}"
+      end
+    end
+
+    return response if group_ids.empty?
+
+    puts group_ids
+    users = Linkbot.db.execute("SELECT username FROM users, groups_users WHERE users.user_id=groups_users.user_id AND group_id IN (?)", group_ids)
+
+    if users.empty?
+      []
+    else
+      response << [users.map {|u| "@#{u[0]}"}.join(" ")]
+    end
+
+    response.flatten
+  end
+
   def self.on_message(message, matches)
     command = matches[0]
     args = matches[1].split(",").map {|x| x.strip }
@@ -114,13 +140,16 @@ class Groups < Linkbot::Plugin
       return self.list_groups
     elsif command == "listusers"
       return self.list_users(args)
+    elsif command == "notify"
+      return self.notify(args)
     elsif command.start_with? "help"
       return [%{!group list - show all groups
 !group add <groupname> - add a group
 !group rem <groupname> - remove a group
 !group adduser <username>, <groupname> - add a user
 !group remuser <username>, <groupname> - remove a user from a group
-!group listusers [<group>] - list all users, optionally only the users in one group}]
+!group listusers [<group>] - list all users, optionally only the users in one group
+!group notify <groupname>[,<groupname]}]
     end
 
     [self.help]
