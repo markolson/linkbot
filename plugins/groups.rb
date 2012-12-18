@@ -18,8 +18,7 @@ class Groups < Linkbot::Plugin
   end
 
   def self.addgroup(args)
-    rows = Linkbot.db.execute("SELECT ifnull(max(group_id), 0) FROM groups")
-    id = rows[0][0]
+    id = Linkbot.db.execute("SELECT ifnull(max(group_id), 0)+1 FROM groups")[0][0]
     Linkbot.db.execute("INSERT INTO groups (group_id, groupname) VALUES (?, ?)", id, args[0])
     ["added group #{args[0]}"]
   end
