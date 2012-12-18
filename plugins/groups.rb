@@ -9,7 +9,7 @@ end
 
 class Groups < Linkbot::Plugin
   Linkbot::Plugin.register('group', self, {
-    :message => {:regex => /!group (\w+)(.*)/, :handler => :on_message, :help => :help}
+    :message => {:regex => /!group (\w+)(.*)|#([\w_\-]+)/, :handler => :on_message, :help => :help}
   })
 
   def self.list_groups()
@@ -137,8 +137,11 @@ class Groups < Linkbot::Plugin
 
   def self.on_message(message, matches)
     command = matches[0]
-    args = matches[1].split(",").map {|x| x.strip }
-    puts message[:options][:roster].items
+    args = matches[1]
+    if args
+      args = args.split(",").map {|x| x.strip }
+    end
+    group_mention = matches[2]
 
     if command == "add"
       return self.addgroup(args)
@@ -154,6 +157,8 @@ class Groups < Linkbot::Plugin
       return self.list_users(args)
     elsif command == "notify"
       return self.notify(args, message[:options][:roster].items)
+    elsif group_mention
+      return self.notify([group_mention], message[:options][:roster].items)
     elsif command.start_with? "help"
       return [%{!group list - show all groups
 !group add <groupname> - add a group
@@ -161,7 +166,7 @@ class Groups < Linkbot::Plugin
 !group adduser <username>, <groupname> - add a user
 !group remuser <username>, <groupname> - remove a user from a group
 !group listusers [<group>] - list all users, optionally only the users in one group
-!group notify <groupname>[,<groupname]}]
+!group notify <groupname>[,<groupname] - mention all users in a group. Alternate syntax: #<groupname>}]
     end
 
     [self.help]
