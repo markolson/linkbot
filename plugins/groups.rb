@@ -75,8 +75,26 @@ class Groups < Linkbot::Plugin
       users = Linkbot.db.execute("SELECT username FROM users, groups_users WHERE users.user_id=groups_users.user_id AND groups_users.group_id=?", group_id)
     end
 
-    [users.join("\n")]
+    if users.empty?
+      []
+    else
+      [users.join("\n")]
+    end
+  end
 
+  def self.remuser(args)
+    user = args[0]
+    group = args[1]
+
+    begin
+      user_id = find_user(user)
+      group_id = find_group(group)
+    rescue UserNotFoundException, GroupNotFoundException => e
+      return [e.message]
+    end
+
+    Linkbot.db.execute("DELETE FROM groups_users WHERE user_id=? AND group_id=?", user_id, group_id)
+    ["Removed user #{user} from group #{group}"]
   end
 
   def self.on_message(message, matches)
