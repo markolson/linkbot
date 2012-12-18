@@ -9,7 +9,7 @@ end
 
 class Groups < Linkbot::Plugin
   Linkbot::Plugin.register('group', self, {
-    :message => {:regex => /!group (\w+)(.*)|#([\w_\-]+)/, :handler => :on_message, :help => :help}
+    :message => {:regex => /!group (\w+)(.*)|\B#([\w_\-]+)/, :handler => :on_message, :help => :help}
   })
 
   def self.list_groups()
@@ -97,22 +97,14 @@ class Groups < Linkbot::Plugin
     ["Removed user #{user} from group #{group}"]
   end
 
-  def self.notify(groups, roster)
-    group_ids = []
-    response = []
-
-    groups.each do |group|
-      begin
-        group_ids << find_group(group)
-      rescue GroupNotFoundException => e
-        response << "Could not find group #{group}"
-      end
+  def self.notify(group, message, roster)
+    begin
+      group_id = find_group(group)
+    rescue GroupNotFoundException => e
+      return [e.message]
     end
 
-    return response if group_ids.empty?
-
-    puts group_ids
-    users = Linkbot.db.execute("SELECT users.user_id FROM users, groups_users WHERE users.user_id=groups_users.user_id AND group_id IN (?)", group_ids)
+    users = Linkbot.db.execute("SELECT users.user_id FROM users, groups_users WHERE users.user_id=groups_users.user_id AND group_id = ?", group_id)
     mentions = []
     users.each do |user|
       user = user[0]
@@ -128,10 +120,8 @@ class Groups < Linkbot::Plugin
     if users.empty?
       []
     else
-      response << [mentions.join(" ")]
+      ["#{message} #{mentions.join(' ')}"]
     end
-
-    response.flatten
   end
 
   def self.on_message(message, matches)
@@ -154,10 +144,8 @@ class Groups < Linkbot::Plugin
       return self.list_groups
     elsif command == "listusers"
       return self.list_users(args)
-    elsif command == "notify"
-      return self.notify(args, message[:options][:roster].items)
     elsif group_mention
-      return self.notify([group_mention], message[:options][:roster].items)
+      return self.notify(group_mention, message.body, message[:options][:roster].items)
     elsif command.start_with? "help"
       return [%{!group list - show all groups
 !group add <groupname> - add a group
@@ -165,7 +153,7 @@ class Groups < Linkbot::Plugin
 !group adduser <username>, <groupname> - add a user
 !group remuser <username>, <groupname> - remove a user from a group
 !group listusers [<group>] - list all users, optionally only the users in one group
-!group notify <groupname>[,<groupname] - mention all users in a group. Alternate syntax: #<groupname>}]
+#<groupname> - mention all users in a group}]
     end
 
     [self.help]
