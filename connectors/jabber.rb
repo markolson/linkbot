@@ -72,7 +72,7 @@ class JabberConnector < Linkbot::Connector
           end
           nick = Linkbot.username(user_id)
           if nick != @options["fullname"]
-            process_message(Time.now,nick,m.body,{:user => m.from})
+            process_message(Time.now,nick,m.body,{:user => m.from, :roster => @roster})
           end
         end
       rescue
