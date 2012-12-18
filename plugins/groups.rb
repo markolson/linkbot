@@ -97,7 +97,7 @@ class Groups < Linkbot::Plugin
     ["Removed user #{user} from group #{group}"]
   end
 
-  def self.notify(groups)
+  def self.notify(groups, roster)
     group_ids = []
     response = []
 
@@ -112,12 +112,24 @@ class Groups < Linkbot::Plugin
     return response if group_ids.empty?
 
     puts group_ids
-    users = Linkbot.db.execute("SELECT username FROM users, groups_users WHERE users.user_id=groups_users.user_id AND group_id IN (?)", group_ids)
+    users = Linkbot.db.execute("SELECT users.user_id FROM users, groups_users WHERE users.user_id=groups_users.user_id AND group_id IN (?)", group_ids)
+    mentions = []
+    users.each do |user|
+      user = user[0]
+      puts "searching user #{user}"
+      mention = roster.find {|id,r| r.jid.to_s.split('@')[0] == user}
+      mention = mention[1].attributes["mention_name"]
+      if mention
+        puts "found user #{mention}"
+        mentions << "@#{mention}"
+      end
+    end
+
 
     if users.empty?
       []
     else
-      response << [users.map {|u| "@#{u[0]}"}.join(" ")]
+      response << [mentions.join(" ")]
     end
 
     response.flatten
@@ -126,7 +138,7 @@ class Groups < Linkbot::Plugin
   def self.on_message(message, matches)
     command = matches[0]
     args = matches[1].split(",").map {|x| x.strip }
-    puts command, args
+    puts message[:options][:roster].items
 
     if command == "add"
       return self.addgroup(args)
@@ -141,7 +153,7 @@ class Groups < Linkbot::Plugin
     elsif command == "listusers"
       return self.list_users(args)
     elsif command == "notify"
-      return self.notify(args)
+      return self.notify(args, message[:options][:roster].items)
     elsif command.start_with? "help"
       return [%{!group list - show all groups
 !group add <groupname> - add a group
