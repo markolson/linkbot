@@ -125,7 +125,6 @@ class Groups < Linkbot::Plugin
       end
     end
 
-
     if users.empty?
       []
     else
