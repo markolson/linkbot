@@ -42,11 +42,17 @@ class Wiki < Linkbot::Plugin
   def self.on_message(message, matches)
     searchterm = CGI.escape(matches[0])
     searchresult = JSON.parse(open("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=#{searchterm}&format=json").read)
+
     page = CGI.escape(searchresult["query"]["search"][0]["title"])
     doc = JSON.parse(open("http://en.wikipedia.org/w/api.php?format=json&action=parse&page=#{page}").read)
+
     text = doc["parse"]["text"]["*"]
-    room = message[:options][:room] || "link_bot_test_3"
+
+    #killing all tables removes some spurious paragraphs
+    text = text.gsub /<table.*?<\/table>/m, ''
     firstp = text[text.index('<p>')..text.index("</p>")]
+
+    room = message[:options][:room] || "16485_link_bot_test_3"
     api_send(room.split('_', 2)[1], firstp)
     []
   end
