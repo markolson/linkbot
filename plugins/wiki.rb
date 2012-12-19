@@ -31,7 +31,7 @@ class Wiki < Linkbot::Plugin
           + "from=#{from}&" \
           + "message=#{message}"
 
-          puts "opening #{url}"
+          puts "sending hipchat messaage to #{url}"
       open(url)
     rescue => e
       puts e.inspect
@@ -43,15 +43,10 @@ class Wiki < Linkbot::Plugin
     searchterm = CGI.escape(matches[0])
     searchresult = JSON.parse(open("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=#{searchterm}&format=json").read)
     page = CGI.escape(searchresult["query"]["search"][0]["title"])
-    #searchresult = JSON.parse(open("https://en.wikipedia.org/w/api.php?action=opensearch&search=#{searchterm}&format=json").read)
-    #page = searchresult[1][0]
-    puts "opening wiki page #{page}"
     doc = JSON.parse(open("http://en.wikipedia.org/w/api.php?format=json&action=parse&page=#{page}").read)
     text = doc["parse"]["text"]["*"]
     room = message[:options][:room] || "link_bot_test_3"
-    p text
     firstp = text[text.index('<p>')..text.index("</p>")]
-    p room, firstp
     api_send(room.split('_', 2)[1], firstp)
     []
   end
