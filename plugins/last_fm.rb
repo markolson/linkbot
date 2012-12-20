@@ -1,9 +1,10 @@
 class LastFm < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["last_fm"]
-  @@fm_regex = Regexp.new(/^!fm([ ](help$|users$|.+$|register[ ].+|remove[ ].+))?$/)
-  @@recent_tracks = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&api_key=#{@@config['key']}&format=json"
 
   if @@config
+    @@fm_regex = Regexp.new(/^!fm([ ](help$|users$|.+$|register[ ].+|remove[ ].+))?$/)
+    @@recent_tracks = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&api_key=#{@@config['key']}&format=json"
+
     Linkbot::Plugin.register('last_fm', self, {
       :periodic => {:handler => :periodic},
       :message => {:regex => /!fm(.*)/, :handler => :on_message, :help => :help}
