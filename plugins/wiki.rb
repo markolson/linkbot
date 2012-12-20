@@ -67,16 +67,25 @@ class Wiki < Linkbot::Plugin
     end
 
     page = CGI.escape(pages[0]["title"])
-    doc = JSON.parse(open("http://en.wikipedia.org/w/api.php?format=json&action=parse&page=#{page}").read)
 
-    text = doc["parse"]["text"]["*"]
+    doc = JSON.parse(open("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro&titles=#{page}&format=json").read)
 
-    #killing all tables removes some spurious paragraphs
-    text = text.gsub /<table.*?<\/table>/m, ''
-    firstp = text[text.index('<p>')..text.index("</p>")]
+    pages = doc["query"]["pages"]
+    text = pages[pages.keys[0]]["extract"]
+
+    maxlen = 750
+    if text.length > maxlen
+      grafs = text.split("<p>")
+      #the first p will be the first two joined by <p>
+      firstp = [grafs.shift(), grafs.shift()].join("<p>")
+      #now take as many ps as we can fit inside 750
+      l = firstp.length
+      more = grafs.take_while {|g| l += g.length; l < maxlen}.join("<p>")
+      text = firstp+more
+    end
 
     room = message[:options][:room] || "16485_link_bot_test_3"
-    api_send(room, firstp)
+    api_send(room, text)
     []
   end
 end
