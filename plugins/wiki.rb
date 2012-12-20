@@ -2,6 +2,7 @@ require 'rubygems'
 require 'json'
 require 'open-uri'
 require 'cgi'
+require 'hpricot'
 
 class Wiki < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["hipchat"]
@@ -67,18 +68,18 @@ class Wiki < Linkbot::Plugin
 
     page = CGI.escape(pages[0]["title"])
     doc = JSON.parse(open("http://en.wikipedia.org/w/api.php?format=json&action=parse&page=#{page}").read)
-    text = doc["parse"]["text"]["*"]
+    doc = Hpricot(doc["parse"]["text"]["*"])
 
-    #killing all tables removes some spurious paragraphs
-    text = text.gsub /<table.*?<\/table>/m, ''
+    #killing all tables removes much of the text we don't want
+    (doc/"table").remove
 
     #only grab text in paragraphs
-    grafs = text.scan(/<p>(.*?)<\/p>/).flatten
+    grafs = (doc/"p")
 
     #reject coordinate grafs, like Hawaii. Place further rules to eliminate spurious first paragraphs below this.
-    grafs.reject! {|g| g.index("Geographic_coordinate_system") }
+    grafs.reject! {|g| g.to_s.index("Geographic_coordinate_system") }
 
-    text = grafs[0]
+    text = grafs[0].to_s
 
     #make the links valid
     text.gsub! /href="(.[^\/])/, 'href="http://en.wikipedia.org\1'
