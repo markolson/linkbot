@@ -21,6 +21,9 @@ class Calc < Linkbot::Plugin
     answer.gsub! /<sup>/, '^'
     answer.gsub! /<\/sup>/, ''
 
+    #we're not allowed HTML entities, so replace &#215; with x
+    answer.gsub! /&#215;/, "\u00d7"
+
     [answer]
   end
 end
