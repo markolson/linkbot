@@ -62,6 +62,10 @@ class Wiki < Linkbot::Plugin
     #try to reject disambiguation pages
     pages.reject! {|p| p["snippet"].index("may refer to") != nil}
 
+    if pages.empty?
+      return ["Unable to find wiki page for #{matches[0]}"]
+    end
+
     page = CGI.escape(pages[0]["title"])
     doc = JSON.parse(open("http://en.wikipedia.org/w/api.php?format=json&action=parse&page=#{page}").read)
 
