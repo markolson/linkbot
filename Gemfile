@@ -21,4 +21,5 @@ gem "octokit"
 
 group :dev do
   gem "ruby-debug19"
+  gem "pry"
 end
