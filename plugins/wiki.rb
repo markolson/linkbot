@@ -17,17 +17,32 @@ class Wiki < Linkbot::Plugin
   def self.api_send(room, message)
     return if message.empty?
 
+    token = @@config['api_token']
+
+    begin
+      url = "https://api.hipchat.com/v1/rooms/list?auth_token=#{token}"
+      data = open(url).read
+      puts data
+      rooms = JSON.parse(data)["rooms"]
+    rescue => e
+      puts rooms
+      puts e.inspect
+      puts e.backtrace.join("\n")
+    end
+
+    room_id = rooms.find {|r| r["xmpp_jid"].start_with? room}["room_id"]
+    puts "found room #{room_id} for room #{room}"
+
     message = CGI.escape(message)
     color = "gray"
     from = "wiki"
-    token = @@config['api_token']
     raise "no api token" if !token
     begin
       url = "https://api.hipchat.com/v1/rooms/message?" \
           + "auth_token=#{token}&" \
           + "message_format=html&" \
           + "color=#{color}&" \
-          + "room_id=#{room}&" \
+          + "room_id=#{room_id}&" \
           + "from=#{from}&" \
           + "message=#{message}"
 
@@ -53,7 +68,7 @@ class Wiki < Linkbot::Plugin
     firstp = text[text.index('<p>')..text.index("</p>")]
 
     room = message[:options][:room] || "16485_link_bot_test_3"
-    api_send(room.split('_', 2)[1], firstp)
+    api_send(room, firstp)
     []
   end
 end
