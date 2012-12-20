@@ -88,6 +88,6 @@ class Wiki < Linkbot::Plugin
 
     room = message[:options][:room] || "16485_link_bot_test_3"
     api_send(room, text)
-    []
+    ["http://en.wikipedia.org/wiki/#{page}"]
   end
 end
