@@ -22,7 +22,6 @@ class Wiki < Linkbot::Plugin
     begin
       url = "https://api.hipchat.com/v1/rooms/list?auth_token=#{token}"
       data = open(url).read
-      puts data
       rooms = JSON.parse(data)["rooms"]
     rescue => e
       puts rooms
@@ -58,7 +57,12 @@ class Wiki < Linkbot::Plugin
     searchterm = CGI.escape(matches[0])
     searchresult = JSON.parse(open("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=#{searchterm}&format=json").read)
 
-    page = CGI.escape(searchresult["query"]["search"][0]["title"])
+    pages = searchresult["query"]["search"]
+
+    #try to reject disambiguation pages
+    pages.reject! {|p| p["snippet"].index("may refer to") != nil}
+
+    page = CGI.escape(pages[0]["title"])
     doc = JSON.parse(open("http://en.wikipedia.org/w/api.php?format=json&action=parse&page=#{page}").read)
 
     text = doc["parse"]["text"]["*"]
