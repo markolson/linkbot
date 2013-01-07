@@ -9,6 +9,10 @@ class Youtube < Linkbot::Plugin
     }
   )
 
+  def self.help
+    "!youtube [query] - return the first youtube result for [query]"
+  end
+
   def self.on_message(message, matches)
     searchterm = matches[0]
 
