@@ -15,6 +15,10 @@ class Wiki < Linkbot::Plugin
     )
   end
 
+  def self.help
+    "!wiki [topic] - Return the first P of the wiki page on [topic]"
+  end
+
   def self.api_send(room, message)
     return if message.empty?
 
