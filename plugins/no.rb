@@ -63,6 +63,8 @@ class No < Linkbot::Plugin
         http://media.tumblr.com/tumblr_m32gxvuToI1ro2d43.gif
         http://media.tumblr.com/tumblr_mamomlzSQI1qbt1zf.gif
         http://media.tumblr.com/tumblr_lzc9otJ6KB1qgqauu.gif
+        http://i.imgur.com/TX4ZJ.gif
+        http://media.tumblr.com/tumblr_lm8m7jqb7s1qza6y2.gif
       ).sample
   end
 
