@@ -6,7 +6,7 @@ class Build < Linkbot::Plugin
   
   Linkbot::Plugin.register('build', self,
     {
-      :message => {:regex => /!build (.+) (.+)/, :handler => :on_message, :help => :help}
+      :message => {:regex => /\A!build (.+) (.+)/, :handler => :on_message, :help => :help}
     }
   )
   
