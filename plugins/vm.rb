@@ -3,16 +3,16 @@ require 'uri'
 require 'optparse'
 
 class Vm < Linkbot::Plugin
-  
+
   Linkbot::Plugin.register('vm', self,
     {
       :message => {:regex => /!vm (.+)/, :handler => :on_message, :help => :help}
     }
   )
-  
+
   create_log(:vm)
-  
-  def self.on_message(message, matches) 
+
+  def self.on_message(message, matches)
     if Linkbot::Config["plugins"]["vm"].nil? || Linkbot::Config["plugins"]["vm"]["webhook"].nil?
       return "The vm plugin must be configured for use"
     end
@@ -20,7 +20,7 @@ class Vm < Linkbot::Plugin
     full_command = matches[0]
     log(:vm, full_command)
     args = full_command.split(" ").map{|e| e.strip}
-    
+
     options = {
       :memory => 4,
       :disk => 100,
@@ -47,9 +47,9 @@ class Vm < Linkbot::Plugin
       end
     end
     o.parse!(args)
-    
+
     message = ''
-    
+
     case args[0]
     when "create"
       return "The virtual machine name must be supplied" if args[1].nil?
@@ -58,7 +58,7 @@ class Vm < Linkbot::Plugin
       Net::HTTP.get_response(uri)
     when "destroy"
       return "The virtual machine name must be supplied. Destruction cancelled." if args[1].nil?
-      return "Request to destroy virtual machine '#{args[0]}' - to confirm, please enter !vm confirm #{args[1]}"
+      return "Request to destroy virtual machine '#{args[1]}' - to confirm, please enter !vm confirm #{args[1]}"
     when "confirm"
       return "The virtual machine name must be supplied. Destruction cancelled." if args[1].nil?
       old_message = @@message_logs[:vm][1]
@@ -111,16 +111,16 @@ class Vm < Linkbot::Plugin
       m << "  !vm snapshot-load <vm name> <snapshot> - Load a snapshot for a virtual machine"
       m << "  !vm help - This message"
       m << "Available options for the 'create' command are:"
-      
+
       help_options = o.help.split("\n")
       help_options.shift
       m = m + help_options
       message = [m.join("\n")]
     end
-    
+
     message
   end
-  
+
   def self.help
     "!vm [options] - Manage virtual environment. '!vm help' for help."
   end
