@@ -13,31 +13,17 @@ class Hubstat < Linkbot::Plugin
   end
 
   def self.on_message(message, matches)
-    response = open('https://status.github.com/api/last-message.json').read
-    last_message = JSON.parse(response)
-    status = GithubStatus.new( last_message['status'],
-                               last_message['body'],
-                               last_message['created_on'] )
-    hipchat_send( status.color, status.message )
-  end
+    response = JSON.parse(open('https://status.github.com/api/last-message.json').read)
 
-  GithubStatus = Struct.new(:status, :body, :created_on) do
-    def color
-      case self.status
-      when 'good'
-        'green'
-      when 'minor'
-        'yellow'
-      when 'major'
-        'red'
-      else
-        'gray'
-      end
-    end
+    colors = {
+      "good" => "green",
+      "minor" => "yellow",
+      "major" => "red"
+    }
+    color = colors.fetch(response['status'], "gray")
 
-    def message
-      "As of #{self.created_on}, GitHub is <a href='https://status.github.com/'>reporting</a>: #{self.body}"
-    end
+    message = "As of #{response["created_on"]}, GitHub is <a href='https://status.github.com/'>reporting</a>: #{response["body"]}"
+    hipchat_send(color, message)
   end
 
   def self.hipchat_send(color, message)
