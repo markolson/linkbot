@@ -1,10 +1,10 @@
 require 'json'
 require 'open-uri'
 
-class GithubStatus < Linkbot::Plugin
+class Hubstat < Linkbot::Plugin
   @@hipchat = Linkbot::Config["plugins"]["hipchat"]
 
-  Linkbot::Plugin.register('github_status', self, {
+  Linkbot::Plugin.register('hubstat', self, {
    :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help }
   })
 
@@ -15,43 +15,32 @@ class GithubStatus < Linkbot::Plugin
   def self.on_message(message, matches)
     response = open('https://status.github.com/api/last-message.json').read
     last_message = JSON.parse(response)
-    GithubStatus.new(last_message).notify
+    status = GithubStatus.new( last_message['status'],
+                               last_message['body'],
+                               last_message['created_on'] )
+    hipchat_send( status.color, status.message )
   end
 
-  attr_reader :api_response
+  GithubStatus = Struct.new(:status, :body, :created_on) do
+    def color
+      case self.status
+      when 'good'
+        'green'
+      when 'minor'
+        'yellow'
+      when 'major'
+        'red'
+      else
+        'gray'
+      end
+    end
 
-  def initialize(api_response)
-    @api_response = api_response
-  end
-
-  def notify
-    hipchat_send("As of #{timestamp}, GitHub is <a href='https://status.github.com/'>reporting</a>: #{notice}")
-  end
-
-  private
-
-  def timestamp
-    api_response['created_on']
-  end
-
-  def notice
-    api_response['body']
-  end
-
-  def color
-    case api_response['status']
-    when 'good'
-      'green'
-    when 'minor'
-      'yellow'
-    when 'major'
-      'red'
-    else
-      'gray'
+    def message
+      "As of #{self.created_on}, GitHub is <a href='https://status.github.com/'>reporting</a>: #{self.body}"
     end
   end
 
-  def hipchat_send(message)
+  def self.hipchat_send(color, message)
     message = CGI.escape(message)
 
     url = "https://api.hipchat.com/v1/rooms/message?" \
