@@ -6,7 +6,7 @@ class Vm < Linkbot::Plugin
 
   Linkbot::Plugin.register('vm', self,
     {
-      :message => {:regex => /!vm (.+)/, :handler => :on_message, :help => :help}
+      :message => {:regex => /\A!vm (.+)/, :handler => :on_message, :help => :help}
     }
   )
 
