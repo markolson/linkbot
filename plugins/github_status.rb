@@ -2,11 +2,14 @@ require 'json'
 require 'open-uri'
 
 class Hubstat < Linkbot::Plugin
+  @@config = Linkbot::Config["plugins"]["hubstat"]
   @@hipchat = Linkbot::Config["plugins"]["hipchat"]
 
-  Linkbot::Plugin.register('hubstat', self, {
-   :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help }
-  })
+  if @@config
+    Linkbot::Plugin.register('hubstat', self, {
+     :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help }
+    })
+  end
 
   def self.help
     '!hubstat - see whether your trouble with GitHub is just you'
@@ -28,12 +31,13 @@ class Hubstat < Linkbot::Plugin
 
   def self.hipchat_send(color, message)
     message = CGI.escape(message)
+    room = @@config['room'] || @@hipchat['room']
 
     url = "https://api.hipchat.com/v1/rooms/message?" \
         + "auth_token=#{@@hipchat['api_token']}&" \
         + "message=#{message}&" \
         + "color=#{color}&" \
-        + "room_id=#{@@hipchat['room']}&" \
+        + "room_id=#{room}&" \
         + "from=GitHub+Status"
 
     puts "sending message to hipchat url #{url}"

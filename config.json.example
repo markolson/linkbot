@@ -32,6 +32,9 @@
       "owner" : "Lookingglass",
       "project" : "scoutvision"
     },
+    "hubstat" : {
+      "room" : ""
+    },
     "boo" : {
       "webhook" : "http://playasoundorsomething.com/boo"
     },
