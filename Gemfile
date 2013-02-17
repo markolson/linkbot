@@ -18,6 +18,7 @@ gem "sinatra"
 gem "xmpp4r", :git => "git://github.com/hoxworth/xmpp4r.git"
 gem "imagesize"
 gem "octokit"
+gem "tzinfo"
 
 group :dev do
   gem "ruby-debug19"
