@@ -65,6 +65,7 @@ class No < Linkbot::Plugin
         http://media.tumblr.com/tumblr_lzc9otJ6KB1qgqauu.gif
         http://i.imgur.com/TX4ZJ.gif
         http://media.tumblr.com/tumblr_lm8m7jqb7s1qza6y2.gif
+        http://i.imgur.com/e0J9dxJ.gif
       ).sample
   end
 
