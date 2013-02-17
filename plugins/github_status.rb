@@ -5,7 +5,7 @@ class Hubstat < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["hubstat"]
   @@hipchat = Linkbot::Config["plugins"]["hipchat"]
 
-  if @@config
+  if @@config && @@hipchat
     Linkbot::Plugin.register('hubstat', self, {
      :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help }
     })
