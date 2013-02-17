@@ -1,5 +1,0 @@
-bundle install
-
-Run: ruby linkbot.rb
-
-KA-CHOW!
