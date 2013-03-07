@@ -12,11 +12,14 @@ class Gif < Linkbot::Plugin
   def self.on_message(message, matches)
     searchterm = matches[0]
 
+    subs = ["gifs", "hifw", "wheredidthesodago"]
+
     if searchterm.nil?
-      reddit = "http://reddit.com/r/gifs.json"
+      reddit = "http://reddit.com/r/#{subs.sample}.json"
     else
       searchterm = URI.encode(searchterm)
-      reddit = "http://www.reddit.com/r/gifs+hifw/search.json?q=#{searchterm}&restrict_sr=on"
+      subreddits = subs.join("+")
+      reddit = "http://www.reddit.com/r/#{subreddits}/search.json?q=#{searchterm}&restrict_sr=on"
     end
 
     doc = ActiveSupport::JSON.decode(open(reddit).read)
