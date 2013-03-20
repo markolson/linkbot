@@ -11,36 +11,31 @@ class Gif < Linkbot::Plugin
 
   def self.on_message(message, matches)
     searchterm = matches[0]
-
-    subs = ["gifs", "hifw", "wheredidthesodago"]
-
     if searchterm.nil?
-      reddit = "http://reddit.com/r/#{subs.sample}.json"
-    else
-      searchterm = URI.encode(searchterm)
-      subreddits = subs.join("+")
-      reddit = "http://www.reddit.com/r/#{subreddits}/search.json?q=#{searchterm}&restrict_sr=on"
+      searchterm = message_history(message)[0]['body']
+      if searchterm == "!image"
+        doc = Hpricot(open("http://www.randomword.net").read)
+        searchterm = doc.search("#word h2").text.strip
+      end
     end
 
-    doc = ActiveSupport::JSON.decode(open(reddit).read)
+    gifs = []
 
-    #reject anything with nsfw in the title
-    doc = doc["data"]["children"].reject {|x| x["data"]["title"] =~ /nsfw/i || x["data"]["over_18"]}
+    begin
+      # Give google 2 seconds to respond (and for us to parse it!)
+      Timeout::timeout(2) do
+        searchurl = "https://www.google.com/search?hl=en&safe=off&biw=517&bih=1073&site=imghp&tbs=itp%3Aanimated&tbm=isch&sa=1&q=#{searchterm}&oq=bananas&gs_l=img.3..0l10.1894734.1895319.0.1896030.7.6.0.1.1.1.109.435.5j1.6.0...0.0...1c.1.7.img.4-MDM6JAaIY"
 
-    if doc.empty?
-      url = "Oh poop! No gifs found..."
-    else
-      url = doc[rand(doc.length)]["data"]["url"]
+        gifs = open(searchurl).read.scan /imgurl=(http:\/\/.*?)&/
+
+      end
+    rescue Timeout::Error
+      return "Google is slow! No images for you."
     end
 
-    # Check if it's an imgur link without an image extension
-    if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
-      url += ".gif"
-    end
+    return "No gifs found. Lame." if gifs.empty?
 
-    log(:images, url)
-
-    url
+    gifs.sample
   end
 
   Linkbot::Plugin.register('gif', self, {
