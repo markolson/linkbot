@@ -17,11 +17,10 @@ class Soda < Linkbot::Plugin
     #reject anything with nsfw in the title
     doc = doc["data"]["children"].reject {|x| x["data"]["title"] =~ /nsfw/i || x["data"]["over_18"]}
 
-    if doc.empty?
-      url = "XXX FIAL XXX"
-    else
-      url = doc[rand(doc.length)]["data"]["url"]
-    end
+    return "XXX FIAL XXX" if doc.empty?
+
+    url = doc[rand(doc.length)]["data"]["url"]
+    title = doc[rand(doc.length)]["data"]["title"]
 
     # Check if it's an imgur link without an image extension
     if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
@@ -30,7 +29,7 @@ class Soda < Linkbot::Plugin
 
     log(:images, url)
 
-    url
+    [title, url]
   end
 
   Linkbot::Plugin.register('soda', self, {
