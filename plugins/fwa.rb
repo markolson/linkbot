@@ -34,6 +34,6 @@ class Fwa < Linkbot::Plugin
   end
 
   Linkbot::Plugin.register('fwa', self, {
-    :message => {:regex => /!fwa/i, :handler => :on_message, :help => :help}
+    :message => {:regex => /!anarchy/i, :handler => :on_message, :help => :help}
   })
 end
