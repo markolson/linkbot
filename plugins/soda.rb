@@ -19,8 +19,9 @@ class Soda < Linkbot::Plugin
 
     return "XXX FIAL XXX" if doc.empty?
 
-    url = doc[rand(doc.length)]["data"]["url"]
-    title = doc[rand(doc.length)]["data"]["title"]
+    randdoc = rand(doc.length)
+    url = doc[randdoc]["data"]["url"]
+    title = doc[randdoc]["data"]["title"]
 
     # Check if it's an imgur link without an image extension
     if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
