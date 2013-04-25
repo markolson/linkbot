@@ -23,7 +23,7 @@ class Swanson < Linkbot::Plugin
 "http://i.imgur.com/PKBztP8.jpg",
 "http://www.pajiba.com/image/ron-dancing-animated.gif",
 "http://28.media.tumblr.com/tumblr_lgl0ieJ0Z01qzkiy8o1_400.jpg",
-"http://www.randomblog.org/wp-content/uploads/2011/02/Ron-Swanson-Pyramid-e1297006038780.jpg",
+"http://i.imgur.com/8DH5j.jpg",
 "I have been developing the Swanson Pyramid of Greatness for years. It's a perfectly calibrated recipe for maximum personal achievement. Categories include: Capitalism, God's way of determining who is smart, and who is poor. Crying, acceptable at funerals and the Grand Canyon. Rage. Poise. Property rights. Fish, for sport only, not for meat. Fish meat is practically a vegetable.",
 "The less I know about other people's affairs, the happier I am. I'm not interested in caring about people. I once worked with a guy for three years and never learned his name. Best friend I ever had. We still never talk sometimes.",
 "Now, I know I'm not going to find somebody that's both aggressively mean and apathetic. April really is the whole package.",
