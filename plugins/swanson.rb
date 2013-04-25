@@ -3,6 +3,9 @@
 class Swanson < Linkbot::Plugin
     def self.on_message(message, matches)
       quotes = [
+"http://24.media.tumblr.com/20a84e7698fd777896aadbce42e571aa/tumblr_ml46srJ1Iv1rdh9azo1_400.gif",
+"http://24.media.tumblr.com/a49de3bc8b55a7ea0e935df28248060e/tumblr_ml46srJ1Iv1rdh9azo2_400.gif",
+"http://i.imgur.com/dqgmsLh.gif",
 "http://i.imgur.com/yNSz3os.jpg",
 "http://i.imgur.com/BlNkVw9.jpg",
 "http://i.imgur.com/mOw7acG.jpg",
