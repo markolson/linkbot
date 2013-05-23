@@ -1,45 +1,58 @@
-class Yes < Linkbot::Plugin
+class Yes #< Linkbot::Plugin
 
   def self.on_message(message, matches)
     case
-    when message.body.scan(/n+o+/i).count > 1
-      self.lots_of_nos
-    when message.body.match(/n+o+!/i)
-      self.emphatic_no
-    when message.body.match(/noo+/i)
-      self.emphatic_no
+    when message.user_name == "Jason Lewis" && message.body =~ /yes|yeah|yup|sure|/i
+      "http://www.cleancutmedia.com/wp-content/uploads/2012/02/Cinemagraphs-Freaky.gif"
+    when message.body =~ /h+e+l+l+(?:z|s)*\s*y+e*ah*/i
+      self.hell_yeah
+    when message.body =~ /si/i
+      self.si
+    when message.body =~ /m+h+m+/i
+      self.mhm
+    when message.body =~ /f+u+c+k+\s*y+e+a+h/
+      self.fuck_yeah
+    when message.body =~ /y+e+a+h+/i
+      self.yyeeaahh
+    when message.body =~ /sure/i
+      self.sure
+    when message.body =~ /Y+E+S+|!+/
+      self.excited_yes
     else
-      self.simple_no
+      self.simple_yes
     end
   end
 
-  Linkbot::Plugin.register('yes', self, {
-    :message => {:regex => /^(?:y+e+s+|(?:h+e+ll+z*\w*)y+e*ah*|y+(?:u|e)+p+|y+a+|si|ja|fuck\syeah|m+h+m+|(?:for\s)?sure)!*$/i, :handler => :on_message}
-  })
+  #Linkbot::Plugin.register('yes', self, {
+  #  :message => {:regex => /(?:o+k+|y+e+s+|(?:(?:h+e+ll+(?:z*|s*)|f+u+c+k+)\s*)y+e*ah*|y+(?:u|e)+p+|y+a+|si|m+h+m+|(?:for\s)?sure)!*(?:\s+|\z)/i, :handler => :on_message}
+  #})
 
   private
 
-  def self.lots_of_yes
-    %w( http://i.imgur.com/Rd8xu.gif
-        http://i.imgur.com/XWAvo.gif
-        http://i.imgur.com/816uC.gif
-        http://media.tumblr.com/tumblr_lvpj1lEg5N1qegw8v.gif
-        http://media.tumblr.com/tumblr_m42alaqSHG1rom4w3.gif
-        http://media.tumblr.com/tumblr_m4ybpoVu2L1qhk160.gif
-        http://media.tumblr.com/tumblr_m9t9sot19G1r1qmov.gif
-      ).sample
-  end
-
-  def self.emphatic_yes
-    ["http://media.giphy.com/media/g4eOulPFxnIEE/200.gif",
-      "http://fc01.deviantart.net/fs70/f/2010/289/c/d/heck_yes_by_authorgreg-d30ucev.jpg",
-      "http://24.media.tumblr.com/tumblr_m6wkqu269Z1qihztbo1_500.gif",
+  def self.excited_yes
+    ["http://media.giphy.com/media/g4eOulPFxnIEE/200.gif", #fist pump
+      "http://fc01.deviantart.net/fs70/f/2010/289/c/d/heck_yes_by_authorgreg-d30ucev.jpg", #heck yes
+      "http://24.media.tumblr.com/tumblr_m6wkqu269Z1qihztbo1_500.gif", #oh yeah doctor who
+      "http://media.giphy.com/media/10DfNV79muK3TO/200.gif", #sex and the city
+      "http://media.giphy.com/media/bbot1PqAOPY4g/200.gif", #ari entourage
+      "http://media.giphy.com/media/13fEclc7N0bshG/200.gif"
     ].sample
   end
 
+  def self.yyeeaahh
+    ["http://media.giphy.com/media/WrI5QcK7EtWog/200.gif", #rihanna
+      "http://i42.photobucket.com/albums/e327/sniper7mm/lil_jon_yeah11.jpg", #Lil Jon
+      "http://25.media.tumblr.com/73db98f98e39e0e69cd4311e81978fa5/tumblr_mexq983s7J1rhq9rvo1_500.gif"
+      ].sample
+  end
+
   def self.simple_yes
-    ["http://media.giphy.com/media/14joII5lDkkVUc/200.gif",
-      "http://media.giphy.com/media/127JeHZl15PRII/200.gif"
+    ["http://media.giphy.com/media/14joII5lDkkVUc/200.gif", #amy poehler
+      "http://media.giphy.com/media/127JeHZl15PRII/200.gif", #obviously
+      "http://media.giphy.com/media/mlbdL8jYb2WOs/original.gif", #zack saved by the bell
+      "http://www.reactiongifs.com/wp-content/gallery/yes/edward_scissorhands_yes.gif", #edward scissorhands
+      "http://www.reactiongifs.com/wp-content/gallery/yes/stanley2.gif", #stanley the office
+      "http://lh5.ggpht.com/_DVoNvgQORbw/TAi8_i66KyI/AAAAAAAAAds/53EJtFCbUGA/yes.gif" #star trek
     ].sample
   end
 
@@ -53,14 +66,13 @@ class Yes < Linkbot::Plugin
   end
 
   def self.mhm
-    ["http://cdn.memegenerator.net/instances/400x/30955267.jpg"
-
-      ].sample
+    "http://img.pandawhale.com/49063-beyonce-meme--mhm-I-know-thats-RHnp.gif" #beyonce
   end
 
   def hell_yeah
     ["http://www.frankottcountry.com/files/QuickSiteImages/Hell_Yeah_Transparent_9586.gif", #hell yeah in flames
       "http://www.scopecapemay.com/shop/252-526-large/can-i-get-a-hell-yeah-box-sign.jpg", #can i get a hell yeah
+      "http://www.wwe24seven.com/images/105/stone-cold-steve-austin-wallpapers1.thumbnail.jpg" #stone cold
     ].sample
   end
 
@@ -69,4 +81,17 @@ class Yes < Linkbot::Plugin
   end
 
 end
+
+Message = Struct.new(:body, :user_name)
+m = Message.new("yes", "Jason Lewis")
+puts Yes.on_message(m, "")
+m = Message.new("YESSSSS", "")
+puts Yes.on_message(m, "")
+m = Message.new("yes", "")
+puts Yes.on_message(m, "")
+m = Message.new("si", "")
+puts Yes.on_message(m, "")
+m = Message.new("fuck yeah!", "")
+puts Yes.on_message(m, "")
+
 
