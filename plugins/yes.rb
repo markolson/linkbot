@@ -82,16 +82,4 @@ class Yes #< Linkbot::Plugin
 
 end
 
-Message = Struct.new(:body, :user_name)
-m = Message.new("yes", "Jason Lewis")
-puts Yes.on_message(m, "")
-m = Message.new("YESSSSS", "")
-puts Yes.on_message(m, "")
-m = Message.new("yes", "")
-puts Yes.on_message(m, "")
-m = Message.new("si", "")
-puts Yes.on_message(m, "")
-m = Message.new("fuck yeah!", "")
-puts Yes.on_message(m, "")
-
 
