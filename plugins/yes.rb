@@ -1,4 +1,4 @@
-class Yes #< Linkbot::Plugin
+class Yes < Linkbot::Plugin
 
   def self.on_message(message, matches)
     case
@@ -23,9 +23,9 @@ class Yes #< Linkbot::Plugin
     end
   end
 
-  #Linkbot::Plugin.register('yes', self, {
-  #  :message => {:regex => /(?:o+k+|y+e+s+|(?:(?:h+e+ll+(?:z*|s*)|f+u+c+k+)\s*)y+e*ah*|y+(?:u|e)+p+|y+a+|si|m+h+m+|(?:for\s)?sure)!*(?:\s+|\z)/i, :handler => :on_message}
-  #})
+  Linkbot::Plugin.register('yes', self, {
+    :message => {:regex => /(?:o+k+|y+e+s+|(?:(?:h+e+ll+(?:z*|s*)|f+u+c+k+)\s*)y+e*ah*|y+(?:u|e)+p+|y+a+|si|m+h+m+|(?:for\s)?sure)!*(?:\s+|\z)/i, :handler => :on_message}
+  })
 
   private
 
