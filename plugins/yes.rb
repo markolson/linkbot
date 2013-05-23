@@ -3,7 +3,7 @@ class Yes < Linkbot::Plugin
   def self.on_message(message, matches)
     case
     when message.user_name == "Jason Lewis" && message.body =~ /yes|yeah|yup|sure|/i
-      "http://www.cleancutmedia.com/wp-content/uploads/2012/02/Cinemagraphs-Freaky.gif"
+      self.yyeessss
     when message.body =~ /h+e+l+l+(?:z|s)*\s*y+e*ah*/i
       self.hell_yeah
     when message.body =~ /si/i
@@ -16,18 +16,38 @@ class Yes < Linkbot::Plugin
       self.yyeeaahh
     when message.body =~ /sure/i
       self.sure
-    when message.body =~ /Y+E+S+|!+/
+    when message.body =~ /y+e+s+/
+      self.yyeessss
+    when message.body =~ /Y+E+S+|!+/i #YES or other matches that have an exclamation point 
       self.excited_yes
     else
       self.simple_yes
     end
   end
 
+  
   Linkbot::Plugin.register('yes', self, {
-    :message => {:regex => /(?:o+k+|y+e+s+|(?:(?:h+e+ll+(?:z*|s*)|f+u+c+k+)\s*)y+e*ah*|y+(?:u|e)+p+|y+a+|si|m+h+m+|(?:for\s)?sure)!*(?:\s+|\z)/i, :handler => :on_message}
+    :message => {:regex => /(?:\s+|\A) # match starts either at beginning of message or after a space
+                            (?:o+k+|y+e+s+
+                              |(?:
+                                (?:h+e+ll+(?:z*|s*) # hell hellz hells. can have multiple letters
+                                |f+u+c+k+)\s*)y+e+a*h* # hell yeah yeh or fuck yeah yeh in same pattern
+                              |y+(?:u|e)+p+ # yup yep yyyuuuppp yeeeeeppppp etc
+                              |y+a+
+                              |s(?:i|í) # si or si with accented i
+                              |m+h+m+
+                              |(?:for\s)?s+u+r+e) # for sure or sure
+                            !* # exclamation points at end
+                            (?:\s+|\z)/ix #match ends at either end of message or after a space
+                            , :handler => :on_message}
   })
+  
 
   private
+
+  def self.yyeessss
+    "http://www.cleancutmedia.com/wp-content/uploads/2012/02/Cinemagraphs-Freaky.gif"
+  end
 
   def self.excited_yes
     ["http://media.giphy.com/media/g4eOulPFxnIEE/200.gif", #fist pump
@@ -57,8 +77,7 @@ class Yes < Linkbot::Plugin
   end
 
   def self.sure
-    ["http://media.giphy.com/media/HFHovXXltzS7u/200.gif", #workaholics for sure
-    ]
+    "http://media.giphy.com/media/HFHovXXltzS7u/200.gif" #workaholics for sure
   end
 
   def self.si
@@ -81,5 +100,3 @@ class Yes < Linkbot::Plugin
   end
 
 end
-
-
