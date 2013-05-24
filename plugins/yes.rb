@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Yes < Linkbot::Plugin
 
   def self.on_message(message, matches)
@@ -6,7 +8,7 @@ class Yes < Linkbot::Plugin
       self.yyeessss
     when message.body =~ /h+e+l+l+(?:z|s)*\s*y+e*ah*/i
       self.hell_yeah
-    when message.body =~ /si/i
+    when message.body =~ /si|sí/i
       self.si
     when message.body =~ /m+h+m+/i
       self.mhm
@@ -25,7 +27,6 @@ class Yes < Linkbot::Plugin
     end
   end
 
-  
   Linkbot::Plugin.register('yes', self, {
     :message => {:regex => /(?:\s+|\A) # match starts either at beginning of message or after a space
                             (?:o+k+|y+e+s+
@@ -41,7 +42,6 @@ class Yes < Linkbot::Plugin
                             (?:\s+|\z)/ix #match ends at either end of message or after a space
                             , :handler => :on_message}
   })
-  
 
   private
 
@@ -100,3 +100,4 @@ class Yes < Linkbot::Plugin
   end
 
 end
+
