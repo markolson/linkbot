@@ -12,7 +12,7 @@ class Yes < Linkbot::Plugin
       self.si
     when message.body =~ /m+h+m+/i
       self.mhm
-    when message.body =~ /f+u+c+k+\s*y+e+a+h/
+    when message.body =~ /f+u+c+k+\s*y+e+a+h/i
       self.fuck_yeah
     when message.body =~ /y+e+a+h+/i
       self.yyeeaahh
@@ -39,8 +39,8 @@ class Yes < Linkbot::Plugin
                               |m+h+m+
                               |(?:for\s)?s+u+r+e) # for sure or sure
                             !* # exclamation points at end
-                            (?:\s+|\z)/ix #match ends at either end of message or after a space
-                            , :handler => :on_message}
+                            (?:\s+|\z)/ix, # match ends at either end of message or after a space
+                            :handler => :on_message}
   })
 
   private
@@ -88,7 +88,7 @@ class Yes < Linkbot::Plugin
     "http://img.pandawhale.com/49063-beyonce-meme--mhm-I-know-thats-RHnp.gif" #beyonce
   end
 
-  def hell_yeah
+  def self.hell_yeah
     ["http://www.frankottcountry.com/files/QuickSiteImages/Hell_Yeah_Transparent_9586.gif", #hell yeah in flames
       "http://www.scopecapemay.com/shop/252-526-large/can-i-get-a-hell-yeah-box-sign.jpg", #can i get a hell yeah
       "http://www.wwe24seven.com/images/105/stone-cold-steve-austin-wallpapers1.thumbnail.jpg" #stone cold
