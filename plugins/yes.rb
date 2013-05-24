@@ -18,6 +18,8 @@ class Yes < Linkbot::Plugin
       self.yyeeaahh
     when message.body =~ /sure/i
       self.sure
+    when message.body =~ /\Ayes\z/i
+      self.simple_yes
     when message.body =~ /y+e+s+/
       self.yyeessss
     when message.body =~ /Y+E+S+|!+/i #YES or other matches that have an exclamation point 
