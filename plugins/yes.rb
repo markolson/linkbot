@@ -6,7 +6,7 @@ class Yes < Linkbot::Plugin
     case
     when message.user_name == "Jason Lewis" && message.body =~ /yes|yeah|yup|sure|/i
       self.yyeessss
-    when message.body =~ /h+e+l+l+(?:z|s)*\s*y+e*ah*/i
+    when message.body =~ /h+e+l+l+(?:z|s)*\s*(y+e*ah*|y+e+s+)/i
       self.hell_yeah
     when message.body =~ /si|sí/i
       self.si
@@ -28,18 +28,18 @@ class Yes < Linkbot::Plugin
   end
 
   Linkbot::Plugin.register('yes', self, {
-    :message => {:regex => /(?:\s+|\A) # match starts either at beginning of message or after a space
+    :message => {:regex => /\A
                             (?:o+k+|y+e+s+
                               |(?:
                                 (?:h+e+ll+(?:z*|s*) # hell hellz hells. can have multiple letters
-                                |f+u+c+k+)\s*)y+e+a*h* # hell yeah yeh or fuck yeah yeh in same pattern
+                                |f+u+c+k+)\s*)(?:y+e+a*h*|y+e+s+) # hell yeah yeh or fuck yeah yeh in same pattern
                               |y+(?:u|e)+p+ # yup yep yyyuuuppp yeeeeeppppp etc
                               |y+a+
                               |s(?:i|í) # si or si with accented i
                               |m+h+m+
                               |(?:for\s)?s+u+r+e) # for sure or sure
                             !* # exclamation points at end
-                            (?:\s+|\z)/ix, # match ends at either end of message or after a space
+                            \z/ix, # match ends at either end of message or after a space
                             :handler => :on_message}
   })
 
