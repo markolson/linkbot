@@ -18,7 +18,7 @@ class Yes < Linkbot::Plugin
       self.yyeeaahh
     when message.body =~ /sure/i
       self.sure
-    when message.body =~ /\Ayes\z/i
+    when message.body =~ /\Ayes\z/
       self.simple_yes
     when message.body =~ /y+e+s+/
       self.yyeessss
@@ -31,10 +31,9 @@ class Yes < Linkbot::Plugin
 
   Linkbot::Plugin.register('yes', self, {
     :message => {:regex => /\A
-                            (?:o+k+|y+e+s+
-                              |(?:
+                            (?:(?:
                                 (?:h+e+ll+(?:z*|s*) # hell hellz hells. can have multiple letters
-                                |f+u+c+k+)\s*)(?:y+e+a*h*|y+e+s+) # hell yeah yeh or fuck yeah yeh in same pattern
+                                |f+u+c+k+)\s*)?(?:y+e+a*h*|y+e+s+) # hell yeah yeh or fuck yeah yeh in same pattern
                               |y+(?:u|e)+p+ # yup yep yyyuuuppp yeeeeeppppp etc
                               |y+a+
                               |s(?:i|í) # si or si with accented i
