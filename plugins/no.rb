@@ -27,6 +27,7 @@ class No < Linkbot::Plugin
       'http://media.tumblr.com/tumblr_m42alaqSHG1rom4w3.gif', # Emma Stone nononononono, no!
       'http://media.tumblr.com/tumblr_m4ybpoVu2L1qhk160.gif', # B&W band no no no
       'http://media.tumblr.com/tumblr_m9t9sot19G1r1qmov.gif', # No no, did I mention? No.
+      'http://cdn-w.sneakhype.com/wp-content/uploads/2013/03/super-duper-cool-pics-6.gif', # kitchen dancy nos
     ].sample
   end
 
