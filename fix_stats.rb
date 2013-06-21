@@ -31,4 +31,5 @@ end
 # Go through the users, update the stats
 users.each do |user_id,user|
   db.execute("update stats set dupes=#{user[:dupes]}, total=#{user[:total]} where user_id='#{user_id}'")
+  db.execute("update karma set karma=#{user[:total]} where user_id='#{user_id}'")
 end
