@@ -57,7 +57,21 @@ class HackerNews < Linkbot::Plugin
             hash,
             comment_text,
             user,
-            'NSA')
+            'nsa')
+        end
+        if comment_text =~ /google/i
+          Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
+            hash,
+            comment_text,
+            user,
+            'google')
+        end
+        if comment_text =~ /apple/i
+          Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
+            hash,
+            comment_text,
+            user,
+            'apple')
         end
       end
     end
