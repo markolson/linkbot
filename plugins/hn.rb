@@ -16,12 +16,23 @@ class HackerNews < Linkbot::Plugin
 
   def self.on_message(message, matches)
     if matches[0]
-      res = Linkbot.db.execute("select comment,user from hn where category=?", matches[0])
-      if res.length > 0
-        comment = res[rand(res.length)]
-        "#{comment[0]} - #{comment[1]}"
+      if matches[0] == "help"
+        m = []
+        m << "Available categories are:"
+        m << " apple"
+        m << " google"
+        m << " nsa"
+        m << " lawyer"
+        m << " yesyoudo"
+        m.join("\n")
       else
-        "No HN comments in that category!"
+        res = Linkbot.db.execute("select comment,user from hn where category=?", matches[0])
+        if res.length > 0
+          comment = res[rand(res.length)]
+          "#{comment[0]} - #{comment[1]}"
+        else
+          "No HN comments in that category!"
+        end
       end
     else
       begin
@@ -87,13 +98,6 @@ class HackerNews < Linkbot::Plugin
             comment_text,
             user,
             'lawyer')
-        end
-        if comment_text =~ /\bapple\b/i
-          Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
-            hash,
-            comment_text,
-            user,
-            'apple')
         end
       end
     end
