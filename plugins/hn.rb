@@ -50,8 +50,8 @@ class HackerNews < Linkbot::Plugin
       hash = Digest::SHA1.hexdigest(comment_text)
 
       # Make sure this comment is saved already
-      res = Linkbot.db.execute("select * from hn where hash='#{hash}'")
-      if res.length == 0
+      res = Linkbot.db.execute("select count(*) from hn where hash=?",hash)
+      if res[0][0] == 0
         if comment_text =~ /nsa/i
           Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
             hash,
