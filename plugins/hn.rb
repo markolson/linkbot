@@ -61,6 +61,8 @@ class HackerNews < Linkbot::Plugin
         end
       end
     end
+
+    {:messages => [], :options => {}}
   end
 
   def self.help
