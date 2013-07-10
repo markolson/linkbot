@@ -52,21 +52,43 @@ class HackerNews < Linkbot::Plugin
       # Make sure this comment is saved already
       res = Linkbot.db.execute("select count(*) from hn where hash=?",hash)
       if res[0][0] == 0
-        if comment_text =~ /nsa/i
+        if comment_text =~ /\bnsa\b/i
           Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
             hash,
             comment_text,
             user,
             'nsa')
         end
-        if comment_text =~ /google/i
+        if comment_text =~ /\bgoogle\b/i
           Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
             hash,
             comment_text,
             user,
             'google')
         end
-        if comment_text =~ /apple/i
+        if comment_text =~ /\bapple\b/i
+          Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
+            hash,
+            comment_text,
+            user,
+            'apple')
+        end
+        if comment_text =~ /\bi don\'t mean to be\b/i ||
+           comment_text =~ /\bnot trying to be\b/i
+          Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
+            hash,
+            comment_text,
+            user,
+            'yesyoudo')
+        end
+        if comment_text =~ /\bianal\b/i
+          Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
+            hash,
+            comment_text,
+            user,
+            'lawyer')
+        end
+        if comment_text =~ /\bapple\b/i
           Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
             hash,
             comment_text,
