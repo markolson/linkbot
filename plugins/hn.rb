@@ -46,7 +46,7 @@ class HackerNews < Linkbot::Plugin
 
     comments.each do |comment|
       comment_text = comment.search("font")[0].inner_text
-      user = comment.search("font")[0].inner_text
+      user = comment.search("a")[0].inner_text
       hash = Digest::SHA1.hexdigest(comment_text)
 
       # Make sure this comment is saved already
