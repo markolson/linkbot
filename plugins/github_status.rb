@@ -21,19 +21,13 @@ class Hubstat < Linkbot::Plugin
     '!hubstat - see whether your trouble with GitHub is just you'
   end
 
-  def self.post_status(last_pulled)
-    response = JSON.parse(open('https://status.github.com/api/last-message.json').read)
-
+  def self.post_status(response)
     colors = {
       "good" => "green",
       "minor" => "yellow",
       "major" => "red"
     }
     color = colors.fetch(response['status'], "gray")
-
-    #don't print the message if time exists and is newer than the message
-    message_time = Time.parse(response["created_on"])
-    return last_pulled if last_pulled && last_pulled > message_time
 
     timestr = message_time.in_time_zone("EST").strftime("%b %d %H:%m EST")
 
@@ -48,16 +42,27 @@ class Hubstat < Linkbot::Plugin
     rows = Linkbot.db.execute("select dt from hubstatus")
     last_pulled = Time.parse(rows[0][0]) if !rows.empty? && rows[0][0]
 
-    max_time = self.post_status(last_pulled)
+    response = self.get_status
+
+    #don't print the message if time exists and is newer than the message
+    status_time = Time.parse(response["created_on"])
+    if last_pulled && last_pulled < status_time
+      self.post_status(response)
+    end
 
     Linkbot.db.execute("delete from hubstatus")
-    Linkbot.db.execute("insert into hubstatus (dt) VALUES ('#{max_time}')")
+    Linkbot.db.execute("insert into hubstatus (dt) VALUES ('#{status_time}')")
     {:messages => []}
   end
 
   def self.on_message(message, matches)
-    self.post_status(nil)
+    response = self.get_status
+    self.post_status(response)
     []
+  end
+
+  def self.get_status
+    JSON.parse(open('https://status.github.com/api/last-message.json').read)
   end
 
   def self.hipchat_send(color, message)
