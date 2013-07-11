@@ -84,7 +84,7 @@ class HackerNews < Linkbot::Plugin
             user,
             'apple')
         end
-        if comment_text =~ /\bi don\'t mean to be\b/i ||
+        if comment_text =~ /\bi don\'t mean to\b/i ||
            comment_text =~ /\bnot trying to be\b/i
           Linkbot.db.execute("insert into hn (hash, comment, user, category) VALUES (?,?,?,?)",
             hash,
