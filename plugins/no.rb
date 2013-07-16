@@ -14,7 +14,7 @@ class No < Linkbot::Plugin
   end
 
   Linkbot::Plugin.register('no', self, {
-    :message => {:regex => /\A(?:n+o+[^\w]*(?:\s*))+\z/i, :handler => :on_message}
+    :message => {:regex => /\A(?:!n+o+[^\w]*(?:\s*))+\z/i, :handler => :on_message}
   })
 
   private
