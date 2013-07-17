@@ -51,7 +51,7 @@ class Hubstat < Linkbot::Plugin
     end
 
     Linkbot.db.execute("delete from hubstatus")
-    Linkbot.db.execute("insert into hubstatus (dt) VALUES ('#{status_time}')")
+    Linkbot.db.execute("insert into hubstatus (dt) VALUES ('#{status_time.to_s}')")
     {:messages => []}
   end
 
