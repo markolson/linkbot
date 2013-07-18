@@ -29,6 +29,7 @@ class Hubstat < Linkbot::Plugin
     }
     color = colors.fetch(response['status'], "gray")
 
+    message_time = Time.parse(response["created_on"])
     timestr = message_time.in_time_zone("EST").strftime("%b %d %H:%m EST")
 
     message = "As of #{timestr}, GitHub is <a href='https://status.github.com/'>reporting</a>: #{response["body"]}"
