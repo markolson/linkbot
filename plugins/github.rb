@@ -106,6 +106,41 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
     end
   end
 
+  def self.search(client, command, args)
+    if not args.length > 0
+      return ["Missing query. To search for an issue, use: !hub issue <query>"]
+    end
+    query = args[0]
+
+    res = client.search_code "@#{@@config["organization"]} #{query}", :accept => "application/vnd.github.preview.text-match+json"
+
+    msg = res.items[0..9].map do |item|
+      url = item.rels[:html].href_template.to_s
+      filename = url.match(/blob\/.*?\/(.*)/)[1]
+
+      link = "<a href=\"#{url}\">#{item.repository.name}:#{filename}</a>"
+
+      # this is how to get text fragments, but they're too large and annoying
+      # ... I really wish github provided line numbers to me, but they don't
+      # ATM. I have filed a support request, but until then, I'm killing this
+      #fragments = item.text_matches.map { |m| m.fragment }.join("<br>")
+      #fraghtml = "<pre>#{fragments}</pre>"
+
+      #"#{link}<br>#{fraghtml}"
+    end
+
+    search_url = "https://github.com/search?q=%40lookingglass%20#{URI.escape(query)}&type=Code&ref=searchresults"
+
+    msg.insert(0, "<a href=\"#{search_url}\">#{res.total_count} results</a>")
+
+    if msg.length > 0
+      self.hipchat_send msg.join("<br>"), "hub"
+      []
+    else
+      ["no issues found for query <#{query}>"]
+    end
+  end
+
   def self.on_message(message, matches)
     command = matches[0]
     args = matches[1].split " "
@@ -120,10 +155,13 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
       return self.get_stale_branches(client, command, args)
     elsif command.start_with? "issue"
       return self.get_issues(client, command, args)
-    elsif command.start_with? "help"
+    elsif command.start_with? "search"
+      return self.search(client, command, args)
+    else
       return [%{!hub pull [<repo>] - show open pull requests for repository <repo> or all repos if omitted
 !hub repos - show all Lookingglass repos
 !hub stale <repo> - show stale branches in repo
+!hub search <query> - search lg code for <query>
 !hub issue <query> - search for issues}]
     end
 
