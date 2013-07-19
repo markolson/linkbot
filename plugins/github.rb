@@ -108,7 +108,7 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
 
   def self.search(client, command, args)
     if not args.length > 0
-      return ["Missing query. To search for an issue, use: !hub issue <query>"]
+      return ["Missing query. To search for code use: !hub search <query>"]
     end
     query = args[0]
 
