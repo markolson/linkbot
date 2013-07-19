@@ -110,7 +110,7 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
     if not args.length > 0
       return ["Missing query. To search for code use: !hub search <query>"]
     end
-    query = args[0]
+    query = args.join " "
 
     res = client.search_code "@#{@@config["organization"]} #{query}", :accept => "application/vnd.github.preview.text-match+json"
 
