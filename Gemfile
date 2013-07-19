@@ -17,7 +17,7 @@ gem "thin"
 gem "sinatra"
 gem "xmpp4r", :git => "git://github.com/hoxworth/xmpp4r.git"
 gem "imagesize"
-gem "octokit"
+gem "octokit", "2.0.0.rc2"
 gem "tzinfo"
 
 group :dev do
