@@ -23,35 +23,26 @@ class Image < Linkbot::Plugin
         searchterm = doc.search("#word h2").text.strip
       end
     end
-    if searchterm =~ /$\(\w+\) ^/
-      parts = searchterm.split(" ")
-      color = parts.shift
-      searchterm = parts.join(" ")
-    end
+
+    imgs = []
 
     begin
       # Give google 2 seconds to respond (and for us to parse it!)
       Timeout::timeout(2) do
-        doc = JSON.parse(open("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=#{URI.encode(searchterm)}&rsz=8&#{color.nil? ? '' : '&imcolor=' + color}", "Referer" => "http://lgscout.com").read)
+        searchurl = "https://www.google.com/search?q=#{URI.encode(searchterm)}&site=imghp&tbm=isch&source=lnt&tbs=isz:lt,islt:qsvga&sa=X&ei=s7v7UbOIK8_J4AOo24HwAw&ved=0CBwQpwU&biw=1673&bih=1062"
+
+        imgs = open(searchurl).read.scan(/imgurl=(http:\/\/.*?)&/).flatten
       end
     rescue Timeout::Error
       return "Google is slow! No images for you."
     end
 
+    #funnyjunk sucks
+    imgs.reject! {|x| x =~ /fjcdn\.com/}
 
-    if doc && doc["responseData"] && doc["responseData"]["results"].length > 0
-      url = URI.decode(doc["responseData"]["results"][rand(doc["responseData"]["results"].length)]["url"])
+    return "No images found. Lame." if imgs.empty?
 
-      if ::Util.wallpaper?(url)
-        url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
-      end
-
-      log(:images, url)
-
-      url
-    else
-      "No pictures found! Nuts!"
-    end
+    imgs.sample
   end
 
   def self.help

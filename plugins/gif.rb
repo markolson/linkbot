@@ -27,10 +27,9 @@ class Gif < Linkbot::Plugin
         searchurl = "https://www.google.com/search?hl=en&safe=off&biw=517&bih=1073&site=imghp&tbs=itp%3Aanimated&tbm=isch&sa=1&q=#{URI.encode(searchterm)}&oq=bananas&gs_l=img.3..0l10.1894734.1895319.0.1896030.7.6.0.1.1.1.109.435.5j1.6.0...0.0...1c.1.7.img.4-MDM6JAaIY"
 
         gifs = open(searchurl).read.scan(/imgurl=(http:\/\/.*?)&/).flatten
-
       end
     rescue Timeout::Error
-      return "Google is slow! No images for you."
+      return "Google is slow! No gifs for you."
     end
 
     #funnyjunk sucks
