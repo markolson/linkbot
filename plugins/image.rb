@@ -29,7 +29,7 @@ class Image < Linkbot::Plugin
     begin
       # Give google 2 seconds to respond (and for us to parse it!)
       Timeout::timeout(2) do
-        searchurl = "https://www.google.com/search?q=#{URI.encode(searchterm)}&site=imghp&tbm=isch&source=lnt&tbs=isz:lt,islt:qsvga&sa=X&ei=s7v7UbOIK8_J4AOo24HwAw&ved=0CBwQpwU&biw=1673&bih=1062"
+        searchurl = "https://www.google.com/search?q=#{URI.encode(searchterm)}&site=imghp&safe=on&tbm=isch&source=lnt&tbs=isz:lt,islt:qsvga&sa=X&ei=s7v7UbOIK8_J4AOo24HwAw&ved=0CBwQpwU&biw=1673&bih=1062"
 
         imgs = open(searchurl).read.scan(/imgurl=(http:\/\/.*?)&/).flatten
       end
