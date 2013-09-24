@@ -42,7 +42,13 @@ class Image < Linkbot::Plugin
 
     return "No images found. Lame." if imgs.empty?
 
-    imgs.sample
+    url = imgs.sample
+
+    if ::Util.wallpaper?(url)
+      url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
+    end
+
+    return url
   end
 
   def self.help
