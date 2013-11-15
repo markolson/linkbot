@@ -1,7 +1,7 @@
 class Morse < Linkbot::Plugin
 
   Linkbot::Plugin.register('morse', self, {
-    :message => {:regex => /\A[\s\/\.-]+\z/i, :handler => :on_message}
+    :message => {:regex => /\A[\s\|\?\/\.-]+\z/i, :handler => :on_message}
   })
 
   def self.on_message(message, matches)
@@ -11,10 +11,10 @@ class Morse < Linkbot::Plugin
       '-.-'  => 'K', '.-..' => 'L', '--'   => 'M', '-.'   => 'N', '---'  => 'O',
       '.--.' => 'P', '--.-' => 'Q', '.-.'  => 'R', '...'  => 'S', '-'    => 'T',
       '..-'  => 'U', '...-' => 'V', '.--'  => 'W', '-..-' => 'X', '-.--' => 'Y',
-      '--..' => 'Z', '/'    => ' '
+      '--..' => 'Z', '/'    => ' ', '|'    => ' '
     }
 
-    translation = message.body.split(' ').map {|code| morse_map[code]}.join
+    translation = message.body.split(' ').map {|code| morse_map.fetch(code) {'?'} }.join
     "Mo-o-o-o-orse: #{translation}"
   end
 
