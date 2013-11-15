@@ -15,7 +15,7 @@ class Morse < Linkbot::Plugin
     }
 
     translation = message.body.split(' ').map {|code| morse_map[code]}.join
-    "Translated: #{translation}"
+    "Mo-o-o-o-orse: #{translation}"
   end
 
 end
