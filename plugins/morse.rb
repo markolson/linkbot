@@ -1,7 +1,7 @@
 class Morse < Linkbot::Plugin
 
   Linkbot::Plugin.register('morse', self, {
-    :message => {:regex => /\A[\s\|\?\/\.-]+\z/i, :handler => :on_message}
+    :message => {:regex => /\A[\s\|\?\/\.-]+\s[\s\|\?\/\.-]+\z/i, :handler => :on_message}
   })
 
   def self.on_message(message, matches)
