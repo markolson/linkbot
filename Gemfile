@@ -21,6 +21,6 @@ gem "octokit", "2.0.0.rc2"
 gem "tzinfo"
 
 group :dev do
-  gem "ruby-debug19"
+  gem "debugger"
   gem "pry"
 end
