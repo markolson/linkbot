@@ -35,11 +35,9 @@ class Campfire < Linkbot::Connector
       :timeout => 6
     }
 
-    puts "listening" 
     stream = Twitter::JSONStream.connect(options)
 
     stream.each_item do |item|
-      puts "processing #{item}"
       process_message(item)
     end
 
