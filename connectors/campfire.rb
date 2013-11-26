@@ -35,9 +35,11 @@ class Campfire < Linkbot::Connector
       :timeout => 6
     }
 
+    puts "listening" 
     stream = Twitter::JSONStream.connect(options)
 
     stream.each_item do |item|
+      puts "processing #{item}"
       process_message(item)
     end
 
@@ -61,7 +63,7 @@ class Campfire < Linkbot::Connector
       # processing the message
       if Linkbot.user_exists?(message['user_id'])
         # Build the message
-        message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message )
+        message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message, {} )
         invoke_callbacks(message)
       else
         # Fetch the user data from campfire, then process the callbacks
@@ -77,7 +79,7 @@ class Campfire < Linkbot::Connector
         user_http.callback {
           user = JSON.parse(user_http.response)["user"]
           Linkbot.add_user(user["name"],user["id"])
-          message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message )
+          message = Message.new( message['body'], message['user_id'], Linkbot.user_ids[message['user_id']], self, :message, {} )
           invoke_callbacks(message)
         }
       end
