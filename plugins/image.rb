@@ -27,14 +27,14 @@ class Image < Linkbot::Plugin
     imgs = []
 
     begin
-      # Give google 2 seconds to respond (and for us to parse it!)
-      Timeout::timeout(2) do
-        searchurl = "https://www.google.com/search?q=#{URI.encode(searchterm)}&site=imghp&safe=on&tbm=isch&source=lnt&tbs=isz:lt,islt:qsvga&sa=X&ei=s7v7UbOIK8_J4AOo24HwAw&ved=0CBwQpwU&biw=1673&bih=1062"
+      # Give imgur 10 seconds to respond (and for us to parse it!)
+      Timeout::timeout(10) do
+        searchurl = "http://imgur.com/?q=#{URI.encode(searchterm)}"
 
-        imgs = open(searchurl).read.scan(/imgurl=(http:\/\/.*?)&/).flatten
+        imgs = open(searchurl).read.scan(/alt.*?src="(.*?)"/).flatten.map { |x| "http:" + x.gsub("b.", ".") }
       end
     rescue Timeout::Error
-      return "Google is slow! No images for you."
+      return "imgur is slow! No images for you."
     end
 
     #funnyjunk sucks
