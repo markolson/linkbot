@@ -8,7 +8,7 @@ module Linkbot
     
     def self.load
       begin
-        @@settings = JSON.parse(open("config.json").read)
+        @@settings = JSON.parse(open(File.join(File.dirname(__FILE__), "config.json")).read)
       rescue Errno::ENOENT
         puts "You must have a config.json file defined"
         exit(1)
