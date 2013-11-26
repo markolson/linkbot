@@ -6,7 +6,7 @@ plugin system and many plugins already written.
 
 ## Installation
 
-Make sure you have ruby 1.9 or greater, rubygems, and bundler installed.
+Make sure you have ruby 1.9.2 or greater, rubygems, and bundler installed.
 
 Then,
 
