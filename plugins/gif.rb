@@ -24,7 +24,16 @@ class Gif < Linkbot::Plugin
         # this is an old iphone user agent. Seems to make google return good results.
         useragent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7"
 
-        gifs = open(searchurl, "User-Agent" => useragent).read.scan(/http:\/\/[\/\.\w\-~]*?\.gif/)
+        gifs = open(searchurl, "User-Agent" => useragent).read.scan(/imgurl.*?(http.*?)\\/).flatten
+
+        # un-escape double-escaped codes into escape codes.
+        #
+        # Yes that makes sense.
+        #
+        # Read it again.
+        #
+        # Google turns a url-escaped "%20" -> "\\x20", so this turns "\\x20" -> "%20" to make it a URL again
+        gifs = gifs.map{|x| x.sub(/\\x(\d+)/, "%\\1")}
       end
     rescue Timeout::Error
       return "Google is slow! No gifs for you."
