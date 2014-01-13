@@ -10,7 +10,7 @@ class Sonic < Linkbot::Plugin
   def self.on_message(message, matches)
     page = rand(29)
     doc = Hpricot(open("http://dumbrunningsonic.tumblr.com/page/#{page}").read)
-    imgs = doc.search("div[@class=post-content] img").map {|x| x.attributes['src']}
+    imgs = doc.search("div[@class=contentwrap] img").map {|x| x.attributes['src']}
     imgs[rand(imgs.length)]
   end
 
