@@ -12,11 +12,11 @@ require 'rack'
 require 'thin'
 
 require 'pp'
-require './config.rb'
-require './util'
-require './db'
-require './plugin'
-require './connector'
+require_relative 'config'
+require_relative 'util'
+require_relative 'db'
+require_relative 'plugin'
+require_relative 'connector'
 
 Linkbot::Config.load
 
