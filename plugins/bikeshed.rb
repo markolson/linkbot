@@ -12,7 +12,7 @@ class Bikeshed < Linkbot::Plugin
 
   def self.on_message(message, matches)
     colour = Nokogiri::XML(open('http://www.colourlovers.com/api/colors/random'))
-    colour.xpath('//badgeUrl').children.first.content
+    colour.css("badgeUrl").children.first.content
   end
 end
 
