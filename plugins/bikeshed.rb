@@ -3,7 +3,6 @@
 # from colourlovers.com
 
 class Bikeshed < Linkbot::Plugin
-
   require 'nokogiri'
   require 'open-uri'
 
@@ -15,7 +14,5 @@ class Bikeshed < Linkbot::Plugin
     colour = Nokogiri::XML(open('http://www.colourlovers.com/api/colors/random'))
     colour.xpath('//badgeUrl').children.first.content
   end
-
-
 end
 
