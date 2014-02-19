@@ -25,6 +25,8 @@ class Confused < Linkbot::Plugin
       "http://media.tumblr.com/tumblr_m29p06JMii1qhj4zv.gif", # Whaaaaat?
       "http://media.tumblr.com/tumblr_lvfkdpwHxa1ql85u5.gif", # Friday Heh heh whu?
       "http://media.tumblr.com/tumblr_m29ozq9wOR1qhj4zv.gif", # John Stewart whaaaat?
+      "http://usatthebiglead.files.wordpress.com/2014/02/john-calipari-provides-for-one-of-the-best-gifs-ever-against-ole-miss.gif",
+      "http://replygif.net/i/1102.gif", # Jennifer Lawrence "Wut?"
     # I'm out
       "http://i.imgur.com/P79tv.gif", # "I'm out," says Jerry Seinfeld
       "http://i.imgur.com/aQSx1.gif", # head shake
