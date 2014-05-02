@@ -39,23 +39,20 @@ module Linkbot
       final_message = []
 
       Linkbot::Plugin.plugins.each {|k,v|
-        if v[:handlers][message.type] && v[:handlers][message.type][:handler]
+        if v[:ptr].has_permission?(message) && v[:handlers][message.type] && v[:handlers][message.type][:handler]
 
           if ((v[:handlers][message.type][:regex] && v[:handlers][message.type][:regex].match(message.body)) || v[:handlers][message.type][:regex].nil?)
 
             matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
             puts "#{k} processing message type #{message.type}"
             begin
-              # Check for room permissions first
-              if (v[:ptr].has_permission?(message))
-                end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
+              end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
 
-                if !end_msg.empty?
-                  if end_msg.is_a? Array
-                    final_message.concat(end_msg)
-                  else
-                    final_message << end_msg
-                  end
+              if !end_msg.empty?
+                if end_msg.is_a? Array
+                  final_message.concat(end_msg)
+                else
+                  final_message << end_msg
                 end
               end
             rescue => e
