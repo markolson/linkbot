@@ -63,5 +63,17 @@
     "build" : {
       "webhook" : "http://buildserver/build"
     }
+  },
+  "permissions" : {
+    "test_room" : {
+      "blacklist" : [
+        "Cats"
+      ]
+    },
+    "other_room" : {
+      "whitelist" : [
+        "Image"
+      ]
+    }
   }
 }

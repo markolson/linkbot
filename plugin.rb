@@ -39,7 +39,7 @@ module Linkbot
       final_message = []
 
       Linkbot::Plugin.plugins.each {|k,v|
-        if v[:handlers][message.type] && v[:handlers][message.type][:handler]
+        if v[:ptr].has_permission?(message) && v[:handlers][message.type] && v[:handlers][message.type][:handler]
 
           if ((v[:handlers][message.type][:regex] && v[:handlers][message.type][:regex].match(message.body)) || v[:handlers][message.type][:regex].nil?)
 
@@ -97,6 +97,32 @@ module Linkbot
         pp final_messages
       end
       final_messages
+    end
+
+    def self.has_permission?(message)
+      if message[:options][:room]
+        if ::Linkbot::Config["permissions"].nil?
+          ## No permissions model exists. LET THEM ALL IN!
+          return true
+        else
+          ## Rats.
+          if ::Linkbot::Config["permissions"][message[:options][:room]]
+            room_permissions = ::Linkbot::Config["permissions"][message[:options][:room]]
+            # Check the whitelist first
+            if room_permissions["whitelist"]
+              return room_permissions["whitelist"].include?(self.name)
+            elsif room_permissions["blacklist"]
+              return !room_permissions["blacklist"].include?(self.name)
+            else
+              return true
+            end
+          else
+            return true
+          end
+        end
+      end
+
+      return true
     end
 
     def self.message_history(message)
