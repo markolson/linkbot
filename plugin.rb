@@ -46,13 +46,16 @@ module Linkbot
             matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
             puts "#{k} processing message type #{message.type}"
             begin
-              end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
+              # Check for room permissions first
+              if (v[:ptr].has_permission?(message))
+                end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
 
-              if !end_msg.empty?
-                if end_msg.is_a? Array
-                  final_message.concat(end_msg)
-                else
-                  final_message << end_msg
+                if !end_msg.empty?
+                  if end_msg.is_a? Array
+                    final_message.concat(end_msg)
+                  else
+                    final_message << end_msg
+                  end
                 end
               end
             rescue => e
@@ -97,6 +100,32 @@ module Linkbot
         pp final_messages
       end
       final_messages
+    end
+
+    def self.has_permission?(message)
+      if message[:options][:room]
+        if ::Linkbot::Config["permissions"].nil?
+          ## No permissions model exists. LET THEM ALL IN!
+          return true
+        else
+          ## Rats.
+          if ::Linkbot::Config["permissions"][message[:options][:room]]
+            room_permissions = ::Linkbot::Config["permissions"][message[:options][:room]]
+            # Check the whitelist first
+            if room_permissions["whitelist"]
+              return room_permissions["whitelist"].include?(self.name)
+            elsif room_permissions["blacklist"]
+              return !room_permissions["blacklist"].include?(self.name)
+            else
+              return true
+            end
+          else
+            return true
+          end
+        end
+      end
+
+      return true
     end
 
     def self.message_history(message)
