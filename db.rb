@@ -23,9 +23,9 @@ module Linkbot
   end
   
   def self.user_exists?(user)
-    rows = Linkbot.db.execute("select * from users where username = '#{user}'")
+    rows = Linkbot.db.execute("select * from users where username = ?", user)
     if rows.empty?
-      rows = Linkbot.db.execute("select * from users where user_id = '#{user}'")
+      rows = Linkbot.db.execute("select * from users where user_id = ?", user)
       !rows.empty?
     else
       true
@@ -33,31 +33,31 @@ module Linkbot
   end
   
   def self.username(user_id)
-    Linkbot.db.execute("select username from users where user_id = '#{user_id}'")[0][0]
+    Linkbot.db.execute("select username from users where user_id = ?", user_id)[0][0]
   end
   
   def self.user_id(username)
-    Linkbot.db.execute("select user_id from users where username = '#{username}'")[0][0]
+    Linkbot.db.execute("select user_id from users where username = ?", username)[0][0]
   end
   
   # Update a username based on the user_id
   def self.update_user(username,user_id) 
-    Linkbot.db.execute("update users set username = '#{username}' where user_id = '#{user_id}'")
+    Linkbot.db.execute("update users set username = ? where user_id = ?", username, user_id)
   end
   
   def self.add_user(username,user_id=nil)
-    rows = Linkbot.db.execute("select * from users where username = '#{username}'")
+    rows = Linkbot.db.execute("select * from users where username = ?", username)
     if rows.empty?
       if user_id == nil
         rows = Linkbot.db.execute("select max(user_id) from users")
         user_id = rows[0][0] + 1
       end
-      Linkbot.db.execute("insert into users (user_id,username) values ('#{user_id}', '#{username}')")
+      Linkbot.db.execute("insert into users (user_id,username) values (?, ?)", user_id, username)
       @@user_ids[user_id] = username
       @@users[username] = user_id
     #if we didn't find the user's id, but we found their name, update their id
     elsif user_id
-      Linkbot.db.execute("update users set user_id='#{user_id}' where username='#{username}'")
+      Linkbot.db.execute("update users set user_id=? where username=?", user_id, username)
     end
   end
   

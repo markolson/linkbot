@@ -4,7 +4,7 @@ class Last < Linkbot::Plugin
       rows = nil
       mess = ""
       if match[1]
-        rows = Linkbot.db.execute("select l.url,l.dt from links l, users u where u.username='#{match[1]}' and u.user_id = l.user_id order by l.dt desc limit #{count}")
+        rows = Linkbot.db.execute("select l.url,l.dt from links l, users u where u.username= and u.user_id = l.user_id order by l.dt desc limit ?", match[1], count)
         i = 1
         if rows.length > 0
           rows.each {|row| mess = mess + "#{i}. #{row[0]} (#{::Util.ago_in_words(Time.now, Time.at(row[1]))})\n"; i = i + 1}
@@ -12,7 +12,7 @@ class Last < Linkbot::Plugin
           mess = "No links from user '#{match[1]}'"
         end
       else
-        rows = Linkbot.db.execute("select l.url,l.dt,u.username,u.showname from links l, users u where l.user_id = u.user_id order by l.dt desc limit #{count}")
+        rows = Linkbot.db.execute("select l.url,l.dt,u.username,u.showname from links l, users u where l.user_id = u.user_id order by l.dt desc limit ?", count)
         i = 1
         if rows.length > 0
           rows.each {|row| 

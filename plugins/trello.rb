@@ -123,7 +123,7 @@ class Trello < Linkbot::Plugin
     end
 
     Linkbot.db.execute("delete from trello")
-    Linkbot.db.execute("insert into trello (dt) VALUES ('#{max_item_time}')")
+    Linkbot.db.execute("insert into trello (dt) VALUES (?)", max_item_time)
 
     {:messages => messages, :options => {:room => @@config['room']}}
   end

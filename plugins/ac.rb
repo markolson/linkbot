@@ -70,7 +70,7 @@ class ActiveCollab < Linkbot::Plugin
     end
 
     Linkbot.db.execute("delete from activecollab")
-    Linkbot.db.execute("insert into activecollab (dt) VALUES ('#{max_item_time}')")
+    Linkbot.db.execute("insert into activecollab (dt) VALUES (?)", max_item_time)
 
     {:messages => [], :options => {}}
     #{:messages => messages, :options => {:room => @@config['room']}}
