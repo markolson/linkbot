@@ -32,7 +32,7 @@ class PullRequests < Linkbot::Plugin
         response.each do |pullreq|
           next if pullreq["number"].to_i <= min_pull
           messages << "New pull request:\n#{pullreq['title']}\n#{pullreq['body']}\n#{pullreq['url']}"
-          Linkbot.db.execute("insert into pull_requests (number) VALUES (#{pullreq["number"]})")
+          Linkbot.db.execute("insert into pull_requests (number) VALUES (?)", pullreq["number"])
         end
 
         {:messages => messages, :options => {:room => @@config[:room]}}

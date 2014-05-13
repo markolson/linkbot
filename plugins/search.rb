@@ -4,7 +4,7 @@ class Search < Linkbot::Plugin
       :message => {:regex => Regexp.new('!search (.*)'), :handler => :on_message, :help => :help}
     }
   )
-  
+
   def self.on_message(message, matches)
     search = matches[0]
     rows = nil
@@ -19,13 +19,13 @@ class Search < Linkbot::Plugin
     else
       mess = "No links"
     end
-    
+
     # Take the karma hit
-    karma = Linkbot.db.execute("select karma from karma where user_id=#{user['id']}")[0][0] - 1
-    Linkbot.db.execute("update karma set karma=#{karma} where user_id=#{user['id']}")
+    karma = Linkbot.db.execute("select karma from karma where user_id=?", user['id'])[0][0] - 1
+    Linkbot.db.execute("update karma set karma=? where user_id=?", karma, user['id'])
     mess
   end
-  
+
   def self.help
     "!search query - search for links that you think should be dupes"
   end

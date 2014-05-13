@@ -38,8 +38,9 @@ class JabberConnector < Linkbot::Connector
   end
 
   def reconnect
-    puts "Connecting and authenticating..."
-    @connection = ::Jabber::Client.new(Jabber::JID.new("#{@username}@#{@server}/#{@resource}"))
+    jid = "#{@username}@#{@server}/#{@resource}"
+    puts "Connecting and authenticating as ...#{jid}"
+    @connection = ::Jabber::Client.new(Jabber::JID.new(jid))
     @connection.connect
     @connection.auth(@password)
   end

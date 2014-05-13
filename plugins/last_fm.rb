@@ -130,7 +130,7 @@ class LastFm < Linkbot::Plugin
 
         current = ""
         if now
-          current = Linkbot.db.execute("select now_playing from users where last_fm_username = '#{u[0]}'")[0][0] || ":("
+          current = Linkbot.db.execute("select now_playing from users where last_fm_username = ?", u[0])[0][0] || ":("
         end
         begin
           tracks = ActiveSupport::JSON.decode(open(url).read)
