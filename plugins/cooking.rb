@@ -1,5 +1,5 @@
 class Cooking < Linkbot::Plugin
-    Linkbot::Plugin.register('awwww', self,
+    Linkbot::Plugin.register('cooking', self,
       {
         :message => {:regex => /cook(ed|ing|in|\s)/i, :handler => :on_message}
       }
