@@ -5,9 +5,8 @@ class ThinConnector < Linkbot::Connector
     super(options)
     listen
   end
-  
+
   def call(env)
-    puts env.to_json
     case env["REQUEST_URI"]
     when "/message"
       if env["REQUEST_METHOD"] != "POST"
