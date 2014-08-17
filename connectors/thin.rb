@@ -26,8 +26,9 @@ class ThinConnector < Linkbot::Connector
           invoke_callbacks(message)
 
           [202, {'Content-Type'=>'text/plain'}, StringIO.new("Message accepted\n")]
-        rescue Exception
-          puts $!.message
+        rescue Exception => e
+          puts e.message
+          puts e.backtrace.join("\n")
           [422, {'Content-Type'=>'text/plain'}, StringIO.new("Data was in an invalid format\n")]
         end
       end
