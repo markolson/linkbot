@@ -1,13 +1,15 @@
+require 'open-uri'
+
 class ThinConnector < Linkbot::Connector
+  @@config = Linkbot::Config["plugins"]
   Linkbot::Connector.register('thin', self)
 
   def initialize(options)
     super(options)
     listen
   end
-  
+
   def call(env)
-    puts env.to_json
     case env["REQUEST_URI"]
     when "/message"
       if env["REQUEST_METHOD"] != "POST"
@@ -27,10 +29,32 @@ class ThinConnector < Linkbot::Connector
           invoke_callbacks(message)
 
           [202, {'Content-Type'=>'text/plain'}, StringIO.new("Message accepted\n")]
-        rescue Exception
-          puts $!.message
+        rescue Exception => e
+          puts e.message
+          puts e.backtrace.join("\n")
           [422, {'Content-Type'=>'text/plain'}, StringIO.new("Data was in an invalid format\n")]
         end
+      end
+    when "/doorbell"
+      config = @@config['doorbell']
+      message = config['message'] || "Ding dong!"
+      message = CGI.escape(message)
+      from = config['hipchat_from'] || "Doorbell"
+      begin
+        url = "https://api.hipchat.com/v1/rooms/message?" \
+            + "auth_token=#{config['hipchat_api_token']}&" \
+            + "message=#{message}&" \
+            + "room_id=#{config['hipchat_room']}&" \
+            + "from=#{CGI.escape(from)}&" \
+            + "message_format=text"
+
+        puts "sending message to hipchat url #{url}"
+        open(url)
+        [202, {'Content-Type'=>'text/plain'}, StringIO.new("Doorbell request sent\n")]
+      rescue => e
+        puts e.inspect
+        puts e.backtrace.join("\n")
+        [500, {'Content-Type'=>'text/plain'}, StringIO.new("Internal Error\n")]
       end
     when "/"
       data = <<-EOF
@@ -45,9 +69,9 @@ class ThinConnector < Linkbot::Connector
                 message: $('#message').val(),
                 username: "Anonymous"
               };
-              
+
               var dataString = JSON.stringify(data);
-              
+
               $.ajax({
                 type: 'POST',
                 url: '/message',
@@ -79,7 +103,7 @@ class ThinConnector < Linkbot::Connector
       [404, {'Content-Type'=>'text/plain'}, StringIO.new("404: Not found\n")]
     end
   end
-  
+
   def listen
     Thin::Server.start('0.0.0.0', @options["port"], self)
   end
