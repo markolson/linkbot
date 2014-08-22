@@ -13,9 +13,7 @@ class IRCConnector < Linkbot::Connector
     @username = options["username"]
     @host     = options["server"]
     @port     = options["port"] || "6667"
-    puts "got options #{options.inspect}"
     @rooms    = options["rooms"]
-    puts "got rooms #{@rooms.inspect}"
 
     listen
   end
@@ -35,18 +33,17 @@ class IRCConnector < Linkbot::Connector
       on :connect do
         puts "connected to #{host}:#{port}, setting nick #{nick}"
         nick nick
-        puts "joining rooms #{rooms.inspect}"
         rooms.each do |room|
           puts "connecting to #{room}"
           join room
         end
       end
 
-      on :join do |channel|  # called after joining a channel
+      on :join do |channel|
         puts "joined #{channel}"
       end
 
-      on :message do |user, room, message|  # called when being messaged
+      on :message do |user, room, message|
         parent.handle_message(user, room, message)
         puts "<#{user}> -> <#{room}>: #{message}"
       end
