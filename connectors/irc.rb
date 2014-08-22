@@ -44,6 +44,10 @@ class IRCConnector < Linkbot::Connector
       end
 
       on :message do |user, room, message|
+        if !room.start_with? "#"
+          room = user
+        end
+
         parent.handle_message(user, room, message)
         puts "<#{user}> -> <#{room}>: #{message}"
       end
