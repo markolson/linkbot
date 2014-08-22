@@ -71,7 +71,9 @@ class IRCConnector < Linkbot::Connector
     puts "Got messages #{msgs} <<#{options}>>"
     msgs.each do |msg|
       if msg && msg.strip.length > 0 && options[:room]
-        @client.message(options[:room], msg)
+        msg.split("\n").each do |line|
+          @client.message(options[:room], line)
+        end
       end
     end
   end
