@@ -3,7 +3,6 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'twitter/json_stream'
 require 'sanitize'
 require 'htmlentities'
 require 'eventmachine'
