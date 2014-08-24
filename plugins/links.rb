@@ -40,7 +40,7 @@ class Links < Linkbot::Plugin
         }
         # Add the link to the dupe table
         Linkbot.db.execute("insert into links (user_id, dt, url) VALUES (?, ?, ?)",
-                           message.user_id, Time.now, url)
+                           message.user_id, Time.now.to_s, url)
       else
         Linkbot::Plugin.plugins.each {|k,v|
           messages << v[:ptr].on_dupe(message, url, rows[0][0], rows[0][1]) if(v[:ptr].respond_to?(:on_dupe))

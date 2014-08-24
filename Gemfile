@@ -1,5 +1,4 @@
 source "http://rubygems.org"
-source "http://gemcutter.org"
 
 gem "sanitize"
 gem "htmlentities"
@@ -19,8 +18,9 @@ gem "xmpp4r", :git => "git://github.com/hoxworth/xmpp4r.git"
 gem "imagesize"
 gem "octokit", "2.0.0.rc2"
 gem "tzinfo"
+gem "em-irc"
 
 group :dev do
-  gem "debugger"
+  gem "byebug"
   gem "pry"
 end
