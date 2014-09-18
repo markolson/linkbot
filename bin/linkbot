@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+
+require 'linkbot'
+require 'optparse'
+
+Encoding.default_internal = Encoding.default_external = "UTF-8"
+
+trap("INT") {
+  puts "Shutting down..."
+  exit(1)
+}
+
+at_exit {
+  puts "I know now why you cry. But it's something I can never do."
+}
+
+options = {
+  :test => false,
+  :dev => false
+}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: linkbot [options]"
+
+  opts.on("-t", "--test", "Run in test mode in the command line") do |v|
+    options[:test] = v
+  end
+
+  opts.on("-d", "--dev", "Do not actually create outbound connections") do |v|
+    options[:dev] = v
+  end
+
+end.parse!
+
+
+if options[:test]
+  Linkbot::Console.new(options)
+else
+  Linkbot::Bot.new(options)
+end.run
+
