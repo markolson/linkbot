@@ -1,16 +1,26 @@
+require 'yaml'
+
 module Linkbot
   class Config
     @@settings = {}
     
+    def self.settings
+      @@settings
+    end
+
     def self.[](x)
       @@settings[x]
     end
+
+    def self.[]=(x,y)
+      @@settings[x] = y
+    end
     
-    def self.load
+    def self.load(path)
       begin
-        @@settings = JSON.parse(open(File.join(File.dirname(__FILE__), "config.json")).read)
+        @@settings = YAML::load(File.open(path))
       rescue Errno::ENOENT
-        puts "You must have a config.json file defined"
+        puts "You must have a config.yml file defined"
         exit(1)
       end
     end
