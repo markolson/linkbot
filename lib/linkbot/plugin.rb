@@ -150,13 +150,16 @@ module Linkbot
 
     def self.plugins; @@plugins; end;
 
-    def self.collect
-      Dir["plugins/*.rb"].each do |file|
-        begin
-          load file
-        rescue Exception => e
-          puts "unable to load plugin #{file}"
-          puts e
+    def self.collect(paths = [])
+      #paths << File.expand_path(File.join(File.dirname(__FILE__), "..", "plugins"))
+      paths.each do |path|
+        Dir[File.join(path, "*.rb")].each do |file|
+          begin
+            load file
+          rescue Exception => e
+            puts "unable to load plugin #{file}"
+            puts e
+          end
         end
       end
     end

@@ -21,9 +21,8 @@ module Linkbot
 
       @connectors = []
       Linkbot::Connector.collect
-      Linkbot::Config.settings
       Linkbot.load_users
-      Linkbot::Plugin.collect
+      Linkbot::Plugin.collect(Linkbot::Config["extra_plugin_directories"])
     end
 
     def run
