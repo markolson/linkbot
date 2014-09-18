@@ -44,7 +44,6 @@ module Linkbot
           if ((v[:handlers][message.type][:regex] && v[:handlers][message.type][:regex].match(message.body)) || v[:handlers][message.type][:regex].nil?)
 
             matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
-            puts "#{k} processing message type #{message.type}"
             begin
               end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
 
@@ -63,8 +62,6 @@ module Linkbot
           end
         end
       }
-      puts "returning msgs from plugins:"
-      pp final_message
       final_message
     end
 

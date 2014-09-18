@@ -19,11 +19,11 @@ module Linkbot
         Linkbot::Config["connectors"] = [{ "type" => "console", "periodic" => true, "receive_broadcasts" => true}]
       end
 
-      #Linkbot::Plugin.collect
       @connectors = []
       Linkbot::Connector.collect
       Linkbot::Config.settings
-      #Linkbot.load_users
+      Linkbot.load_users
+      Linkbot::Plugin.collect
     end
 
     def run
@@ -57,6 +57,7 @@ module Linkbot
               end
             })
           end
+          connector.start
         end
 
         #every 30 seconds, run periodic plugins
