@@ -22,15 +22,17 @@ class Console < Linkbot::Connector
     end
 
     message = Message.new(msg, Linkbot.user_id(nick), nick, self, :message, options)
-    invoke_callbacks(message, options)
+
+    EventMachine::defer(proc {
+      invoke_callbacks(message, options)
+    })
+    EventMachine::defer(proc { prompt})
   end
 
   def send_messages(msgs, options={})
     msgs.each do |msg|
-      msg.split("\n").each do |line|
-        puts "[Linkbot] >> " + line
-      end
+      puts msg
     end
-    prompt
+    EventMachine::defer(proc { prompt})
   end
 end

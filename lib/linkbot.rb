@@ -20,57 +20,45 @@ module Linkbot
       end
 
       @connectors = []
-      Linkbot::Connector.collect
       Linkbot.load_users
+      Linkbot::Connector.collect
+      load_connectors
       Linkbot::Plugin.collect(Linkbot::Config["extra_plugin_directories"])
     end
 
-    def run
-      EventMachine::run do
-        Linkbot::Config["connectors"].each { |config| 
-          if Linkbot::Connector[config["type"]]
-            connectors << Linkbot::Connector[config["type"]].new(config)
-          end
-        }
 
-        connectors.each do |connector|
+    def load_connectors
+      Linkbot::Config["connectors"].each { |config| 
+        if Linkbot::Connector[config["type"]]
+          connector =  Linkbot::Connector[config["type"]].new(config)
           connector.onmessage do |message,options|
-            EventMachine::defer(proc {
+            EventMachine::defer(proc { 
               messages = Linkbot::Plugin.handle_message(message)
-              # Check for broadcasts
-              if message.connector.options["broadcast"]
-                # Go through all of the connectors and send to all that accept broadcasts
-                connectors.each do |c|
-                  if c.options["receive_broadcasts"]
-                    begin
-                      c.send_messages(messages)
-                    rescue => e
-                      end_msg = "the #{c} connector threw an exception: #{e.inspect}"
-                      puts e.inspect
-                      puts e.backtrace.join("\n")
-                    end
-                  end
-                end
-              else
-                message.connector.send_messages(messages,options)
-              end
+              message.connector.send_messages(messages,options)
             })
           end
-          connector.start
+          connectors << connector
         end
+      }
+    end
 
-        #every 30 seconds, run periodic plugins
-        EventMachine.add_periodic_timer(30) do
-          linkbot.connectors.each do |c|
-            begin
-              c.periodic
-            rescue Exception => e
-              puts "error in call to #{c}"
-              puts e
-            end
+    def run_periodically_too
+      #every 30 seconds, run periodic plugins
+      EventMachine.add_periodic_timer(30) do
+        connectors.each do |c|
+          begin
+            c.periodic
+          rescue Exception => e
+            puts "error in call to #{c}"
+            puts e
           end
         end
-      end    
+      end
+    end
+
+    def run
+      EventMachine::run { connectors.each(&:start) }
+      run_periodically_too
     end
   end
 end
