@@ -19,7 +19,7 @@ at_exit {
 options = {
   :console => false,
   :dev => false,
-  :config_path => File.expand_path(File.join(File.dirname(__FILE__), "..", "config", "config.yml"))
+  :config_path => File.expand_path(File.join(File.dirname(__FILE__), "..", "config", "config.json"))
 }
 
 OptionParser.new do |opts|

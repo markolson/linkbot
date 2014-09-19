@@ -1,4 +1,4 @@
-require 'yaml'
+require 'json'
 
 module Linkbot
   class Config
@@ -18,7 +18,7 @@ module Linkbot
     
     def self.load(path)
       begin
-        @@settings = YAML::load(File.open(path))
+        @@settings = JSON.parse(File.read(path))
       rescue Errno::ENOENT
         puts "You must have a config.yml file defined"
         exit(1)
