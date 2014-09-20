@@ -3,7 +3,7 @@ require 'json'
 module Linkbot
   class Config
     @@settings = {}
-    
+
     def self.settings
       @@settings
     end
@@ -15,7 +15,11 @@ module Linkbot
     def self.[]=(x,y)
       @@settings[x] = y
     end
-    
+
+    def self.has_key?(key)
+      return @@settings.has_key? key
+    end
+
     def self.load(path)
       begin
         @@settings = JSON.parse(File.read(path))
