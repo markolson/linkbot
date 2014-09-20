@@ -23,7 +23,7 @@ module Linkbot
       Linkbot.load_users
       Linkbot::Connector.collect
       load_connectors
-      Linkbot::Plugin.collect(Linkbot::Config["extra_plugin_directories"])
+      Linkbot::Plugin.collect
     end
 
 
