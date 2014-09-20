@@ -150,12 +150,7 @@ module Linkbot
 
     def self.plugins; @@plugins; end;
 
-    def self.collect(paths = [])
-      if Linkbot::Config.has_key? "extra_plugin_directories"
-        Linkbot::Config["extra_plugin_directories"].each {|p| paths << p}
-      end
-      paths << File.expand_path(File.join(File.dirname(__FILE__), "..","..", "plugins"))
-
+    def self.collect(paths)
       paths.each do |path|
         Dir[File.join(path, "*.rb")].each do |file|
           begin

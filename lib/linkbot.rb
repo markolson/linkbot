@@ -23,7 +23,13 @@ module Linkbot
       Linkbot.load_users
       Linkbot::Connector.collect
       load_connectors
-      Linkbot::Plugin.collect
+
+      plugin_paths = []
+      if Linkbot::Config.has_key? "extra_plugin_directories"
+        Linkbot::Config["extra_plugin_directories"].each {|p| plugin_paths << p}
+      end
+      plugin_paths << File.expand_path(File.join(File.dirname(__FILE__), "..", "plugins"))
+      Linkbot::Plugin.collect(plugin_paths)
     end
 
 
