@@ -22,4 +22,5 @@ gem "em-irc"
 group :dev do
   gem "byebug"
   gem "pry"
+  gem "rspec"
 end
