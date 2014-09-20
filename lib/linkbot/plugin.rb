@@ -154,7 +154,7 @@ module Linkbot
       paths.each do |path|
         Dir[File.join(path, "*.rb")].each do |file|
           begin
-            p file
+            p "loading plugin #{file}"
             load file
           rescue Exception => e
             puts "unable to load plugin #{file}"
