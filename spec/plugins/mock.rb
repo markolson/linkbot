@@ -1,11 +1,18 @@
 class MockPlugin
+  @@messages = []
+  @@matches = []
+
   def self.help; HELP; end
 
-  attr :message, :matches
   def self.on_message(message, matches)
-    @message = message
-    @matches = matches
+    @@messages << message
+    @@matches << matches
+
+    message
   end
+
+  def self.messages; @@messages; end
+  def self.matches; @@matches; end
 
   Linkbot::Plugin.register('mock', self, {:message => {:regex => //, :handler => :on_message, :help => :help}})
 end
