@@ -58,9 +58,14 @@ GEM
       mini_portile (= 0.6.0)
     octokit (2.0.0.rc2)
       sawyer (~> 0.1.0)
+    pry (0.10.0)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
+    rake (10.1.0)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -114,6 +119,7 @@ DEPENDENCIES
   octokit (= 2.0.0.rc2)
   pry
   rack
+  rake
   rspec
   sanitize
   sinatra
