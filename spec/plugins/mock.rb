@@ -1,4 +1,4 @@
-class MockPlugin
+class MockPlugin < Linkbot::Plugin
   @@messages = []
   @@matches = []
 
