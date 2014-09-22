@@ -1,4 +1,4 @@
-/config/*example
+/config/config.json*
 /.bundle/
 /.yardoc
 /Gemfile.lock

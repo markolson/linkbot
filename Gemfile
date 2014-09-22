@@ -18,8 +18,10 @@ gem "imagesize"
 gem "octokit", "2.0.0.rc2"
 gem "tzinfo"
 gem "em-irc"
+gem "rake"
 
 group :dev do
   gem "byebug"
   gem "pry"
+  gem "rspec"
 end

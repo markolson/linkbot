@@ -44,6 +44,7 @@ module Linkbot
           if ((v[:handlers][message.type][:regex] && v[:handlers][message.type][:regex].match(message.body)) || v[:handlers][message.type][:regex].nil?)
 
             matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
+
             begin
               end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
 
@@ -150,13 +151,10 @@ module Linkbot
 
     def self.plugins; @@plugins; end;
 
-    def self.collect(paths = [])
-      paths << File.expand_path(File.join(File.dirname(__FILE__), "..","..", "plugins"))
-      p paths
+    def self.collect(paths)
       paths.each do |path|
         Dir[File.join(path, "*.rb")].each do |file|
           begin
-            p file
             load file
           rescue Exception => e
             puts "unable to load plugin #{file}"

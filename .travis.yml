@@ -1,0 +1,7 @@
+language: ruby
+cache: bundler
+rvm:
+  - "2.1.1"
+  - "2.1.2"
+notifications:
+  irc: "chat.freenode.net#linkbot"
