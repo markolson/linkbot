@@ -8,7 +8,7 @@ class MockPlugin < Linkbot::Plugin
     @@messages << message
     @@matches << matches
 
-    message
+    message.body
   end
 
   def self.messages; @@messages; end

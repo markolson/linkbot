@@ -13,9 +13,10 @@ describe Linkbot::Plugin do
 
   it "handles a message" do
     plugin = Linkbot::Plugin.plugins['mock'][:ptr]
-    Linkbot::Plugin.handle_message(Message.new("text", 1, "user", nil, nil, {}))
+    response = Linkbot::Plugin.handle_message(Message.new("text", 1, "user", nil, :message, {}))
 
     expect(plugin.messages.length).to eq 1
-    expect(plugin.messages).to eq "text"
+    expect(plugin.messages[0].body).to eq "text"
+    expect(response).to eq ['text']
   end
 end
