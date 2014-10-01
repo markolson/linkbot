@@ -4,7 +4,7 @@ require 'hpricot'
 class Fwa < Linkbot::Plugin
 
   def self.help
-    "!fwa - get an image from /r/firstworldanarchists"
+    "!anarchy - get an image from /r/firstworldanarchists"
   end
 
   create_log(:images)
