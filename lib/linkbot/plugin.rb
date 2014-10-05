@@ -28,15 +28,15 @@ module Linkbot
     def self.has_permission?(message)
       room = message[:options][:room]
       # If no room is set, there's nothing to {white,black}list on.
-      return true if room.nil?
+      return true unless room
 
       permissions = ::Linkbot::Config["permissions"]
       # If no permissions are set in the configuration, there's no {white,black}listing.
-      return true if permissions.nil?
+      return true unless permissions
 
       # If no permissions exist for this room, no {white,black}lists exist for the room.
       room_permissions = permissions[room]
-      return true if room_permissions.nil?
+      return true unless room_permissions
 
       # whitelisting takes precedence over blacklisting
       return room_permissions["whitelist"].include?(self.name) if room_permissions["whitelist"]
@@ -44,6 +44,10 @@ module Linkbot
 
       # if the plugin is not set in the {white,black}list, return true.
       return true
+    end
+
+    def self.has_handler_for?(message)
+      self.respond_to?("on_#{message.type}")
 
     end
   end
