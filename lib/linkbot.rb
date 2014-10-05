@@ -6,6 +6,7 @@ $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/linkbot"
 require 'config'
 require 'db'
 require 'plugin'
+require 'message'
 require 'connector'
 
 module Linkbot
@@ -29,7 +30,7 @@ module Linkbot
         Linkbot::Config["extra_plugin_directories"].each {|p| plugin_paths << p}
       end
       plugin_paths << File.expand_path(File.join(File.dirname(__FILE__), "..", "plugins"))
-      Linkbot::Plugin.collect(plugin_paths)
+      Linkbot::PluginManager.collect(plugin_paths)
     end
 
 
@@ -39,7 +40,7 @@ module Linkbot
           connector =  Linkbot::Connector[config["type"]].new(config)
           connector.onmessage do |message,options|
             EventMachine::defer(proc { 
-              messages = Linkbot::Plugin.handle_message(message)
+              messages = Linkbot::Message.handle(message)
               message.connector.send_messages(messages,options)
             })
           end

@@ -2,152 +2,9 @@ require 'rubygems'
 require 'pp'
 require_relative 'db'
 
-class MessageType
-  MESSAGE       = :message
-  DIRECTMESSAGE = :"direct-message"
-  STARRED       = :starred
-  UNSTARRED     = :unstarred
-end
-
-#The interface message object between Linkbot::Plugin and the plugins.
-#New axiom: the plugins know nothing about the service they're using!
-Message = Struct.new(:body, :user_id, :user_name, :connector, :type, :options)
-
-Response = Struct.new(:message, :options)
-
 module Linkbot
   class Plugin
     @@plugins = {}
-    @@message_logs = {}
-    @@message_logs[:global] = []
-
-    def self.handle_message(message)
-      @@message_logs[:global] << message
-
-      # Check for a room-wide message
-      if message[:options][:room]
-        @@message_logs[message[:options][:room]] ||= []
-        @@message_logs[message[:options][:room]] << message
-      end
-
-      # Check for a user-specific message
-      if message[:options][:user]
-         @@message_logs[message[:options][:user]] ||= []
-         @@message_logs[message[:options][:user]] << message
-      end
-
-      final_message = []
-
-      Linkbot::Plugin.plugins.each {|k,v|
-        if v[:ptr].has_permission?(message) && v[:handlers][message.type] && v[:handlers][message.type][:handler]
-
-          if ((v[:handlers][message.type][:regex] && v[:handlers][message.type][:regex].match(message.body)) || v[:handlers][message.type][:regex].nil?)
-
-            matches = v[:handlers][message.type][:regex] ? v[:handlers][message.type][:regex].match(message.body).to_a.drop(1) : nil
-
-            begin
-              end_msg = v[:ptr].send(v[:handlers][message.type][:handler], message, matches)
-
-              if !end_msg.empty?
-                if end_msg.is_a? Array
-                  final_message.concat(end_msg)
-                else
-                  final_message << end_msg
-                end
-              end
-            rescue => e
-              end_msg = "the #{k} plugin threw an exception: #{e.inspect}"
-              puts e.inspect
-              puts e.backtrace.join("\n")
-            end
-          end
-        end
-      }
-      final_message
-    end
-
-    def self.handle_periodic
-      final_messages = []
-
-      Linkbot::Plugin.plugins.each {|k,v|
-        if v[:handlers][:periodic] && v[:handlers][:periodic][:handler]
-
-          puts "#{k} processing periodic message"
-          begin
-            #messages should be a hash {:messages => [<message:string>],
-            #                           :options => {"room": <room:string>}
-            #                          }
-            messages = v[:ptr].send(v[:handlers][:periodic][:handler])
-
-            if !messages[:messages].empty?
-              final_messages << messages
-            end
-          rescue Exception => e
-            final_messages << "the #{k} plugin threw an exception: #{e.inspect}"
-            puts e.inspect
-            puts e.backtrace.join("\n")
-          end
-        end
-      }
-
-      if final_messages.length
-        puts "returning msgs from periodic plugins:"
-        pp final_messages
-      end
-      final_messages
-    end
-
-    def self.has_permission?(message)
-      if message[:options][:room]
-        if ::Linkbot::Config["permissions"].nil?
-          ## No permissions model exists. LET THEM ALL IN!
-          return true
-        else
-          ## Rats.
-          if ::Linkbot::Config["permissions"][message[:options][:room]]
-            room_permissions = ::Linkbot::Config["permissions"][message[:options][:room]]
-            # Check the whitelist first
-            if room_permissions["whitelist"]
-              return room_permissions["whitelist"].include?(self.name)
-            elsif room_permissions["blacklist"]
-              return !room_permissions["blacklist"].include?(self.name)
-            else
-              return true
-            end
-          else
-            return true
-          end
-        end
-      end
-
-      return true
-    end
-
-    def self.message_history(message)
-      if message[:options][:room]
-        @@message_logs[message[:options][:room]]
-      elsif message[:options][:user]
-        @@message_logs[message[:options][:user]]
-      else
-        @@message_logs[:global]
-      end
-    end
-
-    def self.create_log(log_name)
-      @@message_logs[log_name] ||= []
-    end
-
-    def self.log(log_name, message)
-      if @@message_logs[log_name].length >= 100
-        @@message_logs[log_name].pop
-      end
-      @@message_logs[log_name].unshift(message)
-    end
-
-    def self.registered_methods
-      @registered_methods ||= {}
-      @registered_methods
-    end
 
     def self.plugins; @@plugins; end;
 
@@ -167,6 +24,27 @@ module Linkbot
     def self.register(name, s, handlers)
       @@plugins[name] = {:ptr => s, :handlers => handlers}
     end
-  end
 
+    def self.has_permission?(message)
+      room = message[:options][:room]
+      # If no room is set, there's nothing to {white,black}list on.
+      return true if room.nil?
+
+      permissions = ::Linkbot::Config["permissions"]
+      # If no permissions are set in the configuration, there's no {white,black}listing.
+      return true if permissions.nil?
+
+      # If no permissions exist for this room, no {white,black}lists exist for the room.
+      room_permissions = permissions[room]
+      return true if room_permissions.nil?
+
+      # whitelisting takes precedence over blacklisting
+      return room_permissions["whitelist"].include?(self.name) if room_permissions["whitelist"]
+      return !room_permissions["blacklist"].include?(self.name) if room_permissions["blacklist"]
+
+      # if the plugin is not set in the {white,black}list, return true.
+      return true
+
+    end
+  end
 end
