@@ -25,9 +25,9 @@ module Linkbot
         next unless plugin[:ptr].has_handler_for?(message)
 
         # TODO: Typecheck that :regex is a regex.
-        if matches = (plugin[:handlers][message.type][:regex].nil? || plugin[:handlers][message.type][:regex].match(message.body))
-
-          matches = matches.to_a.drop(1)
+        matches_everything = plugin[:handlers][message.type][:regex].nil?
+        if matches = (matches_everything || plugin[:handlers][message.type][:regex].match(message.body))
+          matches = matches_everything ? nil : matches.to_a.drop(1)
           begin
             output_messages = plugin[:ptr].send(plugin[:handlers][message.type][:handler], message, matches)
             next if output_messages.empty?

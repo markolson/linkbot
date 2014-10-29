@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'pp'
+require 'httparty'
 require_relative 'db'
 
 module Linkbot
@@ -7,6 +8,16 @@ module Linkbot
     @@plugins = {}
 
     def self.plugins; @@plugins; end;
+
+    def self.create_log(name)
+      Linkbot::Message.create_log(name)
+    end
+    def self.log(name, msg)
+      Linkbot::Message.log(name, msg)
+    end
+    def self.message_history(message)
+      Linkbot::Message.message_history(message)
+    end
 
     def self.collect(paths)
       paths.each do |path|

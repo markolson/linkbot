@@ -30,16 +30,16 @@ module Linkbot
         Linkbot::Config["extra_plugin_directories"].each {|p| plugin_paths << p}
       end
       plugin_paths << File.expand_path(File.join(File.dirname(__FILE__), "..", "plugins"))
-      Linkbot::PluginManager.collect(plugin_paths)
+      Linkbot::Plugin.collect(plugin_paths)
     end
 
 
     def load_connectors
-      Linkbot::Config["connectors"].each { |config| 
+      Linkbot::Config["connectors"].each { |config|
         if Linkbot::Connector[config["type"]]
           connector =  Linkbot::Connector[config["type"]].new(config)
           connector.onmessage do |message,options|
-            EventMachine::defer(proc { 
+            EventMachine::defer(proc {
               messages = Linkbot::Message.handle(message)
               message.connector.send_messages(messages,options)
             })

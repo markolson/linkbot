@@ -25,11 +25,11 @@ options = {
 OptionParser.new do |opts|
   opts.banner = "Usage: linkbot [options]"
 
-  opts.on("-c", "--config", "Do not actually create outbound connections") do |v|
+  opts.on("-c", "--config FILE", "Do not actually create outbound connections") do |v|
     options[:config_path] = v
   end
 
-  opts.on("-c", "--console", "Run a local chat console for testing plugins") do |v|
+  opts.on("-k", "--console", "Run a local chat console for testing plugins") do |v|
     options[:console] = v
   end
 

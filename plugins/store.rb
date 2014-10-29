@@ -1,5 +1,5 @@
 class Store < Linkbot::Plugin
-    def self.on_message(message, matches)
+    def self.on_dm(message, matches)
       mymsg = nil
 
       if matches[0] && matches[0].length > 0
@@ -62,7 +62,7 @@ class Store < Linkbot::Plugin
 
     Linkbot::Plugin.register('store', self,
       {
-        :"direct-message" => {:regex => /!store(.*)/, :handler => :on_message, :help => :help},
+        :"direct-message" => {:regex => /!store(.*)/, :handler => :on_dm, :help => :help},
       }
     )
 end
