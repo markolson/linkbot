@@ -14,10 +14,6 @@ module Linkbot
 
     def self.handle(message)
 
-      log(:global, message)
-      log("_room_#{message[:options][:room]}", message)
-      log("_user_#{message[:options][:user]}", message)
-
       final_message = []
 
       Linkbot::Plugin.plugins.each {|k,plugin|
@@ -41,29 +37,6 @@ module Linkbot
         end
       }
       final_message
-    end
-
-    def self.message_history(message)
-      if message[:options][:room]
-        @@message_logs["_room_#{message[:options][:room]}"]
-      elsif message[:options][:user]
-        @@message_logs["_user_#{message[:options][:user]}"]
-      else
-        @@message_logs[:global]
-      end
-    end
-
-    def self.create_log(log_name)
-      @@message_logs[log_name] ||= []
-    end
-
-    def self.log(log_name, message)
-      create_log(log_name)
-
-      if @@message_logs[log_name].length >= 100
-        @@message_logs[log_name].pop
-      end
-      @@message_logs[log_name].unshift(message)
     end
 
   end

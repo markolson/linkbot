@@ -5,6 +5,7 @@ require 'bundler/setup'
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/linkbot"
 require 'config'
 require 'db'
+require 'messagelogs'
 require 'plugin'
 require 'message'
 require 'connector'

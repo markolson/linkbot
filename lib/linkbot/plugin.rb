@@ -9,14 +9,11 @@ module Linkbot
 
     def self.plugins; @@plugins; end;
 
-    def self.create_log(name)
-      Linkbot::Message.create_log(name)
-    end
-    def self.log(name, msg)
-      Linkbot::Message.log(name, msg)
+    def self.log(message)
+      Linkbot::MessageLogs.log(message)
     end
     def self.message_history(message)
-      Linkbot::Message.message_history(message)
+      Linkbot::MessageLogs.logs_for(message)
     end
 
     def self.collect(paths)

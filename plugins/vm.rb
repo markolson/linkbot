@@ -10,8 +10,6 @@ class Vm < Linkbot::Plugin
     }
   )
 
-  create_log(:vm)
-
   def self.on_message(message, matches)
     if Linkbot::Config["plugins"]["vm"].nil? || Linkbot::Config["plugins"]["vm"]["webhook"].nil?
       return "The vm plugin must be configured for use"

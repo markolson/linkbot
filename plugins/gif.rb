@@ -7,8 +7,6 @@ class Gif < Linkbot::Plugin
     "!gif [search term] - get a gif from reddit based on the optional search term"
   end
 
-  create_log(:images)
-
   def self.on_message(message, matches)
     searchterm = matches[0]
     if searchterm.nil?

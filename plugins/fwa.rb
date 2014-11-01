@@ -7,8 +7,6 @@ class Fwa < Linkbot::Plugin
     "!fwa - get an image from /r/firstworldanarchists"
   end
 
-  create_log(:images)
-
   def self.on_message(message, matches)
     url = "http://reddit.com/r/firstworldanarchists.json"
 

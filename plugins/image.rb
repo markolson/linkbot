@@ -11,8 +11,6 @@ class Image < Linkbot::Plugin
     }
   )
 
-  create_log(:images)
-
   def self.on_message(message, matches)
     searchterm = matches[0]
     color = nil

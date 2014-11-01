@@ -7,8 +7,6 @@ class Soda < Linkbot::Plugin
     "!soda - get a gif from /r/wheredidthesodago"
   end
 
-  create_log(:images)
-
   def self.on_message(message, matches)
     url = "http://reddit.com/r/wheredidthesodago.json"
 
