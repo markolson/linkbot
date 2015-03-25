@@ -1,5 +1,7 @@
 # Linkbot
 
+[![Join the chat at https://gitter.im/markolson/linkbot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/markolson/linkbot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Linkbot is a ruby chatbot designed to sit in your chat room and provide
 interesting/fun/useful responses to your queries. It has an easy-to-use
 plugin system and many plugins already written.
