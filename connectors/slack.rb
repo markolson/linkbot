@@ -32,10 +32,10 @@ class SlackConnector < Linkbot::Connector
     puts "Updating users"
     users.each do |user|
       user_id = user["id"]
-      if !Linkbot.user_exists?(user_id)
-        Linkbot.add_user(user["name"],user_id)
-      else
+      if Linkbot.user_exists?(user_id)
         Linkbot.update_user(user["name"],user_id)
+      else
+        Linkbot.add_user(user["name"],user_id)
       end
     end
   end
@@ -50,7 +50,12 @@ class SlackConnector < Linkbot::Connector
   def send_messages(messages, options={})
     messages.each do |message|
       if message && message.strip.length > 0
-        @client.chat_postMessage({:channel => options[:room], :text => message})
+        @client.chat_postMessage({
+          :channel => options[:room],
+          :text => message,
+          :username => "Linkbot",
+          :icon_url => "https://dl.dropboxusercontent.com/u/10931735/bot.png"
+        })
       end
     end
   end
