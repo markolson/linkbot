@@ -25,3 +25,7 @@ group :dev do
   gem "pry"
   gem "rspec"
 end
+
+group :test do
+  gem "codeclimate-test-reporter", require: nil
+end
