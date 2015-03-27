@@ -50,23 +50,7 @@ if __FILE__ == $0
       connector.onmessage do |message,options|
         EventMachine::defer(proc {
           messages = Linkbot::Plugin.handle_message(message)
-          # Check for broadcasts
-          if message.connector.options["broadcast"]
-            # Go through all of the connectors and send to all that accept broadcasts
-            linkbot.connectors.each do |c|
-              if c.options["receive_broadcasts"]
-                begin
-                  c.send_messages(messages)
-                rescue => e
-                  end_msg = "the #{c} connector threw an exception: #{e.inspect}"
-                  puts e.inspect
-                  puts e.backtrace.join("\n")
-                end
-              end
-            end
-          else
-            message.connector.send_messages(messages,options)
-          end
+          message.connector.send_messages(messages,options)
         })
       end
     end
