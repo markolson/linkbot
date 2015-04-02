@@ -41,10 +41,12 @@ class SlackConnector < Linkbot::Connector
   end
 
   def process_message(time, nick, text, options={})
-    if Linkbot.user_exists?(nick)
-      message = Message.new(text, nick, Linkbot.username(nick), self, :message, options )
-      invoke_callbacks(message, options)
+    if !Linkbot.user_exists?(nick)
+      update_users(@client.users_list["members"])
     end
+
+    message = Message.new(text, nick, Linkbot.username(nick), self, :message, options )
+    invoke_callbacks(message, options)
   end
 
   def send_messages(messages, options={})
