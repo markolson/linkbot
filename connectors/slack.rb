@@ -35,18 +35,21 @@ class SlackConnector < Linkbot::Connector
       if Linkbot.user_exists?(user_id)
         Linkbot.update_user(user["name"],user_id)
       else
+        puts "Adding #{user["name"]}"
         Linkbot.add_user(user["name"],user_id)
       end
     end
   end
 
   def process_message(time, nick, text, options={})
-    if !Linkbot.user_exists?(nick)
-      update_users(@client.users_list["members"])
-    end
+    if (!nick.nil? && nick != "")
+      if !Linkbot.user_exists?(nick)
+        update_users(@client.users_list["members"])
+      end
 
-    message = Message.new(text, nick, Linkbot.username(nick), self, :message, options )
-    invoke_callbacks(message, options)
+      message = Message.new(text, nick, Linkbot.username(nick), self, :message, options )
+      invoke_callbacks(message, options)
+    end
   end
 
   def send_messages(messages, options={})
