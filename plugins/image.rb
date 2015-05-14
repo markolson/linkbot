@@ -57,7 +57,7 @@ class Image < Linkbot::Plugin
 
     return "No images found. Lame." if imgs.empty?
 
-    url = imgs.sample
+    url = ensure_image_extension imgs.sample
 
     if ::Util.wallpaper?(url)
       url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
@@ -68,6 +68,15 @@ class Image < Linkbot::Plugin
 
   def self.help
     "!image [searchity search] - Return a relevant picture"
+  end
+
+  def self.ensure_image_extension(url)
+    ext = url.split('.').pop()
+    if ext =~ /(png|jpe?g|gif)$/i
+      url
+    else
+      "#{url}#.png"
+    end
   end
 end
 
