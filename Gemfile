@@ -19,6 +19,7 @@ gem "octokit", "2.0.0.rc2"
 gem "tzinfo"
 gem "em-irc"
 gem "slack-api"
+gem "certifi"
 
 group :dev do
   gem "byebug"

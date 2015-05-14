@@ -1,4 +1,5 @@
-require 'open-uri'
+require 'certifi'
+require 'httparty'
 require 'active_support'
 require 'cgi'
 
@@ -22,9 +23,9 @@ class Youtube < Linkbot::Plugin
 
     searchterm = CGI.escape(searchterm)
 
-    url = "https://gdata.youtube.com/feeds/api/videos?q=#{searchterm}&orderBy=relevance&alt=json"
-    doc = ActiveSupport::JSON.decode(open(url).read)
-    first = doc["feed"]["entry"][0]
-    first["link"][0]["href"]
+    url = "https://www.youtube.com/results?search_query=#{searchterm}"
+    body = HTTParty.get(url, {ssl_ca_file: Certifi.where})
+    watch = body.to_s.scan(/a href="(\/watch[^&]*?)"/)[0][0]
+    "https://www.youtube.com#{watch}"
   end
 end
