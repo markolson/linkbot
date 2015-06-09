@@ -5,12 +5,12 @@ describe Linkbot::Plugin do
     Linkbot::Plugin.collect([PLUGIN_PATH])
   end
 
-  let (:message) { Message.new("text", 1, "user", nil, :message, {room: "this_room"}) }
+  let (:message) { Message.new("foo bar baz", 1, "user", nil, :message, {room: "this_room"}) }
 
   it "has the correct plugin" do
     expect(Linkbot::Plugin.plugins.keys.length).to eq 1
     expect(Linkbot::Plugin.plugins['mock'][:ptr]).to eq MockPlugin
-    expect(Linkbot::Plugin.plugins['mock'][:handlers]).to eq({:message => {:regex => //, :handler => :on_message, :help => :help}})
+    expect(Linkbot::Plugin.plugins['mock'][:handlers]).to eq({:message => {:regex => /(\w+)\s(.*)/, :handler => :on_message, :help => :help}})
   end
 
   it "handles a message" do
@@ -18,8 +18,8 @@ describe Linkbot::Plugin do
     response = Linkbot::Message.handle(message)
 
     expect(plugin.messages.length).to eq 1
-    expect(plugin.messages[0].body).to eq "text"
-    expect(response).to eq ['text']
+    expect(plugin.messages[0].body).to eq "foo bar baz"
+    expect(response).to eq ["body: foo bar baz", "matches: foo, bar baz"]
   end
 
   it "does not register a plugin unless all handlers have regexes" do

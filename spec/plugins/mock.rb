@@ -8,11 +8,11 @@ class MockPlugin < Linkbot::Plugin
     @@messages << message
     @@matches << matches
 
-    message.body
+    ["body: #{message.body}", "matches: #{matches.join(', ')}"]
   end
 
   def self.messages; @@messages; end
   def self.matches; @@matches; end
 
-  Linkbot::Plugin.register('mock', self, {:message => {:regex => //, :handler => :on_message, :help => :help}})
+  Linkbot::Plugin.register('mock', self, {:message => {:regex => /(\w+)\s(.*)/, :handler => :on_message, :help => :help}})
 end
