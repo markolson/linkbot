@@ -30,6 +30,9 @@ module Linkbot
     end
 
     def self.register(name, s, handlers)
+      handlers.each do |type, options|
+        return if !Regexp.try_convert options[:regex]
+      end
       @@plugins[name] = {:ptr => s, :handlers => handlers}
     end
 

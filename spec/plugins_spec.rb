@@ -22,6 +22,12 @@ describe Linkbot::Plugin do
     expect(response).to eq ['text']
   end
 
+  it "does not register a plugin unless all handlers have regexes" do
+    bad_handler = {:message => { :regex => :not_a_regex, :handler => :no_handler} }
+    expect(Linkbot::Plugin.register('faker', MockPlugin, bad_handler)).to be nil
+    expect(Linkbot::Plugin.plugins.keys).to contain_exactly 'mock'
+  end
+
   context "has permission" do
 
     it "when there is no room associated with a message" do
