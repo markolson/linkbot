@@ -24,7 +24,9 @@ class SlackConnector < Linkbot::Connector
     end
 
     update_users(@client.post("rtm.start")["users"])
+  end
 
+  def start
     @rtc.start
   end
 
