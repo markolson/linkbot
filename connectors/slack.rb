@@ -5,6 +5,8 @@ class SlackConnector < Linkbot::Connector
 
   def initialize(options)
     super(options)
+    @options["username"] ||= "Linkbot"
+    @options["icon_url"] ||= "https://dl.dropboxusercontent.com/u/10931735/bot.png"
 
     Slack.configure do |config|
       config.token = @options["token"]
@@ -60,8 +62,8 @@ class SlackConnector < Linkbot::Connector
         @client.chat_postMessage({
           :channel => options[:room],
           :text => message,
-          :username => "Linkbot",
-          :icon_url => "https://dl.dropboxusercontent.com/u/10931735/bot.png"
+          :username => @options["username"],
+          :icon_url => @options["icon_url"],
         })
       end
     end

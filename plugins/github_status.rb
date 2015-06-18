@@ -4,14 +4,15 @@ require 'active_support/time'
 
 class Hubstat < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["hubstat"]
-  @@hipchat = Linkbot::Config["plugins"]["hipchat"]
-
-  if @@config && @@hipchat
-    Linkbot::Plugin.register('hubstat', self, {
-     :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help },
-     :periodic => {:handler => :periodic}
-    })
+  handlers = {
+   :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help },
+  }
+  if @@config && @@config['room']
+    @@room = @@config['room']
+    handlers[:periodic] = {:handler => :periodic}
   end
+
+  Linkbot::Plugin.register('hubstat', self, handlers)
 
   if Linkbot.db.table_info('hubstatus').empty?
     Linkbot.db.execute('CREATE TABLE hubstatus (dt TEXT)');
@@ -21,22 +22,22 @@ class Hubstat < Linkbot::Plugin
     '!hubstat - see whether your trouble with GitHub is just you'
   end
 
-  def self.post_status(response)
-    colors = {
-      "good" => "green",
-      "minor" => "yellow",
-      "major" => "red"
+  def self.status_text(response)
+    statuses = {
+      "good" => "✅",
+      "minor" => "⚠️",
+      "major" => "🔴"
     }
-    color = colors.fetch(response['status'], "gray")
+    how_are_things = statuses.fetch(response['status'], '¯\_(ツ)_/¯')
 
     message_time = Time.parse(response["created_on"])
     timestr = message_time.in_time_zone("EST").strftime("%b %d %H:%m EST")
 
-    message = "As of #{timestr}, GitHub is <a href='https://status.github.com/'>reporting</a>: #{response["body"]}"
-    hipchat_send(color, message)
+    "#{how_are_things} As of #{timestr}, GitHub is reporting: #{response["body"]}\nhttps://status.github.com/"
   end
 
   def self.periodic
+    messages = []
     #by default, post the message if it's within the last day
     last_pulled = Time.now.utc - 60*60*24
 
@@ -48,40 +49,20 @@ class Hubstat < Linkbot::Plugin
     #don't print the message if time exists and is newer than the message
     status_time = Time.parse(response["created_on"])
     if last_pulled && last_pulled < status_time
-      self.post_status(response)
+      messages << self.status_text(response)
     end
 
     Linkbot.db.execute("delete from hubstatus")
     Linkbot.db.execute("insert into hubstatus (dt) VALUES (?)", status_time.to_s)
-    {:messages => []}
+    {:messages => messages, :options => { :room => @@room } }
   end
 
   def self.on_message(message, matches)
     response = self.get_status
-    self.post_status(response)
-    []
+    self.status_text(response)
   end
 
   def self.get_status
     JSON.parse(open('https://status.github.com/api/last-message.json').read)
   end
-
-  def self.hipchat_send(color, message)
-    message = CGI.escape(message)
-    room = @@config['room'] || @@hipchat['room']
-
-    url = "https://api.hipchat.com/v1/rooms/message?" \
-        + "auth_token=#{@@hipchat['api_token']}&" \
-        + "message=#{message}&" \
-        + "color=#{color}&" \
-        + "room_id=#{room}&" \
-        + "from=GitHub+Status"
-
-    puts "sending message to hipchat url #{url}"
-    open(url)
-  rescue => e
-    puts e.inspect
-    puts e.backtrace.join("\n")
-  end
-
 end
