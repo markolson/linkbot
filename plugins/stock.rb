@@ -1,10 +1,8 @@
 # encoding: UTF-8
 class Stock < Linkbot::Plugin
 
-  Linkbot::Plugin.register('stock', self, {
-    :message => {:regex => Regexp.new('\$(\w+)'), :handler => :on_message, :help => :help},
-    :"direct-message" => {:regex => Regexp.new('\$(\w)+'), :handler => :on_message, :help => :help}
-  })
+  register :regex => Regexp.new('\$(\w+)')
+  help "$<ticker> returns that stock's price"
 
   def self.on_message(message, matches)
     ticker = matches[0]
@@ -24,7 +22,4 @@ class Stock < Linkbot::Plugin
     [msg]
   end
 
-  def self.help
-    "$<ticker> returns that stock's price"
-  end
 end

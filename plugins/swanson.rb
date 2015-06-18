@@ -43,20 +43,11 @@ class Swanson < Linkbot::Plugin
 "Leslie, you need to understand that we are headed to the most special place on earth. When I'm done eating a Mulligan's meal, for weeks afterwards there are flecks of meat in my mustache and I refuse to clean it because every now and then a piece of meat will fall into my mouth.",
 "(His museum speech) Shut up. And look at me. Welcome to Visions of Nature. This room has several paintings in it. Some are big and some are small. People did them and they are here now. I believe after this is over they will be hung in government buildings. Why the government is involved in an art show is beyond me. I also think it's pointless for a human to paint scenes of nature when they can go outside and stand in it.",
 "The whole thing is a scam. Birthdays were invented by Hallmark to sell cards.",
-"I won't publicly endorse a product unless I use it exclusively. My only official recommendations are U.S. Army issued mustache trimmers, Morton's salt, and the C.R. Lawrence Fein two inch axe-style scraper oscillating knife blade."             
+"I won't publicly endorse a product unless I use it exclusively. My only official recommendations are U.S. Army issued mustache trimmers, Morton's salt, and the C.R. Lawrence Fein two inch axe-style scraper oscillating knife blade."
 	]
       quotes[rand(quotes.length)]
     end
 
-    def self.help
-      "!swanson - The one and only, Ron Swanson"
-    end
-
-    
-    Linkbot::Plugin.register('swanson', self,
-      {
-        :message => {:regex => /!swanson/, :handler => :on_message, :help => :help},
-        :"direct-message" => {:regex => /!swanson/, :handler => :on_message, :help => :help}
-      }
-    )
+    help "!swanson - The one and only, Ron Swanson"
+    register :regex => /!swanson/
 end

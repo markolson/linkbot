@@ -5,6 +5,9 @@ require 'json'
 
 class Meme < Linkbot::Plugin
 
+  register :regex => /!meme(.*)/
+  help help_text
+
   @@meme_regex = Regexp.new(/^!meme([ ](--list|--help|[A-Za-z0-9_]+)([ ].*)?)?$/)
 
   ##
@@ -56,7 +59,7 @@ class Meme < Linkbot::Plugin
   advice_dog 'TROLLFACE',       68,     'Troll-Face',                     269
   advice_dog 'WONKA',           542616, 'Willy Wonka',                    2729805
   advice_dog 'YODAWG',          79,     'Yo Dawg Xzibit',                 108785
-  advice_dog 'YUNO',            2,      'Y-U-NO',                         166088,         'Y U NO'              
+  advice_dog 'YUNO',            2,      'Y-U-NO',                         166088,         'Y U NO'
   # keep generators in alphabetical order
 
   ##
@@ -173,15 +176,5 @@ class Meme < Linkbot::Plugin
       return "Unknown command"
     end
   end
-
-  def self.help
-    self.help_text
-  end
-
-  Linkbot::Plugin.register('meme', self,
-    {
-      :message => {:regex => /!meme(.*)/, :handler => :on_message, :help => :help}
-    }
-  )
 
 end

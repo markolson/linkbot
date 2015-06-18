@@ -1,9 +1,8 @@
 class Video < Linkbot::Plugin
   include HTTParty
-  
-  Linkbot::Plugin.register('video', self, {
-    :message => {:regex => /^!video (.+)/i, :handler => :on_message, :help => :help}
-  })
+
+  register :regex => /^!video (.+)/i
+  help "!video (youtube video | stop) - play a video, or stop a video. Or call a built-in video. Or something." 
 
   def self.on_message(message, matches)
     default_videos = {
@@ -15,7 +14,7 @@ class Video < Linkbot::Plugin
       "fail" => "1ytCEuuW2_A",
       "womp womp" => "yJxCdh1Ps48"
     }
-    
+
     url = ""
     key = matches[0].strip
     if key.downcase == 'stop'
@@ -25,12 +24,9 @@ class Video < Linkbot::Plugin
     else
       url = "#{Linkbot::Config["plugins"]["video"]["base_uri"]}/youtube/#{key}"
     end
-    
+
     get(url)
     ''
   end
-  
-  def self.help
-    "!video (youtube video | stop) - play a video, or stop a video. Or call a built-in video. Or something."
-  end
+
 end

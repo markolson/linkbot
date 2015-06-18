@@ -1,9 +1,6 @@
 class Stab < Linkbot::Plugin
-  Linkbot::Plugin.register('stab', self,
-    {
-      :message => {:regex => /\/stab(?: ([\w\s]+))?/, :handler => :on_message}
-    }
-  )
+
+  register :regex => /\/stab(?: ([\w\s]+))?/
   
   def self.on_message(message, matches)
     name = matches[0] || "everyone in the face"

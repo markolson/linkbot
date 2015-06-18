@@ -2,10 +2,9 @@ class Trello < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["trello"]
 
   if @@config
-    Linkbot::Plugin.register('trello', self, {
-      :periodic => {:handler => :periodic}
-    })
 
+    register :periodic => {:handler => :periodic}
+    
     if Linkbot.db.table_info('trello').empty?
       Linkbot.db.execute('CREATE TABLE trello (dt TEXT)');
     end
@@ -79,7 +78,7 @@ class Trello < Linkbot::Plugin
     messages = []
 
     max_item_time = min_pull
-    
+
     # need to increment a second so that we don't pull up dupes
     since_time = (min_pull + 1).strftime '%Y-%m-%dT%H:%M:%S'
 

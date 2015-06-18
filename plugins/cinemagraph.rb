@@ -3,9 +3,8 @@ require 'hpricot'
 
 class Cinemagraph < Linkbot::Plugin
 
-  def self.help
-    "!cinemagraph - get a fancy gif"
-  end
+  register :regex => /!cinemagraph/i
+  help "!cinemagraph - get a fancy gif"
 
   def self.on_message(message, matches)
     if rand(2) == 1
@@ -20,8 +19,4 @@ class Cinemagraph < Linkbot::Plugin
       imgs[rand(imgs.length)].attributes["src"]
     end
   end
-
-  Linkbot::Plugin.register('cinemagraph', self, {
-    :message => {:regex => /!cinemagraph/i, :handler => :on_message, :help => :help}
-  })
 end

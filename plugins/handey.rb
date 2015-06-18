@@ -249,15 +249,12 @@ QUOTES = ["Before criticizing someone, walk a mile in their shoes. Then when you
 "When I think back on all the blessings I have been given in my life, I can't think of a single one, unless you count that rattlesnake that granted me all those wishes.",]
 
 class Handey < Linkbot::Plugin
-  Linkbot::Plugin.register('handey', self, {
-    :message => {:regex => /!deepthought/, :handler => :on_message, :help => :help}
-  })
+  
+  register :regex => /!deepthought/
+  help "!deepthought - return a deep thought"
 
   def self.on_message(message, matches)
     QUOTES.sample + " - Jack Handey"
   end
 
-  def self.help
-    "!deepthought - return a deep thought"
-  end
 end

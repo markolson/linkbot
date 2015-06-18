@@ -3,9 +3,8 @@ require 'hpricot'
 
 class Sonic < Linkbot::Plugin
 
-  def self.help
-    "!sonic - get a dumb random sonic gif"
-  end
+  register :regex => /!sonic/i
+  help "!sonic - get a dumb random sonic gif"
 
   def self.on_message(message, matches)
     page = rand(29)
@@ -14,7 +13,4 @@ class Sonic < Linkbot::Plugin
     imgs[rand(imgs.length)]
   end
 
-  Linkbot::Plugin.register('sonic', self, {
-    :message => {:regex => /!sonic/i, :handler => :on_message, :help => :help}
-  })
 end

@@ -1,9 +1,7 @@
 class Morse < Linkbot::Plugin
 
-  Linkbot::Plugin.register('morse', self, {
-    :message => {:regex => /\A[\s\|\?\/\.-]+\s[\s\|\?\/\.-]+\z/i, :handler => :on_message}
-  })
-
+  register :regex => /\A[\s\|\?\/\.-]+\s[\s\|\?\/\.-]+\z/i
+  
   def self.on_message(message, matches)
     morse_map = {
       '.-'   => 'A', '-...' => 'B', '-.-.' => 'C', '-..'  => 'D', '.'    => 'E',
@@ -19,4 +17,3 @@ class Morse < Linkbot::Plugin
   end
 
 end
-

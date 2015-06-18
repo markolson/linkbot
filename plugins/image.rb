@@ -5,11 +5,8 @@ require 'cgi'
 
 class Image < Linkbot::Plugin
 
-  Linkbot::Plugin.register('image', self,
-    {
-      :message => {:regex => /!image(?: (.+))?/, :handler => :on_message, :help => :help}
-    }
-  )
+  register :regex => /!image(?: (.+))?/
+  help "!image [searchity search] - Return a relevant picture"
 
   def self.on_message(message, matches)
     searchterm = matches[0]
@@ -64,10 +61,6 @@ class Image < Linkbot::Plugin
     return url
   end
 
-  def self.help
-    "!image [searchity search] - Return a relevant picture"
-  end
-
   def self.ensure_image_extension(url)
     ext = url.split('.').pop()
     if ext =~ /(png|jpe?g|gif)$/i
@@ -77,4 +70,3 @@ class Image < Linkbot::Plugin
     end
   end
 end
-

@@ -1,4 +1,7 @@
 class Confused < Linkbot::Plugin
+
+  register :regex => /^\?$/
+  
   def self.on_message(message, matches)
     [
     # confusion
@@ -67,7 +70,4 @@ class Confused < Linkbot::Plugin
     ].sample
   end
 
-  Linkbot::Plugin.register('confused', self, {
-      :message => {:regex => /^\?$/, :handler => :on_message}
-  })
 end
