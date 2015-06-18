@@ -4,15 +4,15 @@ require 'active_support/time'
 
 class Hubstat < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["hubstat"]
-
+  handlers = {
+   :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help },
+  }
   if @@config && @@config['room']
     @@room = @@config['room']
-
-    Linkbot::Plugin.register('hubstat', self, {
-     :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help },
-     :periodic => {:handler => :periodic}
-    })
+    handlers[:periodic] = {:handler => :periodic}
   end
+
+  Linkbot::Plugin.register('hubstat', self, handlers)
 
   if Linkbot.db.table_info('hubstatus').empty?
     Linkbot.db.execute('CREATE TABLE hubstatus (dt TEXT)');
