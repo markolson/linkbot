@@ -58,8 +58,7 @@ class SlackConnector < Linkbot::Connector
         @client.chat_postMessage({
           :channel => options[:room],
           :text => message,
-          :username => "Linkbot",
-          :icon_url => "https://dl.dropboxusercontent.com/u/10931735/bot.png"
+          :as_user => true,
         })
       end
     end
