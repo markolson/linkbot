@@ -1,4 +1,8 @@
 class Popcorn < Linkbot::Plugin
+  
+  register :regex => /!popcorn/
+  help "!popcorn - Everyone loves popcorn"
+
     def self.on_message(message, matches)
       quotes = ['http://i.imgur.com/qlRu3.gif',
                 'http://i.imgur.com/DDMBW.gif',
@@ -18,15 +22,4 @@ class Popcorn < Linkbot::Plugin
       quotes[rand(quotes.length)]
     end
 
-    def self.help
-      "!popcorn - Everyone loves popcorn"
-    end
-
-    
-    Linkbot::Plugin.register('popcorn', self,
-      {
-        :message => {:regex => /!popcorn/, :handler => :on_message, :help => :help},
-        :"direct-message" => {:regex => /!popcorn/, :handler => :on_message, :help => :help}
-      }
-    )
 end

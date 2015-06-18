@@ -6,19 +6,14 @@ class Hubstat < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["hubstat"]
   @@hipchat = Linkbot::Config["plugins"]["hipchat"]
 
+  help '!hubstat - see whether your trouble with GitHub is just you'
+
   if @@config && @@hipchat
-    Linkbot::Plugin.register('hubstat', self, {
-     :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help },
-     :periodic => {:handler => :periodic}
-    })
+    register :regex => /\A!hubstat/, :periodic => {:handler => :periodic}
   end
 
   if Linkbot.db.table_info('hubstatus').empty?
     Linkbot.db.execute('CREATE TABLE hubstatus (dt TEXT)');
-  end
-
-  def self.help
-    '!hubstat - see whether your trouble with GitHub is just you'
   end
 
   def self.post_status(response)

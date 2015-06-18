@@ -3,9 +3,8 @@ require 'hpricot'
 
 class Fwa < Linkbot::Plugin
 
-  def self.help
-    "!anarchy - get an image from /r/firstworldanarchists"
-  end
+  register :regex => /!anarchy/i
+  help "!anarchy - get an image from /r/firstworldanarchists"
 
   def self.on_message(message, matches)
     url = "http://reddit.com/r/firstworldanarchists.json"
@@ -30,8 +29,4 @@ class Fwa < Linkbot::Plugin
 
     [title, url]
   end
-
-  Linkbot::Plugin.register('fwa', self, {
-    :message => {:regex => /!anarchy/i, :handler => :on_message, :help => :help}
-  })
 end

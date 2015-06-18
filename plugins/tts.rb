@@ -2,10 +2,9 @@ require 'uri'
 
 class TTS < Linkbot::Plugin
   include HTTParty
-  
-  Linkbot::Plugin.register('tts', self, {
-    :message => {:regex => /^!tts(?: (.+))?/i, :handler => :on_message, :help => :help}
-  })
+
+  register :regex => /^!tts(?: (.+))?/i
+  help "!tts (text to say) - SAY IT"
 
   def self.on_message(message, matches)
     statement = matches[0]
@@ -18,7 +17,4 @@ class TTS < Linkbot::Plugin
     ''
   end
   
-  def self.help
-    "!tts (text to say) - SAY IT"
-  end
 end

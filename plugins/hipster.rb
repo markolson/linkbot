@@ -1,26 +1,21 @@
 class Hipster < Linkbot::Plugin
-    def self.on_message(message, matches)
-      url = URI.parse('http://api.automeme.net/text?vocab=hipster')
 
-      res = Net::HTTP.get(url)
-      meme = res.split("\n").first
+  register :regex => /!hipster/
+  help "!hipster - Is it can be PBR tiem nao plox?"
 
-      page = rand(150)
-      url = "http://lookatthisfuckinhipster.com"
-      doc = Hpricot(open("#{url}?p=#{page}").read)
-      imgs = doc.search("div[@class=imagewrap] img")
-      img = url + imgs[rand(imgs.length)].attributes["src"]
+  def self.on_message(message, matches)
+    url = URI.parse('http://api.automeme.net/text?vocab=hipster')
 
-      [img, meme]
-    end
+    res = Net::HTTP.get(url)
+    meme = res.split("\n").first
 
-    def self.help
-      "!hipster - Is it can be PBR tiem nao plox?"
-    end
+    page = rand(150)
+    url = "http://lookatthisfuckinhipster.com"
+    doc = Hpricot(open("#{url}?p=#{page}").read)
+    imgs = doc.search("div[@class=imagewrap] img")
+    img = url + imgs[rand(imgs.length)].attributes["src"]
 
-    Linkbot::Plugin.register('hipster', self,
-      {
-        :message => {:regex => /!hipster/, :handler => :on_message, :help => :help}
-      }
-    )
+    [img, meme]
+  end
+
 end

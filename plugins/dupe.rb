@@ -4,14 +4,10 @@ require 'sqlite3'
 require 'time'
 
 class Dupe < Linkbot::Plugin
-  
-  Linkbot::Plugin.register('dupe', self,
-    {
-      :message => {:regex => /!stats/, :handler => :on_message, :help => :help}
-    }
-  )
-  
-  def self.on_message(message, matches) 
+
+  register :regex => /!stats/
+
+  def self.on_message(message, matches)
     rows = Linkbot.db.execute("select u.username,s.total,s.dupes,k.karma,u.showname from stats s, users u, karma k where u.user_id = s.user_id AND u.user_id = k.user_id order by k.karma desc")
     mess = "Link stats:\n--------------------------\n"
 
@@ -25,7 +21,7 @@ class Dupe < Linkbot::Plugin
     }
     mess
   end
-  
+
   def self.on_dupe(message, url, duped_user, duped_timestamp)
     total,dupes = self.stats(message.user_id)
     Linkbot.db.execute("update stats set dupes = ? where user_id=?", dupes+1, message.user_id)
@@ -35,13 +31,13 @@ class Dupe < Linkbot::Plugin
     puts duped_timestamp
     "DUPE: Previously posted by #{duped_user} #{::Util.ago_in_words(Time.now, Time.parse(duped_timestamp.to_s))}"
   end
-  
+
   def self.on_newlink(message, url)
     total,dupes = self.stats(message.user_id)
     Linkbot.db.execute("update stats set total = ? where user_id=?", total+1, message.user_id)
   end
-  
-  
+
+
   def self.stats(user_id)
     total = 0
     dupes = 0
@@ -54,11 +50,11 @@ class Dupe < Linkbot::Plugin
     end
     return total,dupes
   end
-  
+
   def self.help
     "!stats - show all karma and links stats for linkchat participants"
   end
-  
+
   if Linkbot.db.table_info('stats').empty?
     Linkbot.db.execute('CREATE TABLE stats (user_id STRING, dupes INTEGER, total INTEGER)');
   end

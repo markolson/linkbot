@@ -2,9 +2,8 @@ class Timer < Linkbot::Plugin
 
   @@active = 0
 
-  def self.help
-    "!timer <seconds> [message] - set a timer, optionally saying something."
-  end
+  register :regex => /!timer (\d+)\s?(.*)/i
+  help "!timer <seconds> [message] - set a timer, optionally saying something."
 
   def self.on_message(message, matches)
     if @@active >= 5
@@ -20,8 +19,4 @@ class Timer < Linkbot::Plugin
       message
     end
   end
-
-  Linkbot::Plugin.register('timer', self, {
-    :message => {:regex => /!timer (\d+)\s?(.*)/i, :handler => :on_message, :help => :help}
-  })
 end

@@ -3,9 +3,8 @@ require 'hpricot'
 
 class Soda < Linkbot::Plugin
 
-  def self.help
-    "!soda - get a gif from /r/wheredidthesodago"
-  end
+  register :regex => /!soda/i
+  help "!soda - get a gif from /r/wheredidthesodago"
 
   def self.on_message(message, matches)
     url = "http://reddit.com/r/wheredidthesodago.json"
@@ -31,7 +30,4 @@ class Soda < Linkbot::Plugin
     [title, url]
   end
 
-  Linkbot::Plugin.register('soda', self, {
-    :message => {:regex => /!soda/i, :handler => :on_message, :help => :help}
-  })
 end

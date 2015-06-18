@@ -5,10 +5,8 @@ class LastFm < Linkbot::Plugin
     @@fm_regex = Regexp.new(/^!fm([ ](help$|users$|.+$|register[ ].+|remove[ ].+))?$/)
     @@recent_tracks = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&api_key=#{@@config['key']}&format=json"
 
-    Linkbot::Plugin.register('last_fm', self, {
-      :periodic => {:handler => :periodic},
-      :message => {:regex => /!fm(.*)/, :handler => :on_message, :help => :help}
-    })
+    register :regex => /!fm(.*)/, :periodic => {:handler => :periodic}
+    help "!fm, Get tracks currently being listened to...\n!fm <username>|<name>, Get track currently being listened to by user.\n!fm register <username>, Register/update your last.fm username with Linkbot.\n!fm remove, Unregister your last.fm username from Linkbot.\n!fm users, Get the list of registered Last.fm users\n!fm help, Get this message...\n"
   end
 
   def self.api_send(message)
@@ -160,15 +158,6 @@ class LastFm < Linkbot::Plugin
 
       return recent
     end
-  end
-
-  def self.help
-    ["!fm, Get tracks currently being listened to...\n",
-     "!fm <username>|<name>, Get track currently being listened to by user.\n",
-     "!fm register <username>, Register/update your last.fm username with Linkbot.\n",
-     "!fm remove, Unregister your last.fm username from Linkbot.\n",
-     "!fm users, Get the list of registered Last.fm users\n",
-     "!fm help, Get this message...\n"].join
   end
 
 end

@@ -1,0 +1,177 @@
+{
+  "connectors": [
+    {
+      "type": "jabber",
+      "resource": "bot",
+      "server": "chat.hipchat.com",
+      "conference": "conf.hipchat.com",
+      "periodic": true,
+      "receive_broadcasts": true,
+      "username": "50263_360669",
+      "password": "twilioscales",
+      "fullname": "Hedwig ❤",
+      "api_token": "5d8fff5d2742235ad76df57e485e51"
+    }
+  ],
+  "disabled_plugins": [
+
+  ],
+  "plugins": {
+    "Snap": {
+      "images": [
+        "http://i3.photobucket.com/albums/y79/IJG/oh_snap.gif",
+        "http://www.gifsoup.com/webroot/animatedgifs/108696_o.gif",
+        "http://stream1.gifsoup.com/view/385350/glee-oh-snap-o.gif",
+        "http://img.pandawhale.com/79984-jon-stewart-OH-SNAP-gif-Nn2l.gif",
+        "http://media.giphy.com/media/xs6FqhzEdWMZW/giphy.gif",
+        "http://i894.photobucket.com/albums/ac143/valo138/OhSnap-house-1.gif",
+        "http://i.imgur.com/M5B3Xy6.gif",
+        "http://i.imgur.com/Mgm12.gif",
+        "http://www.ieatgravel.com/wp-content/uploads/2013/10/edge-wrestler-gif.gif"
+      ]
+    },
+    "Popcorn": {
+      "images": [
+
+      ]
+    },
+    "Links": {
+      "whitelist": [
+        "http://google.com",
+        "http://youtube.com"
+      ]
+    }
+  },
+  "rooms": {
+    "50263_reddit": {
+      "blacklist": [
+
+      ],
+      "config": {
+      }
+    },
+    "50263_ping_pong": {
+      "blacklist": [
+        "Awwww",
+        "Awwyeah",
+        "Blowhard",
+        "Boo",
+        "Bubs",
+        "Calc",
+        "Cats",
+        "Cinemagraph",
+        "Comic",
+        "Confused",
+        "Dogs",
+        "Dupe",
+        "Earth",
+        "Explain",
+        "Face",
+        "Fact",
+        "Fail",
+        "Fakename",
+        "Flip",
+        "Gif",
+        "Google",
+        "Handey",
+        "Image",
+        "Links",
+        "Morse",
+        "Okay",
+        "OnCall",
+        "Popcorn",
+        "PullRequest",
+        "Qwantz",
+        "Slap",
+        "Snap",
+        "Soda",
+        "Sonic",
+        "Success",
+        "Swanson",
+        "Timer",
+        "Toothpaste",
+        "Translate"
+      ],
+      "config": {
+      }
+    },
+    "50263_hoothoot": {
+      "blacklist": [
+        "Awwww",
+        "Awwyeah",
+        "Blowhard",
+        "Blush",
+        "Boo",
+        "Bubs",
+        "Calc",
+        "Cats",
+        "Cinemagraph",
+        "Comic",
+        "Confused",
+        "Dogs",
+        "Dupe",
+        "Earth",
+        "Explain",
+        "Face",
+        "Fact",
+        "Fail",
+        "Fakename",
+        "Flip",
+        "Gif",
+        "Giphy",
+        "Google",
+        "Handey",
+        "Image",
+        "Links",
+        "Morse",
+        "Okay",
+        "OnCall",
+        "PingPong",
+        "Popcorn",
+        "PullRequest",
+        "Qwantz",
+        "Slap",
+        "Snap",
+        "Soda",
+        "Sonic",
+        "Success",
+        "Swanson",
+        "Timer",
+        "Toothpaste",
+        "Translate"
+      ],
+      "config": {
+      }
+    },
+    "50263_client": {
+      "blacklist": [
+
+      ],
+      "config": {
+      }
+    },
+    "50263_hedwig": {
+      "blacklist": [
+        "Boo"
+      ],
+      "config": {
+      }
+    },
+    "50263_skittles": {
+      "blacklist": [
+
+      ],
+      "config": {
+      }
+    },
+    "50263_lambda_transcoding": {
+      "blacklist": [
+        "Dupe",
+        "Links",
+        "PingPong"
+      ],
+      "config": {
+      }
+    }
+  }
+}

@@ -5,9 +5,8 @@ class Johnny < Linkbot::Plugin
     MNEMONICS.sample
   end
 
-  Linkbot::Plugin.register('johnny', self, {
-    :message => {:regex => /\A!johnny\z/i, :handler => :on_message}
-  })
+  register :regex => /\A!johnny\z/i
+  
 
   # Word List from
   # http://web.archive.org/web/20090918202746/http://tothink.com/mnemonic/wordlist.html

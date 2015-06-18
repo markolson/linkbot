@@ -2,9 +2,8 @@ require 'open-uri'
 require 'cgi'
 
 class Calc < Linkbot::Plugin
-  Linkbot::Plugin.register('calc', self, {
-    :message => {:regex => /!calc (.+)/i, :handler => :on_message}
-  })
+  
+  register :regex => /!calc (.+)/i
 
   def self.on_message(message, matches)
     query = CGI.escape(matches[0])

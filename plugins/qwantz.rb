@@ -1,11 +1,7 @@
 class Qwantz < Linkbot::Plugin
-    Linkbot::Plugin.register('qwantz', self,
-      {
-        :message => {:regex => /!qwantz/, :handler => :on_message, :help => :help},
-        :"direct-message" => {:regex => /!qwantz/, :handler => :on_message, :help => :help}
-      }
-    )
-  
+    register :regex => /!qwantz/
+    help help_text
+
     def self.on_message(message, matches)
         doc = Hpricot(open('http://qwantz.com/index.php'))
         link = doc.search("div.randomquote a")[1]
@@ -13,8 +9,8 @@ class Qwantz < Linkbot::Plugin
         img = doc.search('img.comic')
         [link.inner_html.strip, img.first['src']]
     end
-    
-    def self.help
+
+    def self.help_text
       helpers = [
       "HILARIOUS OUTTAKES COMICS",
       "PHILOSOPHY COMICS",

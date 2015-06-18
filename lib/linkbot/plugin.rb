@@ -29,8 +29,28 @@ module Linkbot
       end
     end
 
-    def self.register(name, s, handlers)
+    def self.register_plugin(name, s, handlers)
       @@plugins[name] = {:ptr => s, :handlers => handlers}
+    end
+
+    def self.register(options = {})
+      name = options[:name] || self.name
+
+      handlers = {}
+      message_handler = options[:handler] || :on_message
+      handlers[:message] = {:regex => options[:regex], :handler => message_handler}
+
+      if options.has_key? :periodic
+        periodic_handler = options[:periodic][:handler] || :periodic
+        handlers[:periodic] = { :handler => periodic_handler }
+      end
+
+      register_plugin(name, self, handlers)
+    end
+
+    def self.help(message = nil)
+      @help = message if !message.nil?
+      @help
     end
 
     def self.has_permission?(message)

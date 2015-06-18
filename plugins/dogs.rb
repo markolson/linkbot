@@ -1,9 +1,7 @@
 class Dogs < Linkbot::Plugin
-  Linkbot::Plugin.register('dogs', self,
-    {
-      :message => {:regex=> /^!dogs$/i, :handler=> :on_message, :help => :help}
-    }
-  )
+  
+  register :regex=> /^!dogs$/i
+  help "!dogs - show a random dog GIF"
 
   def self.on_message(message, matches)
     dogstreamer = "http://dogstreamer.herokuapp.com/dog"
@@ -11,7 +9,4 @@ class Dogs < Linkbot::Plugin
     gif
   end
 
-  def self.help
-    "!dogs - show a random dog GIF"
-  end
 end
