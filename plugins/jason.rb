@@ -1,7 +1,7 @@
 require 'active_support'
 
 class Jason < Linkbot::Plugin
-  register :message => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?'
+  register :regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?')
   help "!randomlink - return a random link"
 
   def self.on_message(message, matches)

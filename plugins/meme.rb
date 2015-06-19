@@ -6,7 +6,13 @@ require 'json'
 class Meme < Linkbot::Plugin
 
   register :regex => /!meme(.*)/
-  help help_text
+  HELP_TEXT = <<HELP
+!meme, Get random meme image
+!meme --help, Get this message...
+!meme --list, List all supported memes
+!meme MEME line1[; line2], Create a meme image, MEME can be upper or lowercase
+HELP
+  help HELP_TEXT
 
   @@meme_regex = Regexp.new(/^!meme([ ](--list|--help|[A-Za-z0-9_]+)([ ].*)?)?$/)
 
@@ -125,12 +131,7 @@ class Meme < Linkbot::Plugin
     out
   end
 
-  def self.help_text
-    ["!meme, Get random meme image\n",
-     "!meme --help, Get this message...\n",
-     "!meme --list, List all supported memes\n",
-     "!meme MEME line1[; line2], Create a meme image, MEME can be upper or lowercase"].join
-  end
+  def self.help_text; HELP_TEXT; end
 
   def self.on_message(message, matches)
 
