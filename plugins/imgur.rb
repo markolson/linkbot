@@ -2,15 +2,11 @@ require 'open-uri'
 require 'hpricot'
 
 class Imgur < Linkbot::Plugin
-  
-  Linkbot::Plugin.register('imgur', self,
-    {
-      :message => {:regex => /!imgur/, :handler => :on_message, :help => :help},
-      :"direct-message" => {:regex => /!imgur/, :handler => :on_message, :help => :help}
-    }
-  )
-  
-  def self.on_message(message, matches) 
+
+  register :regex => /!imgur/
+  help "!imgur - return a random top picture"
+
+  def self.on_message(message, matches)
     imgs = []
     puts "loading images"
     1.upto(3) do |x|
@@ -28,8 +24,4 @@ class Imgur < Linkbot::Plugin
     url
   end
   
-  def self.help
-    "!imgur - return a random top picture"
-  end
 end
-

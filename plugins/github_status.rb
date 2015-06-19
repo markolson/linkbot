@@ -4,22 +4,18 @@ require 'active_support/time'
 
 class Hubstat < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["hubstat"]
-  handlers = {
-   :message => { :regex => /\A!hubstat/, :handler => :on_message, :help => :help },
-  }
+
+  periodic = nil
   if @@config && @@config['room']
     @@room = @@config['room']
-    handlers[:periodic] = {:handler => :periodic}
+    periodic = {:handler => :periodic}
   end
 
-  Linkbot::Plugin.register('hubstat', self, handlers)
+  register :regex => /\A!hubstat/, :periodic => periodic
+  help '!hubstat - see whether your trouble with GitHub is just you'
 
   if Linkbot.db.table_info('hubstatus').empty?
     Linkbot.db.execute('CREATE TABLE hubstatus (dt TEXT)');
-  end
-
-  def self.help
-    '!hubstat - see whether your trouble with GitHub is just you'
   end
 
   def self.status_text(response)

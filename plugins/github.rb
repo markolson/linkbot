@@ -5,10 +5,10 @@ class Github < Linkbot::Plugin
   @@config  = Linkbot::Config["plugins"]["github"]
   @@hipchat = Linkbot::Config["plugins"]["hipchat"]
 
+  help "!hub <command> <args> - interact with github. Use the help command for more."
+
   if @@config && @@hipchat
-    Linkbot::Plugin.register('github', self, {
-      :message => {:regex => /!hub (\w+)(.*)/, :handler => :on_message, :help => :help}
-    })
+    register :regex => /!hub (\w+)(.*)/
   end
 
   def self.hipchat_send(message, from)
@@ -94,7 +94,7 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
       issues = client.search_issues("#{@@config["organization"]}/#{repo}", query)
       if issues.length > 0
         msg += ["<b>#{repo}</b>"]
-        msg += issues.map{|issue| "#{issue.number}: <a href=\"#{issue.html_url}\">#{issue.title}</a>"}  
+        msg += issues.map{|issue| "#{issue.number}: <a href=\"#{issue.html_url}\">#{issue.title}</a>"}
       end
     end
 
@@ -168,7 +168,4 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
     []
   end
 
-  def self.help
-    "!hub <command> <args> - interact with github. Use the help command for more."
-  end
 end

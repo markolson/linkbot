@@ -1,12 +1,9 @@
 require 'digest/sha1'
 
 class HackerNews < Linkbot::Plugin
-  Linkbot::Plugin.register('hn', self,
-    {
-      :message => {:regex=> /!hn(?: (.+))?/, :handler=> :on_message, :help => :help},
-      :periodic => {:handler => :periodic}
-    }
-  )
+  
+  register :regex=> /!hn(?: (.+))?/, :periodic => {:handler => :periodic}
+  help "!hn - Random recent HN comment"
 
   if Linkbot.db.table_info('hn').empty?
     Linkbot.db.execute('CREATE TABLE hn (hash STRING, comment STRING, user STRING, category STRING)');
@@ -105,7 +102,4 @@ class HackerNews < Linkbot::Plugin
     {:messages => [], :options => {}}
   end
 
-  def self.help
-    "!hn - Random recent HN comment"
-  end
 end

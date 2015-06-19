@@ -7,17 +7,8 @@ require 'hpricot'
 class Wiki < Linkbot::Plugin
   @@config = Linkbot::Config["plugins"]["hipchat"]
 
-  if @@config
-    Linkbot::Plugin.register('wiki', self,
-      {
-        :message => {:regex => Regexp.new('!wiki(?: (.+))'), :handler => :on_message, :help => :help}
-      }
-    )
-  end
-
-  def self.help
-    "!wiki [topic] - Return the first P of the wiki page on [topic]"
-  end
+  register :regex => Regexp.new('!wiki(?: (.+))')
+  help "!wiki [topic] - Return the first P of the wiki page on [topic]"
 
   def self.api_send(room, message)
     return if message.empty?

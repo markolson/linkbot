@@ -1,9 +1,5 @@
 class Toothpaste < Linkbot::Plugin
-    Linkbot::Plugin.register('toothpaste', self,
-      {
-        :message => {:regex => /!toothpaste/, :handler => :on_message}
-      }
-    )
+    register :regex => /!toothpaste/
 
     def self.on_message(message, matches)
         doc = Hpricot(open('http://www.toothpastefordinner.com/randomComicViewer.php'))
@@ -12,4 +8,3 @@ class Toothpaste < Linkbot::Plugin
         [link.strip, img.first['src']]
     end
 end
-

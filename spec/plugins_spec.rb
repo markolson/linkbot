@@ -9,12 +9,12 @@ describe Linkbot::Plugin do
 
   it "has the correct plugin" do
     expect(Linkbot::Plugin.plugins.keys.length).to eq 1
-    expect(Linkbot::Plugin.plugins['mock'][:ptr]).to eq MockPlugin
-    expect(Linkbot::Plugin.plugins['mock'][:handlers]).to eq({:message => {:regex => //, :handler => :on_message, :help => :help}})
+    expect(Linkbot::Plugin.plugins['MockPlugin'][:ptr]).to eq MockPlugin
+    expect(Linkbot::Plugin.plugins['MockPlugin'][:handlers]).to eq({:message => {:regex => //, :handler => :on_message}})
   end
 
   it "handles a message" do
-    plugin = Linkbot::Plugin.plugins['mock'][:ptr]
+    plugin = Linkbot::Plugin.plugins['MockPlugin'][:ptr]
     response = Linkbot::Message.handle(message)
 
     expect(plugin.messages.length).to eq 1

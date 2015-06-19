@@ -5,7 +5,4 @@ class LookOfDisapproval < Linkbot::Plugin
     'ಠ_ಠ'
   end
 
-  Linkbot::Plugin.register('lod', self, {
-    :message => {:regex => /^.*wtf.*$/, :handler => :on_message}
-  })
-end
+  register :regex => /^.*wtf.*$/

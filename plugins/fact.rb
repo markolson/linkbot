@@ -1,8 +1,8 @@
 class Fact < Linkbot::Plugin
-  def self.help
-    "!fact <fact number> - get a random fact from mental floss or by fact number"
-  end
   
+  help "!fact <fact number> - get a random fact from mental floss or by fact number"
+  register :regex => Regexp.new('!fact(?: (\d+))?')
+
   def self.on_message(message, match)
     factnumber = match[0]
 
@@ -18,7 +18,7 @@ class Fact < Linkbot::Plugin
     doc = ActiveSupport::JSON.decode(open(mentalfloss).read)
 
     outputStr = doc["post_content"]
-        
+
     if outputStr.empty?
       "The fact is no facts came back..."
     else
@@ -26,7 +26,4 @@ class Fact < Linkbot::Plugin
     end
   end
 
-  Linkbot::Plugin.register('fact', self, {
-    :message => {:regex => Regexp.new('!fact(?: (\d+))?'), :handler => :on_message, :help => :help}
-  })
 end

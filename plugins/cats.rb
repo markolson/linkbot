@@ -1,9 +1,7 @@
 class Cats < Linkbot::Plugin
-  Linkbot::Plugin.register('cats', self,
-    {
-      :message => {:regex=> /^!cats$/i, :handler=> :on_message, :help => :help}
-    }
-  )
+
+  register :regex => /^!cats$/i
+  help "!cats - show a random cat gif"
 
   def self.on_message(message, matches)
     catstreamer = "http://catstreamer.herokuapp.com/cats.json"
@@ -12,7 +10,4 @@ class Cats < Linkbot::Plugin
     url
   end
 
-  def self.help
-    "!cats - show a random cat gif"
-  end
 end

@@ -1,6 +1,9 @@
 class Blowhard < Linkbot::Plugin
   include HTTParty
-  
+
+    register :regex => /!blowhard/
+    help "!blowhard - words of wisdom from Dr. Funke"
+
     def self.on_message(message, matches)
       quotes = {
         'I just blue myself.' => 'BznwsT6r_tM',
@@ -26,26 +29,14 @@ class Blowhard < Linkbot::Plugin
     		"I need to go take down the buffet and set up the leather pony. " => nil,
     		"Okay Lindsay, are you forgetting that I was a professional twice over? An analyst, and a therapist. The world's first analrapist! " => "UrIpPqcln6Y"
     	}
-    	
+
     	qtext = quotes.keys[rand(quotes.length)]
-    	
+
     	if Linkbot::Config["plugins"]["blowhard"]["webhook"] && !quotes[qtext].nil?
         get("#{Linkbot::Config["plugins"]["blowhard"]["webhook"]}/#{quotes[qtext]}")
       end
-    	
+
       qtext
     end
 
-
-    def self.help
-      "!blowhard - words of wisdom from Dr. Funke"
-    end
-
-    
-    Linkbot::Plugin.register('blowhard', self,
-      {
-        :message => {:regex => /!blowhard/, :handler => :on_message, :help => :help},
-        :"direct-message" => {:regex => /!blowhard/, :handler => :on_message, :help => :help}
-      }
-    )
 end
