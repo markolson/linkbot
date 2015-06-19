@@ -11,7 +11,7 @@ class Awwww < Linkbot::Plugin
       if url =~ /http:\/\/(www\.)?imgur\.com/ && !['jpg','png','gif'].include?(url.split('.').last)
         url += ".jpg"
 
-        if ::Util.wallpaper?(url)
+        if wallpaper?(url)
           url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
         end
       end

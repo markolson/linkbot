@@ -12,7 +12,7 @@ class Search < Linkbot::Plugin
     if rows.length > 0
       rows.each {|row|
         username = (row[3].nil? || row[3] == '') ? row[1] : row[3]
-        mess = mess + "#{i}. #{row[0]} (#{username} #{::Util.ago_in_words(Time.now, Time.at(row[2]))})\n"; i = i + 1
+        mess = mess + "#{i}. #{row[0]} (#{username} #{ago_in_words(Time.now, Time.at(row[2]))})\n"; i = i + 1
       }
     else
       mess = "No links"

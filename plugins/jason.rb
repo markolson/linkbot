@@ -57,7 +57,7 @@ class Jason < Linkbot::Plugin
 
           messages << url
 
-          if ::Util.wallpaper?(url)
+          if wallpaper?(url)
             messages << "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
           end
         end

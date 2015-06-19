@@ -17,11 +17,10 @@ class Imgur < Linkbot::Plugin
     end
     url = imgs[rand(imgs.length)]
 
-    if ::Util.wallpaper?(url)
+    if wallpaper?(url)
       url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
     end
 
     url
   end
-  
 end
