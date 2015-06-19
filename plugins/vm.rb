@@ -4,7 +4,7 @@ require 'optparse'
 
 class Vm < Linkbot::Plugin
 
-  register :message => {:regex => /\A!vm (.+)/
+  register :regex => /\A!vm (.+)/
   help "!vm [options] - Manage virtual environment. '!vm help' for help."
 
   def self.on_message(message, matches)

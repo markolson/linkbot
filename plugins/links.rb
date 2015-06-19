@@ -3,7 +3,7 @@ require 'uri'
 
 class Links < Linkbot::Plugin
 
-  register :regex => Regexp.new('(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))'
+  register :regex => Regexp.new('(?i)\b((?:[a-z][\w-]+:(?:/{2,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))')
 
   Linkbot::Config["plugins"]["links"] = {} if Linkbot::Config["plugins"]["links"].nil?
   Linkbot::Config["plugins"]["links"]["whitelist"] = [] if Linkbot::Config["plugins"]["links"]["whitelist"].nil?

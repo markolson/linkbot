@@ -11,7 +11,7 @@ class PullRequests < Linkbot::Plugin
     basic_auth @@config["username"], @@config["password"]
     debug_output $stderr
 
-    register :periodic => {:handler => :periodic},
+    register :periodic => {:handler => :periodic}
   end
 
   if @@config
