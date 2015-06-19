@@ -11,7 +11,7 @@ class Last < Linkbot::Plugin
       rows = Linkbot.db.execute("select l.url,l.dt from links l, users u where u.username= and u.user_id = l.user_id order by l.dt desc limit ?", match[1], count)
       i = 1
       if rows.length > 0
-        rows.each {|row| mess = mess + "#{i}. #{row[0]} (#{::Util.ago_in_words(Time.now, Time.at(row[1]))})\n"; i = i + 1}
+        rows.each {|row| mess = mess + "#{i}. #{row[0]} (#{ago_in_words(Time.now, Time.at(row[1]))})\n"; i = i + 1}
       else
         mess = "No links from user '#{match[1]}'"
       end
@@ -21,7 +21,7 @@ class Last < Linkbot::Plugin
       if rows.length > 0
         rows.each {|row|
           username = (row[3].nil? || row[3] == '') ? row[2] : row[3]
-          mess = mess + "#{i}. #{row[0]} (#{username} #{::Linkbot::Util.ago_in_words(Time.now, Time.at(row[1]))})\n"; i = i + 1
+          mess = mess + "#{i}. #{row[0]} (#{username} #{ago_in_words(Time.now, Time.at(row[1]))})\n"; i = i + 1
         }
       else
         mess = "No links"

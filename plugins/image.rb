@@ -54,7 +54,7 @@ class Image < Linkbot::Plugin
 
     url = ensure_image_extension imgs.sample
 
-    if ::Util.wallpaper?(url)
+    if wallpaper?(url)
       url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
     end
 
