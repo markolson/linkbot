@@ -29,7 +29,7 @@ module Linkbot
 
             final_message.concat(Array(output_messages))
           rescue => e
-            output_messages = "the #{plugin.name} plugin threw an exception: #{e.inspect}"
+            final_message.concat(["that gave me heartburn: #{e.inspect}", e.backtrace.first])
             puts e.inspect
             puts e.backtrace.join("\n")
           end
