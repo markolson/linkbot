@@ -31,6 +31,7 @@ module Linkbot
           end
         end
       end
+      @@plugins = []
       ObjectSpace.each_object(Class).select { |klass| klass < self }.each do |plugin|
         @@plugins << plugin.new
       end
@@ -101,7 +102,7 @@ module Linkbot
     end
 
     def has_handler_for?(message)
-      self.handlers.present? &&
+      !self.handlers.nil? &&
       self.handlers.has_key?(message.type) &&
       self.respond_to?("on_#{message.type}")
     end

@@ -1,18 +1,19 @@
 class MockPlugin < Linkbot::Plugin
-  @@messages = []
-  @@matches = []
+  def initialize
+    @messages = []
+    @matches = []
 
-  register :regex => //
-  help '!mockery - mock plugin that only repeats messages'
+    register :regex => //
+    help '!mockery - mock plugin that only repeats messages'
+  end
 
-  def self.on_message(message, matches)
-    @@messages << message
-    @@matches << matches
+  def on_message(message, matches)
+    @messages << message
+    @matches << matches
 
     message.body
   end
 
-  def self.messages; @@messages; end
-  def self.matches; @@matches; end
+  def messages; @messages; end
 
 end
