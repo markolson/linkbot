@@ -3,9 +3,11 @@ require 'open-uri'
 require 'json'
 
 class Weather < Linkbot::Plugin
-  
-  register :regex => Regexp.new('^!weather(?: (\d\d\d\d\d))?(?: (\d\d?)d)?')
-  help "!weather (zip) (10d) - Get your weather on."
+
+  def initialize
+    register :regex => Regexp.new('^!weather(?: (\d\d\d\d\d))?(?: (\d\d?)d)?')
+    help "!weather (zip) (10d) - Get your weather on."
+  end
 
   @@iconmap = {
     "chanceflurries" => "snow",
@@ -30,7 +32,7 @@ class Weather < Linkbot::Plugin
    }
 
 
-   def self.on_message(message, matches)
+   def on_message(message, matches)
      if Linkbot::Config['plugins']['weather'].nil? ||
         Linkbot::Config['plugins']['weather']['key'].nil? ||
         Linkbot::Config['plugins']['weather']['icons'].nil? ||

@@ -1,9 +1,11 @@
 class Fact < Linkbot::Plugin
-  
-  help "!fact <fact number> - get a random fact from mental floss or by fact number"
-  register :regex => Regexp.new('!fact(?: (\d+))?')
 
-  def self.on_message(message, match)
+  def initialize
+    help "!fact <fact number> - get a random fact from mental floss or by fact number"
+    register :regex => Regexp.new('!fact(?: (\d+))?')
+  end
+
+  def on_message(message, match)
     factnumber = match[0]
 
     if factnumber.nil?

@@ -1,8 +1,10 @@
 class Confused < Linkbot::Plugin
 
-  register :regex => /^\?$/
-  
-  def self.on_message(message, matches)
+  def initialize
+    register :regex => /^\?$/
+  end
+
+  def on_message(message, matches)
     [
     # confusion
       "http://i.imgur.com/I8CZK.gif", # confused sports fan

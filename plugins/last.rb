@@ -1,9 +1,11 @@
 class Last < Linkbot::Plugin
 
-  register :regex => /!last(?: (\d+))?(?: (.*))?/
-  help "!last (num) (nick) - Displays the last links provided by users. (num) is optional and defaults to 5; (nick) is optional and returns only links from the specified user."
+  def initialize
+    register :regex => /!last(?: (\d+))?(?: (.*))?/
+    help "!last (num) (nick) - Displays the last links provided by users. (num) is optional and defaults to 5; (nick) is optional and returns only links from the specified user."
+  end
 
-  def self.on_message(message, match)
+  def on_message(message, match)
     count = match[0] || 5
     rows = nil
     mess = ""

@@ -2,16 +2,18 @@ require 'date'
 require 'octokit'
 
 class Github < Linkbot::Plugin
-  @@config  = Linkbot::Config["plugins"]["github"]
-  @@hipchat = Linkbot::Config["plugins"]["hipchat"]
 
-  help "!hub <command> <args> - interact with github. Use the help command for more."
+  def initialize
+    @config  = Linkbot::Config["plugins"]["github"]
+    @hipchat = Linkbot::Config["plugins"]["hipchat"]
 
-  if @@config && @@hipchat
-    register :regex => /!hub (\w+)(.*)/
+    if @config && @hipchat
+      register :regex => /!hub (\w+)(.*)/
+      help "!hub <command> <args> - interact with github. Use the help command for more."
+    end
   end
 
-  def self.hipchat_send(message, from)
+  def hipchat_send(message, from)
     return if message.empty?
 
     pp message
@@ -33,7 +35,7 @@ class Github < Linkbot::Plugin
     end
   end
 
-  def self.get_pull_requests(client, command, args)
+  def get_pull_requests(client, command, args)
     if args.empty?
       repos = client.org_repos(@@config["organization"]).map{|x| x.name}
     else
@@ -49,17 +51,17 @@ class Github < Linkbot::Plugin
         msg += pull_reqs.map{ |req| "#{req.number}: <a href=\"#{req.html_url}\">#{req.title}</a> by #{req.user.login}" }
       end
     end
-    self.hipchat_send msg.join("<br>"), "hub"
+    hipchat_send msg.join("<br>"), "hub"
     []
   end
 
-  def self.get_repos(client, command, args)
+  def get_repos(client, command, args)
     repolinks = client.org_repos(@@config["organization"]).map {|x| "<a href=\"#{x.html_url}\">#{x.name}</a>" }
-    self.hipchat_send repolinks.join("<br>"), "hub"
+    hipchat_send repolinks.join("<br>"), "hub"
     []
   end
 
-  def self.get_stale_branches(client, command, args)
+  def get_stale_branches(client, command, args)
     repo = "#{@@config['organization']}/#{args[0]}"
     branches_info = client.branches(repo).map do |branch|
       abranch = client.branch("Lookingglass/scoutvision", branch.name)
@@ -75,14 +77,14 @@ class Github < Linkbot::Plugin
 k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a href=\"#{link}\">#{name}</a> last commit: #{author}" }
 
     if msg.length > 0
-      self.hipchat_send msg.join("<br>"), "hub"
+      hipchat_send msg.join("<br>"), "hub"
       []
     else
       ["no stale branches found for repo <#{args[0]}>"]
     end
   end
 
-  def self.get_issues(client, command, args)
+  def get_issues(client, command, args)
     if not args.length > 0
       return ["Missing query. To search for an issue, use: !hub issue <query>"]
     end
@@ -99,14 +101,14 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
     end
 
     if msg.length > 0
-      self.hipchat_send msg.join("<br>"), "hub"
+      hipchat_send msg.join("<br>"), "hub"
       []
     else
       ["no issues found for query <#{query}>"]
     end
   end
 
-  def self.search(client, command, args)
+  def search(client, command, args)
     if not args.length > 0
       return ["Missing query. To search for code use: !hub search <query>"]
     end
@@ -134,29 +136,29 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
     msg.insert(0, "<a href=\"#{search_url}\">#{res.total_count} results</a>")
 
     if msg.length > 0
-      self.hipchat_send msg.join("<br>"), "hub"
+      hipchat_send msg.join("<br>"), "hub"
       []
     else
       ["no issues found for query <#{query}>"]
     end
   end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     command = matches[0]
     args = matches[1].split " "
     puts command, args
     client = Octokit::Client.new(:login => @@config['username'], :password => @@config['password'])
 
     if command.start_with? "pull"
-      return self.get_pull_requests(client, command, args)
+      return get_pull_requests(client, command, args)
     elsif command.start_with? "repos"
-      return self.get_repos(client, command, args)
+      return get_repos(client, command, args)
     elsif command.start_with? "stale"
-      return self.get_stale_branches(client, command, args)
+      return get_stale_branches(client, command, args)
     elsif command.start_with? "issue"
-      return self.get_issues(client, command, args)
+      return get_issues(client, command, args)
     elsif command.start_with? "search"
-      return self.search(client, command, args)
+      return search(client, command, args)
     else
       return [%{!hub pull [<repo>] - show open pull requests for repository <repo> or all repos if omitted
 !hub repos - show all Lookingglass repos

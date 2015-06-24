@@ -3,10 +3,12 @@ require 'hpricot'
 
 class Imgur < Linkbot::Plugin
 
-  register :regex => /!imgur/
-  help "!imgur - return a random top picture"
+  def initialize
+    register :regex => /!imgur/
+    help "!imgur - return a random top picture"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     imgs = []
     puts "loading images"
     1.upto(3) do |x|

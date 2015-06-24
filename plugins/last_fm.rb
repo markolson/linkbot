@@ -1,15 +1,18 @@
 class LastFm < Linkbot::Plugin
-  @@config = Linkbot::Config["plugins"]["last_fm"]
 
-  if @@config
-    @@fm_regex = Regexp.new(/^!fm([ ](help$|users$|.+$|register[ ].+|remove[ ].+))?$/)
-    @@recent_tracks = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&api_key=#{@@config['key']}&format=json"
+  def initialize
+    @config = Linkbot::Config["plugins"]["last_fm"]
 
-    register :regex => /!fm(.*)/, :periodic => {:handler => :periodic}
-    help "!fm, Get tracks currently being listened to...\n!fm <username>|<name>, Get track currently being listened to by user.\n!fm register <username>, Register/update your last.fm username with Linkbot.\n!fm remove, Unregister your last.fm username from Linkbot.\n!fm users, Get the list of registered Last.fm users\n!fm help, Get this message...\n"
+    if @config
+      @fm_regex = Regexp.new(/^!fm([ ](help$|users$|.+$|register[ ].+|remove[ ].+))?$/)
+      @recent_tracks = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&api_key=#{@@config['key']}&format=json"
+
+      register :regex => /!fm(.*)/, :periodic => {:handler => :periodic}
+      help "!fm, Get tracks currently being listened to...\n!fm <username>|<name>, Get track currently being listened to by user.\n!fm register <username>, Register/update your last.fm username with Linkbot.\n!fm remove, Unregister your last.fm username from Linkbot.\n!fm users, Get the list of registered Last.fm users\n!fm help, Get this message...\n"
+    end
   end
 
-  def self.api_send(message)
+  def api_send(message)
     return if message.nil?
 
     message = CGI.escape(message)
@@ -29,13 +32,13 @@ class LastFm < Linkbot::Plugin
     end
   end
 
-  def self.periodic
+  def periodic
     output = get_recent_tracks(:now_playing => true)
     output.each {|m| api_send(m) unless m.nil?}
     {:messages => [], :options => {}}
   end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     output = ""
     input = message.body.scan(@@fm_regex)
 
@@ -47,10 +50,10 @@ class LastFm < Linkbot::Plugin
         command, username = input[0][0].strip.split
 
         if command == "help"
-          output = self.help
+          output = help
 
         elsif command == "users"
-          output = self.get_users
+          output = get_users
 
         #Register user?
         elsif command == "register"
@@ -74,12 +77,12 @@ class LastFm < Linkbot::Plugin
     output
   end
 
-  def self.get_users
+  def get_users
     users = Linkbot.db.execute("select username, last_fm_username from users where last_fm_username not null")
     users.map {|u| "#{u[0]} - #{u[1]}"}.join("\n")
   end
 
-  def self.register_user(username, user)
+  def register_user(username, user)
     begin
       update = Linkbot.db.prepare('update users set last_fm_username = (?) where username = (?)')
       update.execute(username, user)
@@ -91,7 +94,7 @@ class LastFm < Linkbot::Plugin
     end
   end
 
-  def self.unregister_user(user)
+  def unregister_user(user)
     begin
       update = Linkbot.db.prepare('update users set last_fm_username = null where username = (?)')
       update.execute(user)
@@ -103,7 +106,7 @@ class LastFm < Linkbot::Plugin
     end
   end
 
-  def self.get_recent_tracks(options = {})
+  def get_recent_tracks(options = {})
     user = options[:user] || nil
     from = options[:from] || nil
     now  = options[:now_playing] || false

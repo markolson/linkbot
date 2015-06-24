@@ -3,21 +3,21 @@ module Linkbot
    def self.handle
       final_messages = []
 
-      Linkbot::Plugin.plugins.each {|k,v|
-        if v[:handlers][:periodic] && v[:handlers][:periodic][:handler]
+      Linkbot::Plugin.plugins.each {|plugin|
+        if plugin.handlers[:periodic] && plugin.handlers[:periodic][:handler]
 
-          puts "#{k} processing periodic message"
+          puts "#{plugin.name} processing periodic message"
           begin
             #messages should be a hash {:messages => [<message:string>],
             #                           :options => {"room": <room:string>}
             #                          }
-            messages = v[:ptr].send(v[:handlers][:periodic][:handler])
+            messages = plugin.send(plugin.handlers[:periodic][:handler])
 
             if !messages[:messages].empty?
               final_messages << messages
             end
           rescue Exception => e
-            final_messages << "the #{k} plugin threw an exception: #{e.inspect}"
+            final_messages << "the #{plugin.name} plugin threw an exception: #{e.inspect}"
             puts e.inspect
             puts e.backtrace.join("\n")
           end

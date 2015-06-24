@@ -2,10 +2,12 @@ require 'active_support'
 
 class Comic < Linkbot::Plugin
 
-  register :regex => Regexp.new('(?:!comic|!fffffffuuuuuuuuuuuu)(?: (\d+))?')
-  help "!comic - return a random fffffffuuuuuuuuuuuu comic"
+  def initialize
+    register :regex => Regexp.new('(?:!comic|!fffffffuuuuuuuuuuuu)(?: (\d+))?')
+    help "!comic - return a random fffffffuuuuuuuuuuuu comic"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     times = matches[0] || "1"
     times = times.to_i
     messages = []

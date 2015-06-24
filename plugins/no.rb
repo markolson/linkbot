@@ -1,27 +1,29 @@
 class No < Linkbot::Plugin
 
-  register :regex => /\A(?:!n+o+[^\w]*(?:\s*))+\z/i
-  help <<HELP
+  def initialize
+    register :regex => /\A(?:!n+o+[^\w]*(?:\s*))+\z/i
+    help <<HELP
 !no - just a simple no will do
 !noooooo | !no no no no - emphatically say no
 HELP
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     case
     when message.body.scan(/n+o+/i).count > 1
-      self.lots_of_nos
+      lots_of_nos
     when message.body.match(/n+o+!/i)
-      self.emphatic_no
+      emphatic_no
     when message.body.match(/noo+/i)
-      self.emphatic_no
+      emphatic_no
     else
-      self.simple_no
+      simple_no
     end
   end
 
   private
 
-  def self.lots_of_nos
+  def lots_of_nos
     [ 'http://i.imgur.com/Rd8xu.gif', # Arrested Development No. No. No. No no no.
       'http://i.imgur.com/XWAvo.gif', # The Office No! God! No! Please! Noooooooo!
       'http://i.imgur.com/816uC.gif', # Tracy Jordan No no no no no no HELL no
@@ -33,7 +35,7 @@ HELP
     ].sample
   end
 
-  def self.emphatic_no
+  def emphatic_no
     [ 'http://i.imgur.com/g9qfN.gif', # hockey stick to the head
       'http://i.imgur.com/IzUaG.gif', # kick to the pant, NO!
       'http://i.imgur.com/NpAbl.gif', # The Office, silent hand-waving no
@@ -47,7 +49,7 @@ HELP
    ].sample
   end
 
-  def self.simple_no
+  def simple_no
     [ 'http://i.imgur.com/BVzQk.gif', # disappointed Colbert
       'http://i.imgur.com/M0EKn.gif', # meditative no
       'http://i.imgur.com/4RnrF.gif', # Seinfeld finger wag

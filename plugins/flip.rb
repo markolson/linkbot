@@ -1,9 +1,11 @@
 class Flip < Linkbot::Plugin
 
-  register :regex => Regexp.new('!flip(?: (\d+)|([\d\w\s,\-\']+))?')
-  help "!flip [n] [john, steve, randy] - flip a coin n times or shuffle a comma separated list"
+  def initialize
+    register :regex => Regexp.new('!flip(?: (\d+)|([\d\w\s,\-\']+))?')
+    help "!flip [n] [john, steve, randy] - flip a coin n times or shuffle a comma separated list"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     if !matches || matches == [nil, nil]
       return rand(2) == 0 ? "heads" : "tails"
     elsif matches[0] && matches[0].match(/\d+/)

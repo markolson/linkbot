@@ -1,17 +1,19 @@
 require 'digest/sha1'
 
 class HackerNews < Linkbot::Plugin
-  
-  register :regex=> /!hn(?: (.+))?/, :periodic => {:handler => :periodic}
-  help "!hn - Random recent HN comment"
 
-  if Linkbot.db.table_info('hn').empty?
-    Linkbot.db.execute('CREATE TABLE hn (hash STRING, comment STRING, user STRING, category STRING)');
-    Linkbot.db.execute('create index hn_comment_idx on hn (hash)')
-    Linkbot.db.execute('create index hn_cat_idx on hn (category collate nocase)')
+  def initialize
+    register :regex=> /!hn(?: (.+))?/, :periodic => {:handler => :periodic}
+    help "!hn - Random recent HN comment"
+    if Linkbot.db.table_info('hn').empty?
+      Linkbot.db.execute('CREATE TABLE hn (hash STRING, comment STRING, user STRING, category STRING)');
+      Linkbot.db.execute('create index hn_comment_idx on hn (hash)')
+      Linkbot.db.execute('create index hn_cat_idx on hn (category collate nocase)')
+    end
   end
 
-  def self.on_message(message, matches)
+
+  def on_message(message, matches)
     if matches[0]
       if matches[0] == "help"
         m = []
@@ -47,7 +49,7 @@ class HackerNews < Linkbot::Plugin
     end
   end
 
-  def self.periodic
+  def periodic
     site = "https://news.ycombinator.com/newcomments"
     doc = Hpricot(open(site).read)
     comments = doc.search("td.default")
