@@ -2,12 +2,13 @@ require 'uri'
 
 class TTS < Linkbot::Plugin
   include HTTParty
-  
-  Linkbot::Plugin.register('tts', self, {
-    :message => {:regex => /^!tts(?: (.+))?/i, :handler => :on_message, :help => :help}
-  })
 
-  def self.on_message(message, matches)
+  def initialize
+    register :regex => /^!tts(?: (.+))?/i
+    help "!tts (text to say) - SAY IT"
+  end
+
+  def on_message(message, matches)
     statement = matches[0]
     if Linkbot::Config['plugins']['tts']['webhook']
       if statement.nil?
@@ -17,8 +18,5 @@ class TTS < Linkbot::Plugin
     end
     ''
   end
-  
-  def self.help
-    "!tts (text to say) - SAY IT"
-  end
+
 end

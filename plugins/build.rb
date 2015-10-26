@@ -3,22 +3,23 @@ require 'uri'
 require 'json'
 
 class Build < Linkbot::Plugin
-  
-  Linkbot::Plugin.register('build', self,
-    {
-      :message => {:regex => /\A!build (.+) (.+)/, :handler => :on_message, :help => :help}
-    }
-  )
-  
-  def self.on_message(message, matches) 
+
+  def initialize
+    register :regex => /\A!build (.+) (.+)/
+    help "!build <repo> <ref> - Build a specific tag or branch for the given repository"
+    @config = Linkbot::Config["plugins"].fetch("build", {})
+    @webhook = @config.fetch("webhook", false)
+  end
+
+  def on_message(message, matches)
     project = matches[0]
     ref = matches[1]
-    
-    if Linkbot::Config["plugins"]["build"].nil? || Linkbot::Config["plugins"]["build"]["webhook"].nil?
+
+    unless @webhook
       return "The build plugin must be configured for use"
     end
-    
-    uri = URI.parse("#{Linkbot::Config["plugins"]["build"]["webhook"]}/#{project}/#{ref}")
+
+    uri = URI.parse("#{@webhook}/#{project}/#{ref}")
     res = JSON.parse(Net::HTTP.get_response(uri).body)
     if res["status"] == 'ok'
       "Attempting to start build of #{project}/#{ref}..."
@@ -26,9 +27,5 @@ class Build < Linkbot::Plugin
       "Uh oh! A build problem occurred: #{res["error"]}"
     end
   end
-  
-  def self.help
-    "!build <repo> <ref> - Build a specific tag or branch for the given repository"
-  end
-end
 
+end

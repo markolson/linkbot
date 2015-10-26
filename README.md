@@ -1,5 +1,7 @@
 # Linkbot
 
+[![Build Status](https://travis-ci.org/markolson/linkbot.svg)](https://travis-ci.org/markolson/linkbot)
+
 Linkbot is a ruby chatbot designed to sit in your chat room and provide
 interesting/fun/useful responses to your queries. It has an easy-to-use
 plugin system and many plugins already written.

@@ -11,7 +11,9 @@ class SlackConnector < Linkbot::Connector
     Slack.configure do |config|
       config.token = @options["token"]
     end
+  end
 
+  def start
     puts "Creating slack client"
     @client = Slack.client
 

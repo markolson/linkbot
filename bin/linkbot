@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+
+require 'linkbot'
+require 'optparse'
+
+Encoding.default_internal = Encoding.default_external = "UTF-8"
+
+trap("INT") {
+  puts "Shutting down..."
+  exit(1)
+}
+
+at_exit {
+  puts "I know now why you cry. But it's something I can never do. 💀"
+}
+
+options = {
+  :console => false,
+  :dev => false,
+  :config_path => File.expand_path(File.join(File.dirname(__FILE__), "..", "config", "config.json"))
+}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: linkbot [options]"
+
+  opts.on("-c", "--config FILE", "Do not actually create outbound connections") do |v|
+    options[:config_path] = v
+  end
+
+  opts.on("-k", "--console", "Run a local chat console for testing plugins") do |v|
+    options[:console] = v
+  end
+
+  opts.on("-d", "--dev", "Do not actually create outbound connections") do |v|
+    options[:dev] = v
+  end
+
+end.parse!
+
+Linkbot::Bot.new(options).run

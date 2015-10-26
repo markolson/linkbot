@@ -14,7 +14,11 @@ module Linkbot
     end
 
     def self.collect
-      Dir["connectors/*.rb"].each {|file| load file }
+      Dir["connectors/*.rb"].each {|file| self.load_connector(file) }
+    end
+
+    def self.load_connector(path)
+      load path
     end
 
     def self.register(name, s)

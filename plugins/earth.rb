@@ -2,11 +2,13 @@ require 'open-uri'
 require 'hpricot'
 
 class Earth < Linkbot::Plugin
-  def self.help
-    "!earth - get a nice satellite image"
+
+  def initialize
+    help "!earth - get a nice satellite image"
+    register :regex => /!earth/i
   end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     url = URI.parse('http://www.earthlens.org/')
     doc = Hpricot(open(url).read)
     imgs = doc.search("img")
@@ -20,7 +22,4 @@ class Earth < Linkbot::Plugin
     i.sub "/square/", "/large/"
   end
 
-  Linkbot::Plugin.register('earth', self, {
-    :message => {:regex => /!earth/i, :handler => :on_message, :help => :help}
-  })
 end

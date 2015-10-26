@@ -3,13 +3,12 @@ require 'hpricot'
 
 class Gif < Linkbot::Plugin
 
-  def self.help
-    "!gif [search term] - get a gif from reddit based on the optional search term"
+  def initialize
+    register :regex => /!gif(?: (.+))?/i
+    help "!gif [search term] - get a gif from reddit based on the optional search term"
   end
 
-  create_log(:images)
-
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     searchterm = matches[0]
     if searchterm.nil?
       searchterm = message_history(message)[0]['body']
@@ -49,8 +48,4 @@ class Gif < Linkbot::Plugin
 
     gifs.sample
   end
-
-  Linkbot::Plugin.register('gif', self, {
-    :message => {:regex => /!gif(?: (.+))?/i, :handler => :on_message, :help => :help}
-  })
 end

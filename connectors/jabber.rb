@@ -17,8 +17,6 @@ class JabberConnector < Linkbot::Connector
     @conference = @options["conference"]
     @mucs = {}
     @connection = nil
-
-    listen
   end
 
   def update_users
@@ -45,7 +43,7 @@ class JabberConnector < Linkbot::Connector
     @connection.auth(@password)
   end
 
-  def listen
+  def start
     reconnect
     @connection.on_exception do |exception,stream,sym|
       sleep 5

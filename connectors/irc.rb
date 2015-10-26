@@ -14,11 +14,9 @@ class IRCConnector < Linkbot::Connector
     @host     = options["server"]
     @port     = options["port"] || "6667"
     @rooms    = options["rooms"]
-
-    listen
   end
 
-  def listen
+  def start
     host = @host
     port = @port
     rooms = @rooms

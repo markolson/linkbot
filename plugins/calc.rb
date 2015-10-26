@@ -2,11 +2,12 @@ require 'open-uri'
 require 'cgi'
 
 class Calc < Linkbot::Plugin
-  Linkbot::Plugin.register('calc', self, {
-    :message => {:regex => /!calc (.+)/i, :handler => :on_message}
-  })
 
-  def self.on_message(message, matches)
+  def initialize
+    register :regex => /!calc (.+)/i
+  end
+
+  def on_message(message, matches)
     query = CGI.escape(matches[0])
     url = "https://encrypted.google.com/search?hl=en&q=#{query}"
     doc = Hpricot(open(url).read)

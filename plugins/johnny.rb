@@ -1,13 +1,14 @@
 # Return a meaningless mnemonic word, handy for server naming
 class Johnny < Linkbot::Plugin
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     MNEMONICS.sample
   end
 
-  Linkbot::Plugin.register('johnny', self, {
-    :message => {:regex => /\A!johnny\z/i, :handler => :on_message}
-  })
+  def initialize
+    register :regex => /\A!johnny\z/i
+  end
+
 
   # Word List from
   # http://web.archive.org/web/20090918202746/http://tothink.com/mnemonic/wordlist.html

@@ -5,6 +5,16 @@ require 'json'
 
 class Meme < Linkbot::Plugin
 
+  def initialize
+    register :regex => /!meme(.*)/
+    help <<HELP
+!meme, Get random meme image
+!meme --help, Get this message...
+!meme --list, List all supported memes
+!meme MEME line1[; line2], Create a meme image, MEME can be upper or lowercase
+HELP
+  end
+
   @@meme_regex = Regexp.new(/^!meme([ ](--list|--help|[A-Za-z0-9_]+)([ ].*)?)?$/)
 
   ##
@@ -56,7 +66,7 @@ class Meme < Linkbot::Plugin
   advice_dog 'TROLLFACE',       68,     'Troll-Face',                     269
   advice_dog 'WONKA',           542616, 'Willy Wonka',                    2729805
   advice_dog 'YODAWG',          79,     'Yo Dawg Xzibit',                 108785
-  advice_dog 'YUNO',            2,      'Y-U-NO',                         166088,         'Y U NO'              
+  advice_dog 'YUNO',            2,      'Y-U-NO',                         166088,         'Y U NO'
   # keep generators in alphabetical order
 
   ##
@@ -71,7 +81,7 @@ class Meme < Linkbot::Plugin
 
   ##
   # Generates links for +generator+
-  def initialize generator
+  def new_generator generator
     @template_id, @template_type, @generator_name, @image_id, @default_line = GENERATORS.match generator
   end
 
@@ -111,7 +121,7 @@ class Meme < Linkbot::Plugin
     end
   end
 
-  def self.help_list
+  def help_list
     out = ""
 
     GENERATORS.sort.each_with_index do |(command, (id, type, name, _)), index|
@@ -122,14 +132,9 @@ class Meme < Linkbot::Plugin
     out
   end
 
-  def self.help_text
-    ["!meme, Get random meme image\n",
-     "!meme --help, Get this message...\n",
-     "!meme --list, List all supported memes\n",
-     "!meme MEME line1[; line2], Create a meme image, MEME can be upper or lowercase"].join
-  end
+  def help_text; HELP_TEXT; end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
 
     lines = message.body.scan(@@meme_regex)
     # First group will be the entire line
@@ -139,8 +144,8 @@ class Meme < Linkbot::Plugin
     unless lines[0].nil?
       command = lines[0][1].strip unless lines[0][1].nil?
 
-      return self.help_list if command == "--list"
-      return self.help_text if command == "--help"
+      return help_list if command == "--list"
+      return help_text if command == "--help"
 
       #No command given, just try and get a random meme image from top 1000
       if lines[0][1].nil? and lines[0][2].nil?
@@ -173,15 +178,5 @@ class Meme < Linkbot::Plugin
       return "Unknown command"
     end
   end
-
-  def self.help
-    self.help_text
-  end
-
-  Linkbot::Plugin.register('meme', self,
-    {
-      :message => {:regex => /!meme(.*)/, :handler => :on_message, :help => :help}
-    }
-  )
 
 end

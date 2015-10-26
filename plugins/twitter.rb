@@ -2,11 +2,12 @@ require 'open-uri'
 require 'hpricot'
 
 class Twitter < Linkbot::Plugin
-  Linkbot::Plugin.register('twitter', self, {
-    :message => {:regex => /(https:\/\/twitter.com\/[\w\/]*)/, :handler => :on_message}
-  })
 
-  def self.on_message(message, matches)
+  def initialize
+    register :regex => /(https:\/\/twitter.com\/[\w\/]*)/
+  end
+
+  def on_message(message, matches)
     url = matches[0]
     doc = Hpricot(open(url).read)
     msg = doc.at(".opened-tweet .tweet-text").inner_text

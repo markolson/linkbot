@@ -3,21 +3,23 @@ class Campfire < Linkbot::Connector
 
   def initialize(options)
     super(options)
-        
+  end
+
+  def start
     request_options = {
       :head => {
         'authorization' => [@options['username'], @options['password']],
-        'Content-Type' => 'application/json' 
+        'Content-Type' => 'application/json'
       }
     }
-    
+
     user_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/users/me.json").get request_options
     user_http.errback { puts "Yeah trouble logging in." }
     user_http.callback {
       @user = JSON.parse(user_http.response)["user"]
       request_options[:head]['authorization'] = [@user["api_auth_token"],"x"]
       request_options[:body] = "_"
-      
+
       join_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/room/#{@options["room"]}/join.xml").post request_options
       join_http.errback { puts "Yeah trouble entering the room." }
       join_http.callback {
@@ -25,7 +27,6 @@ class Campfire < Linkbot::Connector
       }
     }
   end
-
 
   def listen
     options = {
@@ -49,10 +50,9 @@ class Campfire < Linkbot::Connector
       puts "Tried #{retries} times to connect."
       exit
     end
-    
   end
-  
-  
+
+
   def process_message(item)
     message = JSON.parse(item)
 
