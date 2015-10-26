@@ -1,10 +1,12 @@
 require 'active_support'
 
 class Jason < Linkbot::Plugin
-  register :regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?')
-  help "!randomlink - return a random link"
+  def initialize
+    register :regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?')
+    help "!randomlink - return a random link"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     times = matches[0]
         reddits = {
           "/r/pics/" => 10,

@@ -1,8 +1,10 @@
 class MessageLog < Linkbot::Plugin
-  
-  register
 
-  def self.on_message(message, matches)
+  def initialize
+    register :regex => //
+  end
+
+  def on_message(message, matches)
     log(message)
     ""
   end

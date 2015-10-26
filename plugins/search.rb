@@ -1,9 +1,11 @@
 class Search < Linkbot::Plugin
 
-  register :regex => Regexp.new('!search (.*)')
-  help "!search query - search for links that you think should be dupes"
+  def initialize
+    register :regex => Regexp.new('!search (.*)')
+    help "!search query - search for links that you think should be dupes"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     search = matches[0]
     rows = nil
     mess = ""

@@ -1,27 +1,29 @@
 class Trello < Linkbot::Plugin
-  @@config = Linkbot::Config["plugins"]["trello"]
+  def initialize
+    @config = Linkbot::Config["plugins"]["trello"]
 
-  if @@config
+    if @config
 
-    register :periodic => {:handler => :periodic}
-    
-    if Linkbot.db.table_info('trello').empty?
-      Linkbot.db.execute('CREATE TABLE trello (dt TEXT)');
+      register :periodic => {:handler => :periodic}
+
+      if Linkbot.db.table_info('trello').empty?
+        Linkbot.db.execute('CREATE TABLE trello (dt TEXT)');
+      end
     end
   end
 
-  def self.api_send(message)
+  def api_send(message)
     return if message.empty?
 
     message = CGI.escape(message)
-    color = @@config['hipchat_color'] || "purple"
-    from = @@config['hipchat_from'] || "Trello"
+    color = @config['hipchat_color'] || "purple"
+    from = @config['hipchat_from'] || "Trello"
     begin
       url = "https://api.hipchat.com/v1/rooms/message?" \
-          + "auth_token=#{@@config['hipchat_api_token']}&" \
+          + "auth_token=#{@config['hipchat_api_token']}&" \
           + "message=#{message}&" \
           + "color=#{color}&" \
-          + "room_id=#{@@config['hipchat_room']}&" \
+          + "room_id=#{@config['hipchat_room']}&" \
           + "from=#{from}"
 
       open(url)
@@ -31,7 +33,7 @@ class Trello < Linkbot::Plugin
     end
   end
 
-  def self.process_item(item)
+  def process_item(item)
     user = item["memberCreator"]["fullName"]
 
     dispatch = {
@@ -68,7 +70,7 @@ class Trello < Linkbot::Plugin
     dispatch.has_key?(msgtype) ? (dispatch[msgtype]).call(item) : ""
   end
 
-  def self.periodic
+  def periodic
     #by default, grab all entries since one day ago
     min_pull = Time.now.utc - 60*60*24
 
@@ -82,9 +84,9 @@ class Trello < Linkbot::Plugin
     # need to increment a second so that we don't pull up dupes
     since_time = (min_pull + 1).strftime '%Y-%m-%dT%H:%M:%S'
 
-    url = "https://trello.com/1/members/#{@@config["admin_user"]}/boards?" \
-          "key=#{@@config['key']}&" \
-          "token=#{@@config['token']}"
+    url = "https://trello.com/1/members/#{@config["admin_user"]}/boards?" \
+          "key=#{@config['key']}&" \
+          "token=#{@config['token']}"
 
     begin
       boards = ActiveSupport::JSON.decode(open(url).read)
@@ -97,8 +99,8 @@ class Trello < Linkbot::Plugin
 
     boards.each do |board|
       url = "https://trello.com/1/boards/#{board}/actions?" \
-            "key=#{@@config['key']}&" \
-            "token=#{@@config['token']}&" \
+            "key=#{@config['key']}&" \
+            "token=#{@config['token']}&" \
             "limit=10&" \
             "since=#{since_time}"
 
@@ -112,8 +114,8 @@ class Trello < Linkbot::Plugin
       items.reverse.each do |item|
         item_time = Time.parse(item["date"])
 
-        message = self.process_item(item)
-        self.api_send(message) if !message.empty?
+        message = process_item(item)
+        api_send(message) if !message.empty?
 
         if item_time > max_item_time
           max_item_time = item_time
@@ -124,6 +126,6 @@ class Trello < Linkbot::Plugin
     Linkbot.db.execute("delete from trello")
     Linkbot.db.execute("insert into trello (dt) VALUES (?)", max_item_time)
 
-    {:messages => messages, :options => {:room => @@config['room']}}
+    {:messages => messages, :options => {:room => @config['room']}}
   end
 end

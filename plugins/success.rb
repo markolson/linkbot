@@ -1,40 +1,42 @@
 class Success < Linkbot::Plugin
 
-  register :regex => /!success(.*)/
-  
-    @@success_regex = Regexp.new(/^!success?[ ](.*)?[;][ ](.*)?$/)
+  def initialize
+    @success_regex = Regexp.new(/^!success?[ ](.*)?[;][ ](.*)?$/)
+    register :regex => /!success(.*)/
+  end
 
-    def self.on_message(message, matches)
 
-      lines = message.body.scan(@@success_regex)
+  def on_message(message, matches)
 
-      if lines[0] && lines[0].count == 2
+    lines = message.body.scan(@success_regex)
 
-	url = URI.parse 'http://memegenerator.net/create/instance'
-        res, location = nil, nil
+    if lines[0] && lines[0].count == 2
 
-    	post_data = {
-	  "generatorID" => 121,
-	  "imageID" => 1031,
-	  "text0" => lines[0][0],
-	  "text1" => lines[0][1],
-	  "languageCode" => "en"
-    	}
+      url = URI.parse 'http://memegenerator.net/create/instance'
+      res, location = nil, nil
 
-    	Net::HTTP.start url.host do |http|
-      	  post = Net::HTTP::Post.new url.path
-      	  #post['User-Agent'] = USER_AGENT
-      	  post.set_form_data post_data
+      post_data = {
+        "generatorID" => 121,
+        "imageID" => 1031,
+        "text0" => lines[0][0],
+        "text1" => lines[0][1],
+        "languageCode" => "en"
+      }
 
-      	  res = http.request post
+      Net::HTTP.start url.host do |http|
+        post = Net::HTTP::Post.new url.path
+        #post['User-Agent'] = USER_AGENT
+        post.set_form_data post_data
 
-      	  id = res['Location'].split('/').last.to_i
-	  return "http://images.memegenerator.net/instances/400x/#{id}.jpg"
-    	end
+        res = http.request post
+
+        id = res['Location'].split('/').last.to_i
+        return "http://images.memegenerator.net/instances/400x/#{id}.jpg"
       end
-
-      #No text provided... send generic success kid image
-      "http://i.imgur.com/vQr7I.png"
     end
+
+    #No text provided... send generic success kid image
+    "http://i.imgur.com/vQr7I.png"
+  end
 
 end

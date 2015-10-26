@@ -9,14 +9,14 @@ require_relative 'db'
 
 module Linkbot
   class Plugin
-    @@plugins = {}
+    @@plugins = []
 
     def self.plugins; @@plugins; end;
 
-    def self.log(message)
+    def log(message)
       Linkbot::MessageLogs.log(message)
     end
-    def self.message_history(message)
+    def message_history(message)
       Linkbot::MessageLogs.logs_for(message)
     end
 
@@ -31,33 +31,56 @@ module Linkbot
           end
         end
       end
+      @@plugins = []
+      ObjectSpace.each_object(Class).select { |klass| klass < self }.each do |plugin|
+        @@plugins << plugin.new
+      end
     end
 
-    def self.register_plugin(name, s, handlers)
-      @@plugins[name] = {:ptr => s, :handlers => handlers}
-    end
-
-    def self.register(options = {})
-      name = options[:name] || self.name
-
+    def register(options = {})
       handlers = {}
       message_handler = options[:handler] || :on_message
-      handlers[:message] = {:regex => options[:regex], :handler => message_handler}
+      message_matcher = options[:regex] || raise('Message matching plugin needs a regex. //to match all messages.')
+      handlers[:message] = {:regex => message_matcher, :handler => message_handler}
 
       if options.has_key? :periodic
         periodic_handler = options[:periodic][:handler] || :periodic
         handlers[:periodic] = { :handler => periodic_handler }
       end
 
-      register_plugin(name, self, handlers)
+      @handlers = handlers
     end
 
-    def self.help(message = nil)
+    def name
+      self.class.name
+    end
+
+    def handlers
+      @handlers
+    end
+
+    def help(message = nil)
       @help = message if !message.nil?
       @help
     end
 
-    def self.has_permission?(message)
+    def matches?(message)
+      !!match(message)
+    end
+
+    def matches(message)
+      match(message).to_a.drop(1)
+    end
+
+    def match(message)
+      handlers[message.type][:regex].match(message.body)
+    end
+
+    def matches_everything?(message_type)
+      handlers[message_type][:regex].nil?
+    end
+
+    def has_permission?(message)
       room = message[:options][:room]
       # If no room is set, there's nothing to {white,black}list on.
       return true unless room
@@ -78,11 +101,13 @@ module Linkbot
       return true
     end
 
-    def self.has_handler_for?(message)
+    def has_handler_for?(message)
+      !self.handlers.nil? &&
+      self.handlers.has_key?(message.type) &&
       self.respond_to?("on_#{message.type}")
     end
 
-    def self.wallpaper?(url)
+    def wallpaper?(url)
       wallpaper_resolutions = {
         "800x600" => true,
         "1024x600" => true,
@@ -126,7 +151,7 @@ module Linkbot
       false
     end
 
-    def self.ago_in_words(time1, time2)
+    def ago_in_words(time1, time2)
       diff = time1.to_i - time2.to_i
       ago = ''
       if diff == 1

@@ -3,10 +3,12 @@ require 'hpricot'
 
 class Fwa < Linkbot::Plugin
 
-  register :regex => /!anarchy/i
-  help "!anarchy - get an image from /r/firstworldanarchists"
+  def initialize
+    register :regex => /!anarchy/i
+    help "!anarchy - get an image from /r/firstworldanarchists"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     url = "http://reddit.com/r/firstworldanarchists.json"
 
     doc = ActiveSupport::JSON.decode(open(url).read)

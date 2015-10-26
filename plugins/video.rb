@@ -1,10 +1,12 @@
 class Video < Linkbot::Plugin
   include HTTParty
 
-  register :regex => /^!video (.+)/i
-  help "!video (youtube video | stop) - play a video, or stop a video. Or call a built-in video. Or something." 
+  def initialize
+    register :regex => /^!video (.+)/i
+    help "!video (youtube video | stop) - play a video, or stop a video. Or call a built-in video. Or something."
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     default_videos = {
       "bear" => "FiARsQSlzDc",
       "das" => "SIt2CdbBo_w",

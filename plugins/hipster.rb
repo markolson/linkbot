@@ -1,9 +1,11 @@
 class Hipster < Linkbot::Plugin
 
-  register :regex => /!hipster/
-  help "!hipster - Is it can be PBR tiem nao plox?"
+  def initialize
+    register :regex => /!hipster/
+    help "!hipster - Is it can be PBR tiem nao plox?"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     url = URI.parse('http://api.automeme.net/text?vocab=hipster')
 
     res = Net::HTTP.get(url)

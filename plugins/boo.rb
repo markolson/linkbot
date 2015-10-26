@@ -1,12 +1,16 @@
 class Boo < Linkbot::Plugin
   include HTTParty
 
-  register :regex => /^bo+\b/i
+  def initialize
+    register :regex => /^bo+\b/i
+    @config = Linkbot::Config["plugins"].fetch("boo", {})
+    @webhook = @config.fetch("webhook", false)
+  end
 
-  def self.on_message(message, matches)
-    if Linkbot::Config["plugins"]["boo"]["webhook"]
+  def on_message(message, matches)
+    if @webhook
       puts "YEAH"
-      get(Linkbot::Config["plugins"]["boo"]["webhook"])
+      get(@webhook) # poke some external booing
     end
 
     "http://i.imgur.com/nx70H.jpg"

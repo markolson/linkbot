@@ -1,8 +1,10 @@
 class Fuu < Linkbot::Plugin
 
-  register :regex => Regexp.new('FUUU')
+  def initialize
+    register :regex => Regexp.new('FUUU')
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     "http://imgur.com/M4KFN.jpg"
   end
 end

@@ -4,9 +4,11 @@ class EightBall < Linkbot::Plugin
   PROMPT = 'Ask a question! "8ball, will I win the game?"'
   RESPONSE_HEADER = 'Magic 8-ball says...'
 
-  register :regex => /^#{PHRASE}/
-  
-  def self.on_message(message, matches)
+  def initialize
+    register :regex => /^#{PHRASE}/
+  end
+
+  def on_message(message, matches)
     user = message.user_name
     question = self.strip_phrase_from message.body
 
@@ -15,15 +17,15 @@ class EightBall < Linkbot::Plugin
     response
   end
 
-  def self.response
+  def response
     YES_NO_RESPONSES[rand(YES_NO_RESPONSES.size)]
   end
 
-  def self.strip_phrase_from message
+  def strip_phrase_from message
     message.scan(/^#{PHRASE},? (.*)/)
   end
 
-  def self.says
+  def says
     RESPONSE_HEADER
   end
 

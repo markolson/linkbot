@@ -1,10 +1,12 @@
 class Party < Linkbot::Plugin
   include HTTParty
 
-  register :regex => /^!partymode (on|off)/i
-  help "!partymode (on|off) - PARTAY."
+  def initialize
+    register :regex => /^!partymode (on|off)/i
+    help "!partymode (on|off) - PARTAY."
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     if matches[0] == "on"
       if Linkbot::Config["plugins"]["party"] && Linkbot::Config["plugins"]["party"]["on_hooks"]
         Linkbot::Config["plugins"]["party"]["on_hooks"].each do |hook|
@@ -21,5 +23,5 @@ class Party < Linkbot::Plugin
       '(indeed) Party over. (indeed)'
     end
   end
-  
+
 end

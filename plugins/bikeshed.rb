@@ -6,9 +6,11 @@ class Bikeshed < Linkbot::Plugin
   require 'nokogiri'
   require 'open-uri'
 
-  register :regex => /\A!bikeshed\z/i
+  def initialize
+    register :regex => /\A!bikeshed\z/i
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     colour = Nokogiri::XML(open('http://www.colourlovers.com/api/colors/random'))
     colour.css("badgeUrl").children.first.content
   end

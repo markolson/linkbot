@@ -5,10 +5,12 @@ require 'cgi'
 
 class Youtube < Linkbot::Plugin
 
-  register :regex => Regexp.new('!youtube(?: (.+))?')
-  help "!youtube [query] - return the first youtube result for [query]"
+  def initialize
+    register :regex => Regexp.new('!youtube(?: (.+))?')
+    help "!youtube [query] - return the first youtube result for [query]"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     searchterm = matches[0]
 
     if searchterm.nil?

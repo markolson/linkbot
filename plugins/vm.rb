@@ -4,10 +4,12 @@ require 'optparse'
 
 class Vm < Linkbot::Plugin
 
-  register :regex => /\A!vm (.+)/
-  help "!vm [options] - Manage virtual environment. '!vm help' for help."
+  def initialize
+    register :regex => /\A!vm (.+)/
+    help "!vm [options] - Manage virtual environment. '!vm help' for help."
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     if Linkbot::Config["plugins"]["vm"].nil? || Linkbot::Config["plugins"]["vm"]["webhook"].nil?
       return "The vm plugin must be configured for use"
     end

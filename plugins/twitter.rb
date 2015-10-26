@@ -3,9 +3,11 @@ require 'hpricot'
 
 class Twitter < Linkbot::Plugin
 
-  register :regex => /(https:\/\/twitter.com\/[\w\/]*)/
+  def initialize
+    register :regex => /(https:\/\/twitter.com\/[\w\/]*)/
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     url = matches[0]
     doc = Hpricot(open(url).read)
     msg = doc.at(".opened-tweet .tweet-text").inner_text

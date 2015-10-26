@@ -3,22 +3,25 @@ require 'open-uri'
 require 'active_support/time'
 
 class Hubstat < Linkbot::Plugin
-  @@config = Linkbot::Config["plugins"]["hubstat"]
 
-  periodic = nil
-  if @@config && @@config['room']
-    @@room = @@config['room']
-    periodic = {:handler => :periodic}
+  def initialize
+    @config = Linkbot::Config["plugins"]["hubstat"]
+
+    periodic = nil
+    if @config && @config['room']
+      @room = @config['room']
+      periodic = {:handler => :periodic}
+    end
+
+    register :regex => /\A!hubstat/, :periodic => periodic
+    help '!hubstat - see whether your trouble with GitHub is just you'
   end
-
-  register :regex => /\A!hubstat/, :periodic => periodic
-  help '!hubstat - see whether your trouble with GitHub is just you'
 
   if Linkbot.db.table_info('hubstatus').empty?
     Linkbot.db.execute('CREATE TABLE hubstatus (dt TEXT)');
   end
 
-  def self.status_text(response)
+  def status_text(response)
     statuses = {
       "good" => "✅",
       "minor" => "⚠️",
@@ -32,7 +35,7 @@ class Hubstat < Linkbot::Plugin
     "#{how_are_things} As of #{timestr}, GitHub is reporting: #{response["body"]}\nhttps://status.github.com/"
   end
 
-  def self.periodic
+  def periodic
     messages = []
     #by default, post the message if it's within the last day
     last_pulled = Time.now.utc - 60*60*24
@@ -53,12 +56,12 @@ class Hubstat < Linkbot::Plugin
     {:messages => messages, :options => { :room => @@room } }
   end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     response = self.get_status
     self.status_text(response)
   end
 
-  def self.get_status
+  def get_status
     JSON.parse(open('https://status.github.com/api/last-message.json').read)
   end
 end
