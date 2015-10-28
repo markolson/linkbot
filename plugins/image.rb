@@ -41,7 +41,7 @@ class Image < Linkbot::Plugin
     images = images.read.scan(/var u='(.*?)'/).flatten
 
     # unescape google octal escapes
-    images = images.map { |g| unescape(g) }
+    images = images.map { |g| unescape_octal(g) }
 
     #funnyjunk sucks
     images.reject! {|x| x =~ /fjcdn\.com/}
@@ -55,17 +55,5 @@ class Image < Linkbot::Plugin
     end
 
     return url
-  end
-
-  # unescape google urls with octal (!?) escapes into url-encoded hex equivalents
-  def unescape(url)
-    url.gsub(/\\(\d{2})/) do |escape|
-      # given an octal escape like '\\75':
-      #
-      # 1. strip the leading slash
-      # 2. convert to an integer
-      # 3. convert to a hex string (url escaped)
-      "%#{escape[1..-1].to_i(8).to_s(16)}"
-    end
   end
 end

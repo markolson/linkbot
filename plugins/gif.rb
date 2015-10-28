@@ -34,7 +34,7 @@ class Gif < Linkbot::Plugin
     gifs = gifs.read.scan(/var u='(.*?)'/).flatten
 
     # unescape google octal escapes
-    gifs = gifs.map { |g| unescape(g) }
+    gifs = gifs.map { |g| unescape_octal(g) }
 
     #funnyjunk sucks
     gifs.reject! {|x| x =~ /fjcdn\.com/}
