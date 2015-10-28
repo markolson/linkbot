@@ -116,7 +116,7 @@ HELP
       res = http.request post
 
       id = res['Location'].split('/').last.to_i
-      puts id
+      Linkbot.log.debug "Meme plugin: id == #{id}"
       return "http://images.memegenerator.net/instances/400x/#{id}.jpg"
     end
   end
@@ -168,8 +168,8 @@ HELP
         text = lines[0][2].split(';').map {|t| t.strip}
         return meme.generate text
       rescue Exception => e
-        #puts e.message
-        #puts e.backtrace
+        Linkbot.log.error "Meme plugin: #{e}"
+        Linkbot.log.error e.backtrace.join("\n")
         user_name = message.user_name.split.first
         return "ZOMG, what happened?! #{user_name}, you broke all the memes!"
       end

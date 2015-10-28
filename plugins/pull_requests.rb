@@ -41,7 +41,7 @@ class PullRequests < Linkbot::Plugin
 
       {:messages => messages, :options => {:room => @config[:room]}}
     else
-      puts "Login error"
+      Linkbot.log.error "Pull Requests plugin: login error"
     end
   end
 end

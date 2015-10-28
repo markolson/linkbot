@@ -27,11 +27,11 @@ class Github < Linkbot::Plugin
           + "room_id=#{@@hipchat['room']}&" \
           + "from=#{from}"
 
-      puts "sending message to hipchat url #{url}"
+      Linkbot.log.debug "GitHub plugin sending message to hipchat url #{url}"
       open(url)
     rescue => e
-      puts e.inspect
-      puts e.backtrace.join("\n")
+      Linkbot.log.error "GitHub plugin error: #{e.inspect}"
+      Linkbot.log.error e.backtrace.join("\n")
     end
   end
 
@@ -146,7 +146,7 @@ k    msg = stale_branches.map{ |days, name, author, link| "#{days} days old: <a 
   def on_message(message, matches)
     command = matches[0]
     args = matches[1].split " "
-    puts command, args
+    Linkbot.log.debug "GitHub plugin: #{command}, #{args}"
     client = Octokit::Client.new(:login => @@config['username'], :password => @@config['password'])
 
     if command.start_with? "pull"

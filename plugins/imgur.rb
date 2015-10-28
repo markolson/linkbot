@@ -10,7 +10,7 @@ class Imgur < Linkbot::Plugin
 
   def on_message(message, matches)
     imgs = []
-    puts "loading images"
+    Linkbot.log.debug "Imgur plugin: loading images"
     1.upto(3) do |x|
       doc = Hpricot(open("http://imgur.com/gallery?p=#{x}").read)
       imgs += doc.search("div[@class=post] a img").collect do |m|

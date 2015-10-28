@@ -14,13 +14,13 @@ class SlackConnector < Linkbot::Connector
   end
 
   def start
-    puts "Creating slack client"
+    Linkbot.log.info "Slack connector: Creating client"
     @client = Slack.client
 
-    puts "Connection realtime client"
+    Linkbot.log.info "Slack connector: Connection realtime client"
     @rtc = @client.realtime
 
-    puts "Client connected"
+    Linkbot.log.info "Slack connector: Client connected"
     @rtc.on :message do |data|
       if data["channel"]
         process_message(Time.at(data["ts"].to_i),data["user"],data["text"],{:room => data["channel"]})
@@ -33,13 +33,13 @@ class SlackConnector < Linkbot::Connector
   end
 
   def update_users(users)
-    puts "Updating users"
+    Linkbot.log.info "Slack connector: Updating users"
     users.each do |user|
       user_id = user["id"]
       if Linkbot.user_exists?(user_id)
         Linkbot.update_user(user["name"],user_id)
       else
-        puts "Adding #{user["name"]}"
+        Linkbot.log.info "Slack connector: Adding #{user["name"]}"
         Linkbot.add_user(user["name"],user_id)
       end
     end

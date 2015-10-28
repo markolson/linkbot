@@ -34,7 +34,7 @@ class Dupe < Linkbot::Plugin
     res = Linkbot.db.execute("select username,showname from users where user_id='#{message.user_id}'")[0]
     res = Linkbot.db.execute("select username,showname from users where user_id=?", message.user_id)[0]
     username = (res[1].nil? || res[1] == '') ? res[0] : res[1]
-    puts duped_timestamp
+    Linkbot.log.debug duped_timestamp
     "DUPE: Previously posted by #{duped_user} #{ago_in_words(Time.now, Time.parse(duped_timestamp.to_s))}"
   end
 

@@ -11,8 +11,8 @@ class Helper < Linkbot::Plugin
         begin
           messages << v[:ptr].help
         rescue => e
-          puts e.inspect
-          puts e.backtrace.join("\n")
+          Linkbot.log.error "Helper plugin #{e.inspect}"
+          Linkbot.log.error e.backtrace.join("\n")
         end
       end
     }

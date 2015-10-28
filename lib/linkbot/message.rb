@@ -13,7 +13,6 @@ module Linkbot
     @@message_logs = {}
 
     def self.handle(message)
-
       final_message = []
 
       Linkbot::Plugin.plugins.each {|plugin|
@@ -30,8 +29,8 @@ module Linkbot
             final_message.concat(Array(output_messages))
           rescue => e
             final_message.concat(["that gave me heartburn: #{e.inspect}", e.backtrace.first])
-            puts e.inspect
-            puts e.backtrace.join("\n")
+            Linkbot.log.error "Message Handler: #{e.inspect}"
+            Linkbot.log.error e.backtrace.join("\n")
           end
         end
       }

@@ -26,8 +26,9 @@ module Linkbot
           begin
             load file
           rescue Exception => e
-            puts "unable to load plugin #{file}"
-            puts e
+            Linkbot.log.error "Plugin collection: unable to load plugin #{file}"
+            Linkbot.log.error "#{e.inspect}"
+            Linkbot.log.error e.backtrace.join("\n")
           end
         end
       end

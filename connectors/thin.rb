@@ -5,9 +5,9 @@ class ThinConnector < Linkbot::Connector
     super(options)
     listen
   end
-  
+
   def call(env)
-    puts env.to_json
+    Linkbot.log.debug "Thin connector: environment\n#{env.to_json}"
     case env["REQUEST_URI"]
     when "/message"
       if env["REQUEST_METHOD"] != "POST"
@@ -27,8 +27,9 @@ class ThinConnector < Linkbot::Connector
           invoke_callbacks(message)
 
           [202, {'Content-Type'=>'text/plain'}, StringIO.new("Message accepted\n")]
-        rescue Exception
-          puts $!.message
+        rescue Exception => e
+          Linkbot.log.error "Thin connector: #{e.inspect}"
+          Linkbot.log.error e.backtrace.join("\n")
           [422, {'Content-Type'=>'text/plain'}, StringIO.new("Data was in an invalid format\n")]
         end
       end
@@ -45,9 +46,9 @@ class ThinConnector < Linkbot::Connector
                 message: $('#message').val(),
                 username: "Anonymous"
               };
-              
+
               var dataString = JSON.stringify(data);
-              
+
               $.ajax({
                 type: 'POST',
                 url: '/message',
@@ -79,7 +80,7 @@ class ThinConnector < Linkbot::Connector
       [404, {'Content-Type'=>'text/plain'}, StringIO.new("404: Not found\n")]
     end
   end
-  
+
   def listen
     Thin::Server.start('0.0.0.0', @options["port"], self)
   end

@@ -24,11 +24,11 @@ class LastFm < Linkbot::Plugin
           + "room_id=#{@@config['hipchat_room']}&" \
           + "from=#{from}"
 
-      puts "sending message to hipchat url #{url}"
+      Linkbot.log.debug "LastFM plugin: sending message to hipchat url #{url}"
       open(url)
     rescue => e
-      puts e.inspect
-      puts e.backtrace.join("\n")
+      Linkbot.log.error "LastFM plugin #{e.inspect}"
+      Linkbot.log.error e.backtrace.join("\n")
     end
   end
 
@@ -89,8 +89,8 @@ class LastFm < Linkbot::Plugin
       output = "Registered/updated Last.fm username for #{user}."
     rescue SQLite3::Exception => e
       output = "Failed to register/update username for #{user}."
-      puts e
-      puts e.backtrace
+      Linkbot.log.error "LastFM plugin: #{e}"
+      Linkbot.log.error e.backtrace.join("\n")
     end
   end
 
@@ -101,8 +101,8 @@ class LastFm < Linkbot::Plugin
       output = "Unregistered Last.fm username for #{user}."
     rescue SQLite3::Exception => e
       output = "Failed to unregister username for #{user}."
-      puts e
-      puts e.backtrace
+      Linkbot.log.error "LastFM plugin: #{e}"
+      Linkbot.log.error e.backtrace.join("\n")
     end
   end
 
@@ -152,10 +152,10 @@ class LastFm < Linkbot::Plugin
           next if now and track['date']['#text'] != 'now playing'
 
           out
-        rescue
+        rescue => e
           "#{u[0]}: Error retrieving track data..."
-          puts $!
-          puts $!.backtrace
+          Linkbot.log.error "LastFM plugin: #{e}"
+          Linkbot.log.error e.backtrace.join("\n")
         end
       end
 
