@@ -13,9 +13,6 @@ class Links < Linkbot::Plugin
       uri = URI.parse(link)
       Regexp.new("^#{uri.host}#{uri.path}")
     end
-    if Linkbot.db.table_info('users').empty?
-      Linkbot.db.execute('CREATE TABLE users (user_id STRING, username TEXT, showname TEXT)')
-    end
     if Linkbot.db.table_info('links').empty?
       Linkbot.db.execute('CREATE TABLE links (user_id STRING, dt DATETIME, url TEXT)');
     end
