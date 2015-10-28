@@ -23,7 +23,7 @@ That should set you up with linkbot and all its dependencies.
 Next, copy `config.json.example` into `config.json`, and set the
 appropriate variables. You must fill in the `connectors` field
 with appropriate connection information, but feel free to delete
-sections from teh `plugins` section for plugins you don't want.
+sections from the `plugins` section for plugins you don't want.
 
 (TODO: more on this, refactor config)
 

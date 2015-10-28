@@ -5,24 +5,17 @@ require 'cgi'
 require 'hpricot'
 
 class Wiki < Linkbot::Plugin
-  @@config = Linkbot::Config["plugins"]["hipchat"]
+  def initialize
+    @config = Linkbot::Config["plugins"].fetch("hipchat", {})
 
-  if @@config
-    Linkbot::Plugin.register('wiki', self,
-      {
-        :message => {:regex => Regexp.new('!wiki(?: (.+))'), :handler => :on_message, :help => :help}
-      }
-    )
+    register :regex => Regexp.new('!wiki(?: (.+))')
+    help "!wiki [topic] - Return the first P of the wiki page on [topic]"
   end
 
-  def self.help
-    "!wiki [topic] - Return the first P of the wiki page on [topic]"
-  end
-
-  def self.api_send(room, message)
+  def api_send(room, message)
     return if message.empty?
 
-    token = @@config['api_token']
+    token = @config['api_token']
 
     begin
       url = "https://api.hipchat.com/v1/rooms/list?auth_token=#{token}"
@@ -57,7 +50,7 @@ class Wiki < Linkbot::Plugin
     end
   end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     searchterm = CGI.escape(matches[0])
     searchresult = JSON.parse(open("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=#{searchterm}&format=json").read)
 

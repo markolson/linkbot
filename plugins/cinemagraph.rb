@@ -3,11 +3,12 @@ require 'hpricot'
 
 class Cinemagraph < Linkbot::Plugin
 
-  def self.help
-    "!cinemagraph - get a fancy gif"
+  def initialize
+    register :regex => /!cinemagraph/i
+    help "!cinemagraph - get a fancy gif"
   end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     if rand(2) == 1
       url = URI.parse('http://www.gif.tv/gifs/get.php')
       res = Net::HTTP.get(url)
@@ -20,8 +21,4 @@ class Cinemagraph < Linkbot::Plugin
       imgs[rand(imgs.length)].attributes["src"]
     end
   end
-
-  Linkbot::Plugin.register('cinemagraph', self, {
-    :message => {:regex => /!cinemagraph/i, :handler => :on_message, :help => :help}
-  })
 end

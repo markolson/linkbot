@@ -1,6 +1,12 @@
 class Popcorn < Linkbot::Plugin
-    def self.on_message(message, matches)
-      quotes = ['http://i.imgur.com/qlRu3.gif',
+
+  def initialize
+    register :regex => /!popcorn/
+    help "!popcorn - Everyone loves popcorn"
+  end
+
+  def on_message(message, matches)
+    quotes = ['http://i.imgur.com/qlRu3.gif',
                 'http://i.imgur.com/DDMBW.gif',
                 'http://i.imgur.com/SbyLU.gif',
                 'http://i.imgur.com/y8F8s.gif',
@@ -14,19 +20,7 @@ class Popcorn < Linkbot::Plugin
                 'http://i.imgur.com/kXfy9.gif',
                 'http://i.imgur.com/ZDdhJ.gif',
                 'http://www.threadbombing.com/data/media/2/scarjo_popcorn.gif'
-	]
-      quotes[rand(quotes.length)]
-    end
-
-    def self.help
-      "!popcorn - Everyone loves popcorn"
-    end
-
-    
-    Linkbot::Plugin.register('popcorn', self,
-      {
-        :message => {:regex => /!popcorn/, :handler => :on_message, :help => :help},
-        :"direct-message" => {:regex => /!popcorn/, :handler => :on_message, :help => :help}
-      }
-    )
+  	]
+    quotes[rand(quotes.length)]
+  end
 end

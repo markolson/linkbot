@@ -1,14 +1,12 @@
 require 'active_support'
 
 class Jason < Linkbot::Plugin
-  Linkbot::Plugin.register('jason', self,
-    {
-      :message => {:regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?'), :handler => :on_message, :help => :help},
-      :"direct-message" => {:regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?'), :handler => :on_message, :help => :help}
-    }
-  )
+  def initialize
+    register :regex => Regexp.new('(?:!randomlink|!jason)(?: (\d+))?')
+    help "!randomlink - return a random link"
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     times = matches[0]
         reddits = {
           "/r/pics/" => 10,
@@ -61,7 +59,7 @@ class Jason < Linkbot::Plugin
 
           messages << url
 
-          if ::Util.wallpaper?(url)
+          if wallpaper?(url)
             messages << "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"
           end
         end
@@ -69,7 +67,4 @@ class Jason < Linkbot::Plugin
         messages
   end
 
-  def self.help
-    "!randomlink - return a random link"
-  end
 end

@@ -1,18 +1,15 @@
 class Helper < Linkbot::Plugin
 
-  Linkbot::Plugin.register('help', self,
-    {
-      :message => {:regex => /!help/, :handler => :on_message},
-      :"direct-message" => {:regex => /!help/, :handler => :on_message}
-    }
-  )
+  def initialize
+    register :regex => /!help/
+  end
 
-  def self.on_message(message, matches)
+  def on_message(message, matches)
     messages = []
     Linkbot::Plugin.plugins.each {|k,v|
-      if(v[:handlers][message.type] && v[:handlers][message.type][:help])
+      if(v[:handlers][message.type] && v[:ptr].respond_to?(:help) && !v[:ptr].help.nil?)
         begin
-          messages << v[:ptr].send(v[:handlers][message.type][:help])
+          messages << v[:ptr].help
         rescue => e
           puts e.inspect
           puts e.backtrace.join("\n")
