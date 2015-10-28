@@ -27,48 +27,33 @@ class Image < Linkbot::Plugin
     # this is an old iphone user agent. Seems to make google return good results.
     useragent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7"
 
-    imgs = []
+    images = []
 
     begin
       Timeout::timeout(4) do
-        imgs = open(searchurl, "User-Agent" => useragent)
+        images = open(searchurl, "User-Agent" => useragent)
       end
     rescue Timeout::Error
       return "google is slow! No images for you."
     end
 
-    imgs = imgs.read.scan(/imgurl.*?(http.*?)\\/).flatten
+    # pull image URLs out of the page
+    images = images.read.scan(/var u='(.*?)'/).flatten
 
-    # un-escape double-escaped codes into escape codes.
-    #
-    # Yes that makes sense.
-    #
-    # Read it again.
-    #
-    # Google turns a url-escaped "%20" -> "\\x20", so this turns "\\x20" -> "%20" to make it a URL again
-    imgs = imgs.map{|x| x.sub(/\\x(\d+)/, "%\\1")}
-
+    # unescape google octal escapes
+    images = images.map { |g| unescape_octal(g) }
 
     #funnyjunk sucks
-    imgs.reject! {|x| x =~ /fjcdn\.com/}
+    images.reject! {|x| x =~ /fjcdn\.com/}
 
-    return "No images found. Lame." if imgs.empty?
+    return "No images found. Lame." if images.empty?
 
-    url = ensure_image_extension imgs.sample
+    url = images.sample
 
     if wallpaper?(url)
       url = [url, "(dealwithit) WALLPAPER WALLPAPER WALLPAPER (dealwithit)"]
     end
 
     return url
-  end
-
-  def ensure_image_extension(url)
-    ext = url.split('.').pop()
-    if ext =~ /(png|jpe?g|gif)$/i
-      url
-    else
-      "#{url}#.png"
-    end
   end
 end

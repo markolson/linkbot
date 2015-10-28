@@ -107,6 +107,18 @@ module Linkbot
       self.respond_to?("on_#{message.type}")
     end
 
+    # unescape google urls with octal (!?) escapes into url-encoded hex equivalents
+    def unescape_octal(url)
+      url.gsub(/\\(\d{2})/) do |escape|
+        # given an octal escape like '\\75':
+        #
+        # 1. strip the leading slash
+        # 2. convert to an integer
+        # 3. convert to a hex string (url escaped)
+        "%#{escape[1..-1].to_i(8).to_s(16)}"
+      end
+    end
+
     def wallpaper?(url)
       wallpaper_resolutions = {
         "800x600" => true,

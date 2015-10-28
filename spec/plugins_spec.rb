@@ -84,4 +84,24 @@ describe Linkbot::Plugin do
       end
     end
   end
+
+  describe '#unescape_octal' do
+    it 'octal escapes get hex encoded and url escaped' do
+      incoming = 'https://example.com/E\\75MC2'
+      expected = 'https://example.com/E%3dMC2'
+      expect(subject.unescape_octal(incoming)).to eq(expected)
+    end
+
+    it 'multiple octal escapes should be hex encoded' do
+      incoming = 'https://example.com/\\50test\\75test\\51'
+      expected = 'https://example.com/%28test%3dtest%29'
+      expect(subject.unescape_octal(incoming)).to eq(expected)
+    end
+
+    it 'leaves a vanilla string untouched' do
+      incoming = 'https://example.com/something_else'
+      expected = 'https://example.com/something_else'
+      expect(subject.unescape_octal(incoming)).to eq(expected)
+    end
+  end
 end
