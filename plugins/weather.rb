@@ -10,25 +10,25 @@ class Weather < Linkbot::Plugin
   end
 
   @@iconmap = {
-    "chanceflurries" => "snow",
-    "chancerain" => "rain",
-    "chancesleet" => "rain",
-    "chancesnow" => "snow",
-    "chancetstorms" => "tstorm",
-    "clear" => "sun",
-    "cloudy" => "cloudy",
-    "flurries" => "snow",
-    "fog" => "cloudy",
-    "hazy" => "cloudy",
-    "mostlycloudy" => "mostlycloudy",
-    "mostlysunny" => "mostlycloudy",
-    "partlycloudy" => "mostlycloudy",
-    "partlysunny" => "mostlycloudy",
-    "sleet" => "rain",
-    "rain" => "rain",
-    "snow" => "snow",
-    "sunny" => "sun",
-    "tstorms" => "tstorm"
+    "chanceflurries" => "❄️",
+     "chancerain" => "💧",
+     "chancesleet" => "💧",
+     "chancesnow" => "❄️",
+     "chancetstorms" => "⚡️",
+     "clear" => "☀️",
+     "cloudy" => "☁️",
+     "flurries" => "❄️",
+     "fog" => "☁️",
+     "hazy" => "☁️",
+     "mostlycloudy" => "⛅️",
+     "mostlysunny" => "⛅️",
+     "partlycloudy" => "⛅️",
+     "partlysunny" => "⛅️",
+     "sleet" => "💧",
+     "rain" => "💧",
+     "snow" => "❄️",
+     "sunny" => "☀️",
+     "tstorms" => "⚡️"
    }
 
 
@@ -68,7 +68,7 @@ class Weather < Linkbot::Plugin
 
        days = doc["forecast"]["simpleforecast"]["forecastday"][0,days].map do |day|
          m = "#{day["date"]["weekday_short"]}: "
-         m = m + (Linkbot::Config['plugins']['weather']['icons'] == true ? "(#{@@iconmap[day["icon"]]}) " : "#{day["conditions"]} ")
+         m = m + (Linkbot::Config['plugins']['weather']['icons'] == true ? "#{@@iconmap[day["icon"]]} " : "#{day["conditions"]} ")
          m = m + "#{day["high"]["fahrenheit"]}/#{day["low"]["fahrenheit"]}"
          m
        end
