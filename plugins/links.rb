@@ -26,6 +26,13 @@ class Links < Linkbot::Plugin
   end
 
   def on_message(message, matches)
+    # matches[0] is the first HTTP(S) URL found in a message
+    # Slack detects domains without a protocol and rewrites the message
+    # using Slack's markup, e.g. foxnews.com -> <http://foxnews.com|foxnews.com>
+    # the gnarly regex in this plugin detects the URL, but also slurps up the
+    # markup's pipe and link text, e.g.:bad URI(is not URI?): http://foxnews.com|foxnews.com>
+    # So, split on the pipe and take the first thing until we get around to
+    # chopping up that regex
     url = matches[0].split('|')[0]
     url = URI.decode(url)
     uri = URI.parse(url)
