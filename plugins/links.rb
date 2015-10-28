@@ -26,7 +26,7 @@ class Links < Linkbot::Plugin
   end
 
   def on_message(message, matches)
-    url = matches[0]
+    url = matches[0].split('|')[0]
     url = URI.decode(url)
     uri = URI.parse(url)
 
