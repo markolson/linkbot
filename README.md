@@ -8,7 +8,7 @@ plugin system and many plugins already written.
 
 ## Installation
 
-Make sure you have ruby 1.9.2 or greater, rubygems, and bundler installed.
+Make sure you have ruby 2.1 or greater, rubygems, and bundler installed.
 
 Then,
 
@@ -32,12 +32,26 @@ Finally, run `ruby linkbot.rb` to run linkbot.
 ## Connectors
 
 Connectors are the interface for linkbot to connect with your chat service.
-Currently, linkbot has jabber and campfire connectors.
-
-The service is mainly used on hipchat at the moment, so bug reports and
-patches from other services would be very helpful.
+Currently, linkbot has jabber, campfire, slack, and irc connectors, though
+you should really only use the Slack connector.
 
 ## Plugins
 
 Plugins are the bits that make linkbot useful. Each plugin implements a command
-that linkbot knows how to respond to.
+that linkbot knows how to respond to. A basic plugin inherits from `Linkbot::Plugin`,
+and registers a regex to match against in the initializer. Matches are passed
+into `on_message`, which should return a string.
+
+```
+class Slap < Linkbot::Plugin
+  def initialize
+    register :regex => /\/slap(?: ([\w\s]+))?/
+    help "/slap [username] - Flashback to the halcyon days of the 1990s when hammer pants were all the rage"
+  end
+
+  def on_message(message, matches)
+    user = (matches[0] and matches[0].length > 0) ? matches[0] : "everyone"
+    "#{message.user_name} slaps #{user} around a bit with a large trout"
+  end
+end
+```
