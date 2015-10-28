@@ -9,6 +9,9 @@ module Linkbot
   end
   
   def self.load_users
+    if Linkbot.db.table_info('users').empty?
+      Linkbot.db.execute('CREATE TABLE users (user_id STRING, username TEXT, showname TEXT)');
+    end
     rows = Linkbot.db.execute("select user_id, username from users")
     @@user_ids = Hash[rows]
     @@users = Hash[rows.collect {|a,b| [b,a]}]
