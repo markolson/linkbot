@@ -30,16 +30,11 @@ class Gif < Linkbot::Plugin
       return "Google is slow! No gifs for you."
     end
 
-    gifs = gifs.read.scan(/imgurl.*?(http.*?)\\/).flatten
+    # pull gif URLs out of the page
+    gifs = gifs.read.scan(/var u='(.*?)'/).flatten
 
-    # un-escape double-escaped codes into escape codes.
-    #
-    # Yes that makes sense.
-    #
-    # Read it again.
-    #
-    # Google turns a url-escaped "%20" -> "\\x20", so this turns "\\x20" -> "%20" to make it a URL again
-    gifs = gifs.map{|x| x.sub(/\\x(\d+)/, "%\\1")}
+    # unescape google octal escapes
+    gifs = gifs.map { |g| unescape(g) }
 
     #funnyjunk sucks
     gifs.reject! {|x| x =~ /fjcdn\.com/}
@@ -47,5 +42,17 @@ class Gif < Linkbot::Plugin
     return "No gifs found. Lame." if gifs.empty?
 
     gifs.sample
+  end
+
+  # unescape google urls with octal (!?) escapes into url-encoded hex equivalents
+  def unescape(url)
+    url.gsub(/\\(\d{2})/) do |escape|
+      # given an octal escape like '\\75':
+      #
+      # 1. strip the leading slash
+      # 2. convert to an integer
+      # 3. convert to a hex string (url escaped)
+      "%#{escape[1..-1].to_i(8).to_s(16)}"
+    end
   end
 end
