@@ -20,7 +20,7 @@ class JabberConnector < Linkbot::Connector
   end
 
   def update_users
-    puts "Retrieving roster..."
+    Linkbot.log.info "Jabber connector: Retrieving roster..."
     @roster.get_roster
     @roster.wait_for_roster
 
@@ -37,7 +37,7 @@ class JabberConnector < Linkbot::Connector
 
   def reconnect
     jid = "#{@username}@#{@server}/#{@resource}"
-    puts "Connecting and authenticating as ...#{jid}"
+    Linkbot.log.info "Jabber connector: Connecting and authenticating as ...#{jid}"
     @connection = ::Jabber::Client.new(Jabber::JID.new(jid))
     @connection.connect
     @connection.auth(@password)
@@ -47,8 +47,8 @@ class JabberConnector < Linkbot::Connector
     reconnect
     @connection.on_exception do |exception,stream,sym|
       sleep 5
-      puts "Connection failed: #{exception} at #{sym}"
-      puts "Reconnecting..."
+      Linkbot.log.warn "Jabber connector: Connection failed: #{exception} at #{sym}"
+      Linkbot.log.warn "Reconnecting..."
       reconnect
     end
 
@@ -59,7 +59,7 @@ class JabberConnector < Linkbot::Connector
 
     update_users
 
-    puts "Adding callbacks..."
+    Linkbot.log.info "Jabber connector: Adding callbacks..."
 
     @connection.add_message_callback do |m|
       begin
@@ -74,8 +74,9 @@ class JabberConnector < Linkbot::Connector
             process_message(Time.now,nick,m.body,{:user => m.from, :roster => @roster})
           end
         end
-      rescue
-        puts $!.message
+      rescue => e
+        Linkbot.log.error "Jabber connector: #{e.inspect}"
+        Linkbot.log.error e.backtrace.join("\n")
       end
     end
 
@@ -90,8 +91,9 @@ class JabberConnector < Linkbot::Connector
             if nick != @options["fullname"]
               process_message(Time.now,nick,m.body,{:room => room, :roster => @roster})
             end
-          rescue
-            puts $!.message
+          rescue => e
+            Linkbot.log.error "Jabber connector: #{e.inspect}"
+            Linkbot.log.error e.backtrace.join("\n")
           end
         end
       end
@@ -105,7 +107,7 @@ class JabberConnector < Linkbot::Connector
     # Attempt to get the user from the roster
 
     if !Linkbot.user_exists?(nick)
-      puts "Encountered new user '#{nick}' while processing message '#{text}'"
+      Linkbot.log.info "Jabber connector: Encountered new user '#{nick}' while processing message '#{text}'"
       update_users
     end
 

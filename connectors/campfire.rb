@@ -14,14 +14,14 @@ class Campfire < Linkbot::Connector
     }
 
     user_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/users/me.json").get request_options
-    user_http.errback { puts "Yeah trouble logging in." }
+    user_http.errback { Linkbot.log.error "Campfire connector: Yeah trouble logging in." }
     user_http.callback {
       @user = JSON.parse(user_http.response)["user"]
       request_options[:head]['authorization'] = [@user["api_auth_token"],"x"]
       request_options[:body] = "_"
 
       join_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/room/#{@options["room"]}/join.xml").post request_options
-      join_http.errback { puts "Yeah trouble entering the room." }
+      join_http.errback { Linkbot.log.error "Campfire connector: Yeah trouble entering the room." }
       join_http.callback {
         listen
       }
@@ -43,11 +43,11 @@ class Campfire < Linkbot::Connector
     end
 
     stream.on_error do |message|
-      puts "ERROR:#{message.inspect}"
+      Linkbot.log.error "Campfire connector: #{message.inspect}"
     end
 
     stream.on_max_reconnects do |timeout, retries|
-      puts "Tried #{retries} times to connect."
+      Linkbot.log.fatal "Campire connector: tried #{retries} times to connect."
       exit
     end
   end
@@ -73,7 +73,7 @@ class Campfire < Linkbot::Connector
         }
 
         user_http = EventMachine::HttpRequest.new("#{@options["campfire_url"]}/users/#{message['user_id']}.json").get request_options
-        user_http.errback { puts "Yeah trouble entering the room." }
+        user_http.errback { Linkbot.log.error "Campfire connector: Yeah trouble entering the room." }
         user_http.callback {
           user = JSON.parse(user_http.response)["user"]
           Linkbot.add_user(user["name"],user["id"])

@@ -8,12 +8,12 @@ require 'optparse'
 Encoding.default_internal = Encoding.default_external = "UTF-8"
 
 trap("INT") {
-  puts "Shutting down..."
+  Linkbot.log.info "Shutting down..."
   exit(1)
 }
 
 at_exit {
-  puts "I know now why you cry. But it's something I can never do. 💀"
+  Linkbot.log.info "I know now why you cry. But it's something I can never do. 💀"
 }
 
 options = {

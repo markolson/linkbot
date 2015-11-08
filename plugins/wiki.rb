@@ -22,13 +22,13 @@ class Wiki < Linkbot::Plugin
       data = open(url).read
       rooms = JSON.parse(data)["rooms"]
     rescue => e
-      puts rooms
-      puts e.inspect
-      puts e.backtrace.join("\n")
+      Linkbot.log.error "Wiki plugin: rooms == #{rooms}"
+      Linkbot.log.error "Wiki plugin: #{e.inspect}"
+      Linkbot.log.error e.backtrace.join("\n")
     end
 
     room_id = rooms.find {|r| r["xmpp_jid"].start_with? room}["room_id"]
-    puts "found room #{room_id} for room #{room}"
+    Linkbot.log.debug "Wiki plugin: found room #{room_id} for room #{room}"
 
     message = CGI.escape(message)
     color = "gray"
@@ -45,8 +45,8 @@ class Wiki < Linkbot::Plugin
 
       open(url)
     rescue => e
-      puts e.inspect
-      puts e.backtrace.join("\n")
+      Linkbot.log.error "Wiki plugin: #{e.inspect}"
+      Linkbot.log.error e.backtrace.join("\n")
     end
   end
 

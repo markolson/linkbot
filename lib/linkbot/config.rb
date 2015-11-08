@@ -24,7 +24,7 @@ module Linkbot
       begin
         @@settings = JSON.parse(File.read(path))
       rescue Errno::ENOENT
-        puts "You must have a config/config.json file defined"
+        Linkbot.log.fatal "You must have a config/config.json file defined"
         exit(1)
       end
     end

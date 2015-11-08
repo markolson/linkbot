@@ -29,16 +29,16 @@ class IRCConnector < Linkbot::Connector
       port port
 
       on :connect do
-        puts "connected to #{host}:#{port}, setting nick #{nick}"
+        Linkbot.log.info "IRC connector: connected to #{host}:#{port}, setting nick #{nick}"
         nick nick
         rooms.each do |room|
-          puts "connecting to #{room}"
+          Linkbot.log.info "IRC connector: connecting to #{room}"
           join room
         end
       end
 
       on :join do |channel|
-        puts "joined #{channel}"
+        Linkbot.log.info "IRC connector: joined #{channel}"
       end
 
       on :message do |user, room, message|
@@ -47,7 +47,7 @@ class IRCConnector < Linkbot::Connector
         end
 
         parent.handle_message(user, room, message)
-        puts "<#{user}> -> <#{room}>: #{message}"
+        Linkbot.log.debug "IRC connector: <#{user}> -> <#{room}>: #{message}"
       end
     end
 
@@ -66,7 +66,7 @@ class IRCConnector < Linkbot::Connector
   end
 
   def send_messages(msgs, options={})
-    puts "Got messages #{msgs} <<#{options}>>"
+    Linkbot.log.debug "IRC connector: got messages #{msgs} <<#{options}>>"
     msgs.each do |msg|
       if msg && msg.strip.length > 0 && options[:room]
         msg.split("\n").each do |line|

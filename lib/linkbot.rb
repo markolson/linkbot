@@ -3,6 +3,7 @@ require 'rubygems'
 require 'bundler/setup'
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/linkbot"
+require 'log'
 require 'config'
 require 'db'
 require 'messagelogs'
@@ -57,8 +58,9 @@ module Linkbot
           begin
             c.periodic
           rescue Exception => e
-            puts "error in call to #{c}"
-            puts e
+            Linkbot.log.error "Periodic timer: error in call to #{c}"
+            Linkbot.log.error e.inspect
+            Linkbot.log.error e.backtrace.join("\n")
           end
         end
       end

@@ -9,7 +9,6 @@ class Boo < Linkbot::Plugin
 
   def on_message(message, matches)
     if @webhook
-      puts "YEAH"
       get(@webhook) # poke some external booing
     end
 

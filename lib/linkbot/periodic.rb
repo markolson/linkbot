@@ -6,7 +6,7 @@ module Linkbot
       Linkbot::Plugin.plugins.each {|plugin|
         if plugin.handlers[:periodic] && plugin.handlers[:periodic][:handler]
 
-          puts "#{plugin.name} processing periodic message"
+          Linkbot.log.debug "#{plugin.name} processing periodic message"
           begin
             #messages should be a hash {:messages => [<message:string>],
             #                           :options => {"room": <room:string>}
@@ -18,15 +18,15 @@ module Linkbot
             end
           rescue Exception => e
             final_messages << "the #{plugin.name} plugin threw an exception: #{e.inspect}"
-            puts e.inspect
-            puts e.backtrace.join("\n")
+            Linkbot.log.error "Periodic Handler: #{e.inspect}"
+            Linkbot.log.error e.backtrace.join("\n")
           end
         end
       }
 
       if final_messages.length
-        puts "returning msgs from periodic plugins:"
-        pp final_messages
+        Linkbot.log.debug "Periodic Handler: returning msgs from periodic plugins"
+        Linkbot.log.debug final_messages.join("\n")
       end
       final_messages
     end

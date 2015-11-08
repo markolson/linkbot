@@ -28,8 +28,8 @@ class Trello < Linkbot::Plugin
 
       open(url)
     rescue => e
-      puts e.inspect
-      puts e.backtrace.join("\n")
+      Linkbot.log.error "Trello plugin: #{e.inspect}"
+      Linkbot.log.error e.backtrace.join("\n")
     end
   end
 
@@ -91,7 +91,7 @@ class Trello < Linkbot::Plugin
     begin
       boards = ActiveSupport::JSON.decode(open(url).read)
     rescue
-      puts "could not retrieve #{url}"
+      Linkbot.log.error "Trello plugin: could not retrieve #{url}"
       return {:messages => [], :options => {}}
     end
 
@@ -107,7 +107,7 @@ class Trello < Linkbot::Plugin
       begin
         items = ActiveSupport::JSON.decode(open(url).read)
       rescue
-        puts "could not retrieve #{url}"
+        Linkbot.log.error "Trello plugin: could not retrieve #{url}"
         return {:messages => [], :options => {}}
       end
 
