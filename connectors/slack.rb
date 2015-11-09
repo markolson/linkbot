@@ -15,10 +15,10 @@ class SlackConnector < Linkbot::Connector
 
   def start
     Linkbot.log.info "Slack connector: Creating client"
-    @client = Slack.client
+    @client = Slack::Web::Client.new
 
     Linkbot.log.info "Slack connector: Connection realtime client"
-    @rtc = @client.realtime
+    @rtc = Slack::RealTime::Client.new
 
     Linkbot.log.info "Slack connector: Client connected"
     @rtc.on :message do |data|
@@ -29,7 +29,7 @@ class SlackConnector < Linkbot::Connector
 
     update_users(@client.post("rtm.start")["users"])
 
-    @rtc.start
+    @rtc.start!
   end
 
   def update_users(users)
