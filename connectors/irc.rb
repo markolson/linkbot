@@ -1,6 +1,5 @@
 require "em-irc"
 require "logger"
-require 'byebug'
 
 class IRCConnector < Linkbot::Connector
   Linkbot::Connector.register('irc', self)
