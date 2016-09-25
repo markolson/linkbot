@@ -19,7 +19,8 @@ at_exit {
 options = {
   :console => false,
   :dev => false,
-  :config_path => File.expand_path(File.join(File.dirname(__FILE__), "..", "config", "config.json"))
+  :config_path => File.expand_path(File.join(File.dirname(__FILE__), "..", "config", "config.json")),
+  :database_path => File.expand_path(File.join(File.dirname(__FILE__), "..", "data.sqlite3")),
 }
 
 OptionParser.new do |opts|
@@ -27,6 +28,10 @@ OptionParser.new do |opts|
 
   opts.on("-c", "--config FILE", "Do not actually create outbound connections") do |v|
     options[:config_path] = v
+  end
+
+  opts.on("-D", "--database FILE", "Use the SQLite database at this file path") do |v|
+    options[:database_path] = v
   end
 
   opts.on("-k", "--console", "Run a local chat console for testing plugins") do |v|

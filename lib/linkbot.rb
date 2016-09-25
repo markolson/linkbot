@@ -17,6 +17,7 @@ module Linkbot
 
     def initialize(options)
       Linkbot::Config.load(options[:config_path])
+      Linkbot.db(options[:database_path])
 
       if options[:console]
         Linkbot::Config["connectors"] = [{ "type" => "console", "periodic" => true, "receive_broadcasts" => true}]
