@@ -44,7 +44,7 @@ module Linkbot
       message_matcher = options[:regex] || raise('Message matching plugin needs a regex. //to match all messages.')
       handlers[:message] = {:regex => message_matcher, :handler => message_handler}
 
-      if options.has_key? :periodic
+      if options.fetch(:periodic, false)
         periodic_handler = options[:periodic][:handler] || :periodic
         handlers[:periodic] = { :handler => periodic_handler }
       end
@@ -152,7 +152,7 @@ module Linkbot
       if supported_extensions.has_key?(url.split(".").last)
         dimensions = ''
         open(url) do |fh|
-          d = ImageSize.new(fh.read).get_size
+          d = ImageSize.new(fh.read).size
           dimensions = "#{d[0]}x#{d[1]}"
         end
 

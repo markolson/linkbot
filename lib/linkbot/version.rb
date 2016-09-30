@@ -1,3 +1,3 @@
 module Linkbot
-  VERSION = "0.2.00-pre1"
+  VERSION = "1.3.1"
 end

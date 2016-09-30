@@ -16,6 +16,10 @@ module Linkbot
       @@settings[x] = y
     end
 
+    def self.fetch(*args, &block)
+      @@settings.fetch(*args, &block)
+    end
+
     def self.has_key?(key)
       return @@settings.has_key? key
     end

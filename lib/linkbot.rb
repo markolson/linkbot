@@ -13,6 +13,9 @@ require 'connector'
 
 module Linkbot
   class Bot
+
+    class NoConnectors < RuntimeError; end
+
     attr_accessor :connectors
 
     def initialize(options)
@@ -28,17 +31,23 @@ module Linkbot
       Linkbot::Connector.collect
       load_connectors
 
+      raise NoConnectors if connectors.empty?
+
       plugin_paths = []
       if Linkbot::Config.has_key? "extra_plugin_directories"
         Linkbot::Config["extra_plugin_directories"].each {|p| plugin_paths << p}
       end
       plugin_paths << File.expand_path(File.join(File.dirname(__FILE__), "..", "plugins"))
       Linkbot::Plugin.collect(plugin_paths)
+
+    rescue NoConnectors => e
+      Linkbot.log.fatal "No connectors defined. I'm not much of a bot if I don't connect to something.🤖 ⁉️"
+      exit(1)
     end
 
 
     def load_connectors
-      Linkbot::Config["connectors"].each { |config|
+      Linkbot::Config.fetch("connectors", []).each { |config|
         if Linkbot::Connector[config["type"]]
           connector =  Linkbot::Connector[config["type"]].new(config)
           connector.onmessage do |message,options|

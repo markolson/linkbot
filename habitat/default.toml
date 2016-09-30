@@ -1,0 +1,39 @@
+# This TOML structure will be rendered to JSON via a Handlebars template
+
+# == connectors
+# rendered as an array of connector configs, so each should get the TOML table
+# of [["connectors"]]
+
+# - Sample Slack connector
+#[["connectors"]]
+#type = "slack"
+#username = "Linkbot"
+#icon_url = "http://icons.iconarchive.com/icons/pixelpirate/futurama/256/Hedonism-Bot-icon.png"
+#token = "gottaprovidethis"
+#periodic = true
+
+# - Sample Hipchat-flavored Jabber connector
+#[["connectors"]]
+#type = "jabber"
+#username = "123456_09876"
+#fullname = "Linkbot"
+#password = "paaaaasssswoooorrrrrd"
+#rooms = ["123456_a_room_to_chat_in"]
+#resource = "bot"
+#server = "chat.hipchat.com"
+#conference = "conf.hipchat.com"
+#periodic = false
+#receive_broadcasts = true
+
+# == plugins
+# Rendered as a hash-of-hashes-like structure that varies from plugin to plugin
+[plugins]
+# - sample hubstat
+#[plugins.hubstat]
+#room = "wheredoyouwantmetopost?"
+
+# - sample weather
+#[plugins.weather]
+#key = "gottaprovidethistoo"
+#default-zip = "21224"
+#icons = true
