@@ -21,6 +21,7 @@ gem "em-irc"
 gem "rake"
 gem "slack-ruby-client"
 gem "certifi"
+gem "stock_quote"
 
 group :dev do
   gem "byebug"
