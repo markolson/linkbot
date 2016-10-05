@@ -22,7 +22,7 @@ class Stock < Linkbot::Plugin
     movement = stock.change
     pct = stock.change_percent_change
     upordown = movement < 0 ? '↓' : '↑'
-    movetext = "#{upordown} #{movement.abs} #{pct}%"
+    movetext = "#{upordown} #{movement.abs} #{pct}"
 
     msg = "#{name} #{price} #{movetext}"
 
