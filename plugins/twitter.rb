@@ -4,7 +4,18 @@ require 'hpricot'
 class Twitter < Linkbot::Plugin
 
   def initialize
-    register :regex => /(https:\/\/twitter.com\/[\w\/]*)/
+    @config  = Linkbot::Config["plugins"]["twitter"]
+    # Set the following in config.json to have linkbot retrieve and display
+    # tweet content for chat services that don't do that already.
+    # { "plugins": {
+    #     "twitter": {
+    #       "expand_content": true
+    #     }
+    #   }
+    # }
+    if @config && @config["expand_content"]
+      register :regex => /(https:\/\/twitter.com\/[\w\/]*)/
+    end
   end
 
   def on_message(message, matches)
