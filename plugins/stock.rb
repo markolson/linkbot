@@ -1,4 +1,5 @@
 # encoding: UTF-8
+require 'stock_quote'
 class Stock < Linkbot::Plugin
 
   def initialize
@@ -12,14 +13,14 @@ class Stock < Linkbot::Plugin
 
   def on_message(message, matches)
     ticker = matches[0]
-    doc = Hpricot(open("http://www.google.com/ig/api?stock=#{ticker}"))
-    price = (doc/"last").first.attributes["data"]
-    name =  (doc/"company").first.attributes["data"]
+    stock = StockQuote::Stock.quote(ticker)
 
-    return [] if name.empty?
+    return [] unless stock.response_code == 200
 
-    movement = (doc/"change").first.attributes["data"].to_f
-    pct = (doc/"perc_change").first.attributes["data"].to_f
+    price = stock.bid
+    name =  stock.name
+    movement = stock.change
+    pct = stock.change_percent_change
     upordown = movement < 0 ? '↓' : '↑'
     movetext = "#{upordown} #{movement.abs} #{pct}%"
 
