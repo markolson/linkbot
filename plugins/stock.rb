@@ -2,8 +2,12 @@
 class Stock < Linkbot::Plugin
 
   def initialize
-    register :regex => Regexp.new('\$(\w+)')
-    help "$<ticker> returns that stock's price"
+    @config = Linkbot::Config["plugins"]["stock"]
+
+    if @config && @config['enabled']
+      register :regex => Regexp.new('\$(\w+)')
+      help "$<ticker> returns that stock's price"
+    end
   end
 
   def on_message(message, matches)
