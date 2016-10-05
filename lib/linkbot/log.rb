@@ -1,7 +1,8 @@
 require 'logger'
 
 module Linkbot
-  @@logger = ::Logger.new(STDOUT)
+  $stdout.sync = true
+  @@logger = ::Logger.new($stdout)
 
   def self.log
     @@logger
