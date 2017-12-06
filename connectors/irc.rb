@@ -1,5 +1,6 @@
-require "em-irc"
 require "logger"
+require "em/pure_ruby"
+require "em-irc"
 
 class IRCConnector < Linkbot::Connector
   Linkbot::Connector.register('irc', self)

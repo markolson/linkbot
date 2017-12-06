@@ -14,7 +14,8 @@ module Linkbot
     end
 
     def self.collect
-      Dir["connectors/*.rb"].each {|file| self.load_connector(file) }
+      connector_path = File.join(File.dirname(__FILE__), '../..', 'connectors', '*.rb')
+      Dir[connector_path].each {|file| self.load_connector(file) }
     end
 
     def self.load_connector(path)

@@ -1,4 +1,5 @@
-require 'slack'
+require 'slack-ruby-client'
+require 'em/pure_ruby'
 
 class SlackConnector < Linkbot::Connector
   Linkbot::Connector.register('slack', self)
