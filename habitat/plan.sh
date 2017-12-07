@@ -1,5 +1,5 @@
 pkg_name=linkbot
-pkg_origin=robbkidd
+pkg_origin=linkbuds
 pkg_maintainer="Robb Kidd <robb@thekidds.org>"
 pkg_license=('mit')
 pkg_source=_source_found_locally_
