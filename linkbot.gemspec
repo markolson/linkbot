@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib", "connectors"]
 
+  spec.add_runtime_dependency "activesupport", ">= 5.1"
   spec.add_runtime_dependency "bundler", ">= 1.7"
   spec.add_runtime_dependency "certifi", "~> 14.5.14"
   spec.add_runtime_dependency 'chronic', ">= 0.10.2"
@@ -47,7 +48,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra', "~> 1.4"
   spec.add_runtime_dependency "slack-ruby-client", "~> 0.3.1"
   spec.add_runtime_dependency 'sqlite3', "~> 1.3"
-  spec.add_runtime_dependency "stock_quote", "~> 1.2.6"
+  spec.add_runtime_dependency "stock_quote", ">= 1.2.6"
   spec.add_runtime_dependency 'thin', '>= 1.5.0'
   spec.add_runtime_dependency 'twilio-ruby', ">= 4.13.0"
   spec.add_runtime_dependency 'twitter-stream', ">= 0.1.12"
