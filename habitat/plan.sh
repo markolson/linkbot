@@ -1,11 +1,12 @@
 pkg_name=linkbot
-pkg_origin=linkbuds
+pkg_origin=robbkidd
+pkg_version=$(grep "VERSION" $PLAN_CONTEXT/../lib/linkbot/version.rb | awk -F\" '{ print $2 }')
 pkg_maintainer="Robb Kidd <robb@thekidds.org>"
 pkg_license=('mit')
 pkg_source=_source_found_locally_
+pkg_filename="${pkg_name}-${pkg_version}.gem"
 
 pkg_deps=(
-  core/bundler
   core/libffi
   core/libiconv
   core/libxml2
@@ -24,20 +25,18 @@ pkg_build_deps=(
 )
 
 pkg_bin_dirs=(bin)
-pkg_lib_dirs=(lib)
 
-pkg_version() {
-  ruby -I$PLAN_CONTEXT/../lib/linkbot -rversion -e 'puts Linkbot::VERSION'
+do_setup_environment() {
+  push_runtime_env GEM_PATH "${pkg_prefix}/vendor"
 }
 
-
 do_download() {
-  update_pkg_version
-
-  cd $PLAN_CONTEXT/..
-  # Build then unpack the gem to the source cache path to limit the
-  # files packaged to those defined as included in the gemspec
-  gem build $pkg_name.gemspec
+  ( cd $PLAN_CONTEXT/..
+    # Build then unpack the gem to the source cache path to limit the
+    # files packaged to those defined as included in the gemspec
+    gem build $pkg_name.gemspec
+    mv ${pkg_filename} "${HAB_CACHE_SRC_PATH}/${pkg_filename}"
+  )
 }
 
 do_verify() {
@@ -46,7 +45,7 @@ do_verify() {
 }
 
 do_unpack() {
-  gem unpack $PLAN_CONTEXT/../$pkg_name-$pkg_version.gem --target=$HAB_CACHE_SRC_PATH
+  gem unpack "${HAB_CACHE_SRC_PATH}/${pkg_filename}" --target=$HAB_CACHE_SRC_PATH
 }
 
 # The configure scripts for some RubyGems that build native extensions
@@ -57,41 +56,39 @@ do_unpack() {
 #
 # We clean this link up in `do_install`.
 do_prepare() {
+  export GEM_HOME=$pkg_prefix/vendor
+  export CPPFLAGS="${CPPFLAGS} ${CFLAGS}"
+
+  ( cd "$CACHE_PATH"
+    bundle config --local build.nokogiri "--use-system-libraries \
+        --with-zlib-dir=$(pkg_path_for zlib) \
+        --with-xslt-dir=$(pkg_path_for libxslt) \
+        --with-xml2-include=$(pkg_path_for libxml2)/include/libxml2 \
+        --with-xml2-lib=$(pkg_path_for libxml2)/lib"
+    local _sqlite_dir=$(pkg_path_for sqlite)
+    bundle config --local build.sqlite3 "--with-sqlite3-include=${_sqlite_dir}/include \
+        --with-sqlite3-lib=${_sqlite_dir}/lib \
+        --with-sqlite3-dir=${_sqlite_dir}/bin"
+    bundle config --local jobs "$(nproc)"
+    bundle config --local without development test
+    bundle config --local retry 5
+    bundle config --local silence_root_warning 1
+  )
+
   build_line "Setting link for /usr/bin/env to 'coreutils'"
   if [[ ! -r /usr/bin/env ]]; then
     ln -sv $(pkg_path_for coreutils)/bin/env /usr/bin/env
     _clean_env=true
   fi
-  return 0
 }
 
-do_setup_environment() {
-  set_runtime_env GEM_HOME "${pkg_prefix}"
-  set_runtime_env GEM_PATH "${pkg_prefix}:$(pkg_path_for "core/bundler"):$(pkg_path_for "core/ruby")/lib/ruby/gems/2.4.0"
-}
 
 do_build() {
-  export CPPFLAGS="${CPPFLAGS} ${CFLAGS}"
+  build_line "** bundle installing dependencies"
+  bundle install --binstubs
 
-  local _libxml2_dir=$(pkg_path_for libxml2)
-  local _libxslt_dir=$(pkg_path_for libxslt)
-  local _sqlite_dir=$(pkg_path_for sqlite)
-  local _zlib_dir=$(pkg_path_for zlib)
-
-  export BUNDLE_SILENCE_ROOT_WARNING=1 GEM_PATH
-
-  # don't let bundler split up the nokogiri config string (it breaks
-  # the build), so specify it as an env var instead
-  export NOKOGIRI_CONFIG="--use-system-libraries --with-zlib-dir=${_zlib_dir} --with-xslt-dir=${_libxslt_dir} --with-xml2-include=${_libxml2_dir}/include/libxml2 --with-xml2-lib=${_libxml2_dir}/lib"
-  bundle config build.nokogiri '${NOKOGIRI_CONFIG}'
-
-  export SQLITE3_CONFIG="--with-sqlite3-include=${_sqlite_dir}/include --with-sqlite3-lib=${_sqlite_dir}/lib --with-sqlite3-dir=${_sqlite_dir}/bin"
-  bundle config build.sqlite3 '${SQLITE3_CONFIG}'
-
-  bundle install --jobs "$(nproc)" --retry 5 --standalone \
-      --without development,test \
-      --path vendor/bundle \
-      --binstubs
+  # build_line "** installing the app gem itself"
+  # gem install "${HAB_CACHE_SRC_PATH}/${pkg_filename}" --no-document
 }
 
 do_install() {
@@ -101,7 +98,7 @@ do_install() {
 }
 
 do_end() {
-  # Clean up the `env` link, if we set it up. 
+  # Clean up the `env` link, if we set it up.
   if [[ -n "$_clean_env" ]]; then
     rm -fv /usr/bin/env
   fi

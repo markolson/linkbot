@@ -6,7 +6,7 @@ if [ "$(whoami)" = "root" ]; then
   exec chpst \
     -U hab:hab \
     -u hab:hab \
-    bundle exec linkbot --config {{pkg.svc_config_path}}/config.json --database {{pkg.svc_data_path}}/data.sqlite3 2>&1
+    linkbot --config {{pkg.svc_config_path}}/config.json --database {{pkg.svc_data_path}}/data.sqlite3 2>&1
 else
-  exec bundle exec linkbot --config {{pkg.svc_config_path}}/config.json --database {{pkg.svc_data_path}}/data.sqlite3 2>&1
+  exec linkbot --config {{pkg.svc_config_path}}/config.json --database {{pkg.svc_data_path}}/data.sqlite3 2>&1
 fi
