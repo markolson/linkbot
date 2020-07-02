@@ -7,17 +7,13 @@ class Fail < Linkbot::Plugin
   def initialize
     register :regex => /^fail( .+)?/i
   end
-  
+
   def on_message(message, matches)
     sound = true
-    doc = Hpricot(open("http://www.failpictures.com").read)
-    img = "http://www.failpictures.com/" + doc.search("img[@alt='following next photo']").first.attributes['src']
-
-    if Linkbot::Config["plugins"]["fail"]["webhook"]
-      get("#{Linkbot::Config["plugins"]["fail"]["webhook"]}")
-    end
-
-    img
+    doc = Hpricot(open("https://www.failpictures.com").read)
+    fail_image_paths = doc.search("img")
+                          .map {|i| i.attributes['src'] }
+                          .keep_if {|src| src.start_with? 'photos/' }
+    "https://www.failpictures.com/" + fail_image_paths.sample
   end
-
 end
