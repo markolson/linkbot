@@ -16,6 +16,9 @@ jobs:
     name: Lint & Test with Ruby ${{ matrix.ruby }}
     steps:
       - uses: actions/checkout@v2
+      - name: Install Prerequisites
+        run: |
+          sudo apt-get install libsqlite3-dev
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
