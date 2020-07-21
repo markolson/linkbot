@@ -84,11 +84,11 @@ do_prepare() {
 
 
 do_build() {
+  build_line "** install matching version of bundler"
+  gem install bundler -v "$(grep -A1 "BUNDLED WITH" Gemfile.lock | tail -n1)" --no-document
+
   build_line "** bundle installing dependencies"
   bundle install --binstubs
-
-  # build_line "** installing the app gem itself"
-  # gem install "${HAB_CACHE_SRC_PATH}/${pkg_filename}" --no-document
 }
 
 do_install() {
