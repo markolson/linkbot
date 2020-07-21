@@ -21,7 +21,11 @@ class Youtube < Linkbot::Plugin
 
     url = "https://www.youtube.com/results?search_query=#{searchterm}"
     body = HTTParty.get(url, {ssl_ca_file: Certifi.where})
-    watch = body.to_s.scan(/a href="(\/watch[^&]*?)"/)[0][0]
-    "https://www.youtube.com#{watch}"
+    watch_link_scan = body.to_s.scan(%r{watch\?v=\w*})
+    if watch = watch_link_scan[0]
+      "https://www.youtube.com/#{watch}"
+    else
+      "Couldn't find videos."
+    end
   end
 end
