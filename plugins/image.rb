@@ -39,7 +39,7 @@ class Image < Linkbot::Plugin
     end
 
     # pull image URLs out of the page
-    images = images.read.scan(/var u='(.*?)'/).flatten
+    images = images.scan(/imgres[?]imgurl=(.*?)&amp;/).flatten
 
     # unescape google octal escapes
     images = images.map { |g| unescape_octal(g) }
