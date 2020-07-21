@@ -44,7 +44,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'octokit', "~> 2.0"
   spec.add_runtime_dependency 'phonie', ">= 3.3.1"
   spec.add_runtime_dependency 'rack', ">= 1.6.5"
-  spec.add_runtime_dependency 'sanitize', "~> 2.1"
+  spec.add_runtime_dependency 'sanitize', ">= 2.1", "< 6.0"
   spec.add_runtime_dependency 'sinatra', "~> 1.4"
   spec.add_runtime_dependency "slack-ruby-client", "~> 0.3.1"
   spec.add_runtime_dependency 'sqlite3', "~> 1.3"
