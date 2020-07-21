@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'pp'
 require 'httparty'
-require 'open-uri'
+require 'certifi'
 require 'image_size'
 require 'uri'
 require 'cgi'
@@ -151,10 +151,9 @@ module Linkbot
 
       if supported_extensions.has_key?(url.split(".").last)
         dimensions = ''
-        open(url) do |fh|
-          d = ImageSize.new(fh.read).size
-          dimensions = "#{d[0]}x#{d[1]}"
-        end
+        img = HTTParty.get(url, {ssl_ca_file: Certifi.where}).body
+        d = ImageSize.new(img).size
+        dimensions = "#{d[0]}x#{d[1]}"
 
         if wallpaper_resolutions.has_key?(dimensions)
           return true
