@@ -6,10 +6,13 @@ class Helper < Linkbot::Plugin
 
   def on_message(message, matches)
     messages = []
-    Linkbot::Plugin.plugins.each {|k,v|
-      if(v[:handlers][message.type] && v[:ptr].respond_to?(:help) && !v[:ptr].help.nil?)
+    Linkbot::Plugin.plugins.each {|plugin|
+      if( !plugin.help.nil? &&
+          plugin.handlers &&
+          plugin.handlers[message.type] )
+
         begin
-          messages << v[:ptr].help
+          messages << plugin.help
         rescue => e
           Linkbot.log.error "Helper plugin #{e.inspect}"
           Linkbot.log.error e.backtrace.join("\n")
