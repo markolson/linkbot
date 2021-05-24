@@ -61,7 +61,7 @@ GEM
     docile (1.1.5)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    em-http-request (1.1.5)
+    em-http-request (1.1.7)
       addressable (>= 2.3.4)
       cookiejar (!= 0.3.1)
       em-socksify (>= 0.3)
