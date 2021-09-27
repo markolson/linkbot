@@ -36,7 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'eventmachine', "~> 1.0"
   spec.add_runtime_dependency 'faraday', "~> 0.9"
   spec.add_runtime_dependency 'faye-websocket', "~> 0.10.1"
-  spec.add_runtime_dependency 'hipchat', ">= 1.5.4"
   spec.add_runtime_dependency 'hpricot', ">= 0.8.6"
   spec.add_runtime_dependency 'htmlentities', ">= 4.3"
   spec.add_runtime_dependency 'httparty', "~> 0.13"

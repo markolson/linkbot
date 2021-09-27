@@ -11,7 +11,6 @@ PATH
       eventmachine (~> 1.0)
       faraday (~> 0.9)
       faye-websocket (~> 0.10.1)
-      hipchat (>= 1.5.4)
       hpricot (>= 0.8.6)
       htmlentities (>= 4.3)
       httparty (~> 0.13)
@@ -42,9 +41,7 @@ GEM
       tzinfo (~> 1.1)
       zeitwerk (~> 2.1, >= 2.1.8)
     addressable (2.3.8)
-    byebug (3.2.0)
-      columnize (~> 0.8)
-      debugger-linecache (~> 1.2)
+    byebug (11.1.3)
     certifi (14.5.14)
     chronic (0.10.2)
     classifier (1.3.1)
@@ -52,11 +49,9 @@ GEM
     codeclimate-test-reporter (0.4.7)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
-    columnize (0.8.9)
     concurrent-ruby (1.1.5)
     cookiejar (0.3.3)
     daemons (1.3.1)
-    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     domain_name (0.5.20190701)
@@ -80,9 +75,6 @@ GEM
     faye-websocket (0.10.9)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
-    hipchat (1.6.0)
-      httparty
-      mimemagic
     hpricot (0.8.6)
     htmlentities (4.3.4)
     http-cookie (1.0.3)
@@ -100,15 +92,15 @@ GEM
     mime-types (3.3)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2019.0904)
-    mimemagic (0.3.3)
-    mini_portile2 (2.4.0)
-    minitest (5.12.1)
+    mini_portile2 (2.6.1)
+    minitest (5.14.4)
     multi_json (1.11.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     netrc (0.11.0)
-    nokogiri (1.10.4)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.12.5)
+      mini_portile2 (~> 2.6.1)
+      racc (~> 1.4)
     octokit (2.7.2)
       sawyer (~> 0.5.2)
     phonie (3.3.1)
@@ -116,6 +108,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    racc (1.5.2)
     rack (1.6.11)
     rack-protection (1.5.5)
       rack
@@ -158,7 +151,7 @@ GEM
       faraday_middleware
       faye-websocket
     slop (3.6.0)
-    sqlite3 (1.4.1)
+    sqlite3 (1.4.2)
     stemmer (1.0.1)
     stock_quote (3.0.0)
       json
@@ -203,4 +196,4 @@ DEPENDENCIES
   rspec (>= 3.0)
 
 BUNDLED WITH
-   2.1.4
+   2.2.19
