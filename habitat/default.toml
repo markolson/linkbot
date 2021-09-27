@@ -12,19 +12,6 @@
 #token = "gottaprovidethis"
 #periodic = true
 
-# - Sample Hipchat-flavored Jabber connector
-#[["connectors"]]
-#type = "jabber"
-#username = "123456_09876"
-#fullname = "Linkbot"
-#password = "paaaaasssswoooorrrrrd"
-#rooms = ["123456_a_room_to_chat_in"]
-#resource = "bot"
-#server = "chat.hipchat.com"
-#conference = "conf.hipchat.com"
-#periodic = false
-#receive_broadcasts = true
-
 # == plugins
 # Rendered as a hash-of-hashes-like structure that varies from plugin to plugin
 [plugins]
