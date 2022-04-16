@@ -20,7 +20,7 @@ jobs:
       - name: Install Prerequisites
         run: |
           sudo apt-get install libsqlite3-dev
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
       - name: Setup Ruby environment
