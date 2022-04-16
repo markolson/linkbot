@@ -1,0 +1,11 @@
+{
+  "connectors": [
+    {
+      "type": "slack",
+      "username": "devbot",
+      "token": "a_slack_bot_token",
+      "icon_url": "https://dl.dropboxusercontent.com/u/31927607/drawn%20companion%20cube.png"
+    }
+  ],
+  "plugins": {}
+}
