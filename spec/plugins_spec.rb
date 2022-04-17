@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Linkbot::Plugin do
   let(:mock_plugins_path) { File.expand_path(File.join(File.dirname(__FILE__), "mocks", "plugins")) }
-  let (:message) { Message.new("text", 1, "user", nil, :message, {room: "this_room"}) }
+  let (:message) { Linkbot::Message.new("text", 1, "user", nil, :message, {room: "this_room"}) }
 
   describe "#collect" do
     it "loads plugins found in a given path" do
