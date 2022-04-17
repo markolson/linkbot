@@ -1,25 +1,37 @@
 require 'spec_helper'
 
 describe Linkbot::Plugin do
-  before(:each) do
-    Linkbot::Plugin.collect([PLUGIN_PATH])
-  end
-
+  let(:mock_plugins_path) { File.expand_path(File.join(File.dirname(__FILE__), "mocks", "plugins")) }
   let (:message) { Message.new("text", 1, "user", nil, :message, {room: "this_room"}) }
 
-  it "has the correct plugin" do
-    expect(Linkbot::Plugin.plugins.length).to eq 1
-    expect(Linkbot::Plugin.plugins.first.class).to eq MockPlugin
-    expect(Linkbot::Plugin.plugins.first.handlers).to eq({:message => {:regex => //, :handler => :on_message}})
+  describe "#collect" do
+    it "loads plugins found in a given path" do
+      Linkbot::Plugin.collect([mock_plugins_path])
+      expect(Linkbot::Plugin.plugins.map(&:class)).to include(MockPlugin)
+    end
   end
 
-  it "handles a message" do
-    plugin = Linkbot::Plugin.plugins.first
-    response = Linkbot::Message.handle(message)
+  describe "plugin message handling smoke test" do
+    subject do
+      Linkbot::Plugin.collect([mock_plugins_path])
+      Linkbot::Plugin.plugins
+                     .select { |p| p.class == MockPlugin }
+                     .first
+    end
 
-    expect(plugin.messages.length).to eq 1
-    expect(plugin.messages[0].body).to eq "text"
-    expect(response).to eq ['text']
+    it "has the expected mock plugin" do
+      expect(subject.class).to eq MockPlugin
+      expect(subject.handlers).to eq({:message => {:regex => //, :handler => :on_message}})
+    end
+
+    it "handles a message" do
+      plugin = subject
+      response = Linkbot::Message.handle(message)
+
+      expect(plugin.messages.length).to eq 1
+      expect(plugin.messages[0].body).to eq "text"
+      expect(response).to eq ['text']
+    end
   end
 
   context "MockPlugin" do
