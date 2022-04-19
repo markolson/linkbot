@@ -8,7 +8,7 @@ plugin system and many plugins already written.
 
 ## Installation
 
-Make sure you have ruby 2.1 or greater, rubygems, and bundler installed.
+Make sure you have ruby 2.7 or greater, rubygems, and bundler installed.
 
 Then,
 
@@ -20,14 +20,16 @@ bundle install
 
 That should set you up with linkbot and all its dependencies.
 
-Next, copy `config.json.example` into `config.json`, and set the
-appropriate variables. You must fill in the `connectors` field
-with appropriate connection information, but feel free to delete
-sections from the `plugins` section for plugins you don't want.
+Next, copy `config.example.json` into `./tmp/config.json`, and set the
+appropriate variables. You must fill in the `connectors` field with appropriate
+connection information, but feel free to add or delete entries from the `plugins`
+section for plugins you don't want. KEEP the `plugins` section, though, even if
+it is empty.
 
 (TODO: more on this, refactor config)
 
-Finally, run `ruby linkbot.rb` to run linkbot.
+Finally, run `linkbot --config ./tmp/config.json --database ./tmp/data.sqlite3`
+to run linkbot.
 
 ## Connectors
 

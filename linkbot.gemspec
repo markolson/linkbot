@@ -48,7 +48,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "slack-ruby-client", "~> 0.3.1"
   spec.add_runtime_dependency 'sqlite3', "~> 1.3"
   spec.add_runtime_dependency "stock_quote", ">= 1.2.6"
-  spec.add_runtime_dependency 'thin', '>= 1.5.0'
+  spec.add_runtime_dependency 'thin', '>= 1.8.0'
   spec.add_runtime_dependency 'twilio-ruby', ">= 4.13.0"
   spec.add_runtime_dependency 'twitter-stream', ">= 0.1.12"
   spec.add_runtime_dependency 'twss', ">= 0.0.5"
