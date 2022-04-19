@@ -109,7 +109,7 @@ GEM
     rack (1.6.13)
     rack-protection (1.5.5)
       rack
-    rake (10.1.0)
+    rake (13.0.6)
     rb-readline (0.5.3)
     rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
