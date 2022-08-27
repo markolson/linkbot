@@ -1,14 +1,14 @@
-class MessageType
-  MESSAGE       = :message
-  DIRECTMESSAGE = :"direct-message"
-  STARRED       = :starred
-  UNSTARRED     = :unstarred
-end
-
-Message = Struct.new(:body, :user_id, :user_name, :connector, :type, :options)
-Response = Struct.new(:message, :options)
-
 module Linkbot
+  class MessageType
+    MESSAGE       = :message
+    DIRECTMESSAGE = :"direct-message"
+    STARRED       = :starred
+    UNSTARRED     = :unstarred
+  end
+
+  Message = Struct.new(:body, :user_id, :user_name, :connector, :type, :options)
+  Response = Struct.new(:message, :options)
+
   class Message
     @@message_logs = {}
 

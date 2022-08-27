@@ -1,0 +1,14 @@
+version: '2.4'
+
+services:
+  bot: &linkbot
+    build:
+      context: .
+    image: linkbot/linkbot
+    volumes:
+      - ./tmp/config.json:/opt/bot/config.json
+      - ./tmp/data.sqlite3:/opt/bot/data.sqlite3
+
+  console:
+    <<: *linkbot
+    command: ./linkbot --console
