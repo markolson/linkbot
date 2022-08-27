@@ -61,7 +61,7 @@ module Linkbot
     end
 
     def help(message = nil)
-      @help = message if !message.nil?
+      @help = message.chomp if !message.nil?
       @help
     end
 
