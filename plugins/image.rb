@@ -59,7 +59,7 @@ class Image < Linkbot::Plugin
     #funnyjunk sucks
     images.reject! {|x| x =~ /fjcdn\.com/}
 
-    return "No images found. Lame." if images.empty?
+    return "No images found. How sad." if images.empty?
 
     url = images.sample
 
