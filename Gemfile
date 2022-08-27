@@ -18,7 +18,7 @@ gem 'phonie', ">= 3.3.1"
 gem 'rack', ">= 1.6.5"
 gem 'rexml'
 gem 'sanitize', ">= 2.1", "< 7.0"
-gem 'sinatra', "~> 1.4"
+gem 'sinatra', "~> 2.2"
 gem "slack-ruby-client"
 gem 'sqlite3', "~> 1.3"
 gem "stock_quote", ">= 1.2.6"
