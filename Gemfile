@@ -11,7 +11,7 @@ gem 'eventmachine', github: 'eventmachine/eventmachine'
 gem 'faraday', "~> 0.9"
 gem 'hpricot', ">= 0.8.6"
 gem 'htmlentities', ">= 4.3"
-gem 'httparty', "~> 0.13"
+gem 'httparty', "~> 0.21"
 gem 'image_size', ">= 1.5.0"
 gem 'octokit', "~> 2.0"
 gem 'phonie', ">= 3.3.1"
