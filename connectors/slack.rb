@@ -28,7 +28,7 @@ module Linkbot
         end
       end
 
-      update_users(@client.post("rtm.start")["users"])
+      update_users(@client.post("users.list")["members"])
 
       @rtc.start!
     end
