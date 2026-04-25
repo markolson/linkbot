@@ -3,7 +3,8 @@
     {
       "type": "slack",
       "username": "devbot",
-      "token": "a_slack_bot_token",
+      "app_token": "xapp-a_slack_app_level_token",
+      "token": "xoxb-a_slack_oauth_token",
       "icon_url": "https://dl.dropboxusercontent.com/u/31927607/drawn%20companion%20cube.png"
     }
   ],
