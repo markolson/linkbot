@@ -1,6 +1,3 @@
-require 'open-uri'
-require 'hpricot'
-
 class Soda < Linkbot::Plugin
 
   def initialize
@@ -11,7 +8,7 @@ class Soda < Linkbot::Plugin
   def on_message(message, matches)
     url = "http://reddit.com/r/wheredidthesodago.json"
 
-    doc = ActiveSupport::JSON.decode(open(url).read)
+    doc = ActiveSupport::JSON.decode(http_get(url))
 
     #reject anything with nsfw in the title
     doc = doc["data"]["children"].reject {|x| x["data"]["title"] =~ /nsfw/i || x["data"]["over_18"]}

@@ -8,18 +8,19 @@ gem 'chronic', ">= 0.10.2"
 gem 'em-http-request', ">= 1.1.5"
 gem "em-irc", ">= 0.0.2"
 gem 'eventmachine', github: 'eventmachine/eventmachine'
-gem 'faraday', "~> 0.9"
-gem 'hpricot', ">= 0.8.6"
+gem 'faraday', "~> 1.0"
 gem 'htmlentities', ">= 4.3"
 gem 'httparty', "~> 0.13"
 gem 'image_size', ">= 1.5.0"
-gem 'octokit', "~> 2.0"
+gem 'nokogiri'
+gem 'octokit'
 gem 'phonie', ">= 3.3.1"
 gem 'rack', ">= 1.6.5"
 gem 'rexml'
 gem 'sanitize', ">= 2.1", "< 7.0"
 gem 'sinatra', "~> 1.4"
 gem "slack-ruby-client"
+gem 'sorted_set'
 gem 'sqlite3', "~> 1.3"
 gem 'thin', '>= 1.8.0'
 gem 'twilio-ruby', ">= 4.13.0"

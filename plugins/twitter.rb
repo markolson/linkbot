@@ -1,5 +1,4 @@
-require 'open-uri'
-require 'hpricot'
+require 'nokogiri'
 
 class Twitter < Linkbot::Plugin
 
@@ -20,13 +19,13 @@ class Twitter < Linkbot::Plugin
 
   def on_message(message, matches)
     url = matches[0]
-    doc = Hpricot(open(url).read)
-    msg = doc.at(".opened-tweet .tweet-text").inner_text
+    doc = Nokogiri::HTML(http_get(url))
+    msg = doc.at(".opened-tweet .tweet-text").text
 
     # images we want to display have a "src" and match pbs.twimg.com/media
-    images = doc.search("img").select {|x| x.attributes.to_hash.has_key?("src") && x["src"].match(/pbs.twimg.com\/media/) }
+    images = doc.search("img").select {|x| x["src"]&.match(/pbs.twimg.com\/media/) }
     if images.length > 0
-      src = images.first.attributes["src"]
+      src = images.first["src"]
       # strip trailing :large
       src.gsub! /:large$/, ''
 

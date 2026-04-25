@@ -1,4 +1,4 @@
-require 'open-uri'
+require 'nokogiri'
 require 'certifi'
 require 'httparty'
 require 'image_size'
@@ -71,7 +71,7 @@ class Image < Linkbot::Plugin
   end
 
   def random_word
-    doc = Hpricot(open("http://www.randomword.net").read)
+    doc = Nokogiri::HTML(http_get("http://www.randomword.net"))
     doc.search("#word h2").text.strip
   end
 end

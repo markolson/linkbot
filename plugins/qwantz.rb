@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class Qwantz < Linkbot::Plugin
   def initialize
     register :regex => /!qwantz/
@@ -13,9 +15,9 @@ class Qwantz < Linkbot::Plugin
   end
 
   def on_message(message, matches)
-    doc = Hpricot(open('http://qwantz.com/index.php'))
+    doc = Nokogiri::HTML(http_get('http://qwantz.com/index.php'))
     link = doc.search("div.randomquote a")[1]
-    doc = Hpricot(open(link['href']))
+    doc = Nokogiri::HTML(http_get(link['href']))
     img = doc.search('img.comic')
     [link.inner_html.strip, img.first['src']]
   end

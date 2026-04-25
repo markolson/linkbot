@@ -1,5 +1,3 @@
-require 'open-uri'
-require 'hpricot'
 require 'sqlite3'
 require 'time'
 

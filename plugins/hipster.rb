@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class Hipster < Linkbot::Plugin
 
   def initialize
@@ -13,9 +15,9 @@ class Hipster < Linkbot::Plugin
 
     page = rand(150)
     url = "http://lookatthisfuckinhipster.com"
-    doc = Hpricot(open("#{url}?p=#{page}").read)
-    imgs = doc.search("div[@class=imagewrap] img")
-    img = url + imgs[rand(imgs.length)].attributes["src"]
+    doc = Nokogiri::HTML(open("#{url}?p=#{page}").read)
+    imgs = doc.search("div.imagewrap img")
+    img = url + imgs[rand(imgs.length)]["src"]
 
     [img, meme]
   end

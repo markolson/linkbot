@@ -1,4 +1,5 @@
 require 'digest/sha1'
+require 'nokogiri'
 
 class HackerNews < Linkbot::Plugin
 
@@ -36,7 +37,7 @@ class HackerNews < Linkbot::Plugin
     else
       begin
         site = "https://news.ycombinator.com/newcomments"
-        doc = Hpricot(open(site).read)
+        doc = Nokogiri::HTML(http_get(site))
         comments = doc.search("td.default")
         rand_comment = comments[rand(comments.length)]
 
@@ -51,7 +52,7 @@ class HackerNews < Linkbot::Plugin
 
   def periodic
     site = "https://news.ycombinator.com/newcomments"
-    doc = Hpricot(open(site).read)
+    doc = Nokogiri::HTML(http_get(site))
     comments = doc.search("td.default")
 
     comments.each do |comment|

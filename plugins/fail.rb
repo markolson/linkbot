@@ -1,5 +1,4 @@
-require 'open-uri'
-require 'hpricot'
+require 'nokogiri'
 
 class Fail < Linkbot::Plugin
   include HTTParty
@@ -10,9 +9,9 @@ class Fail < Linkbot::Plugin
 
   def on_message(message, matches)
     sound = true
-    doc = Hpricot(open("https://www.failpictures.com").read)
+    doc = Nokogiri::HTML(http_get("https://www.failpictures.com"))
     fail_image_paths = doc.search("img")
-                          .map {|i| i.attributes['src'] }
+                          .map {|i| i["src"] }
                           .keep_if {|src| src.start_with? 'photos/' }
     "https://www.failpictures.com/" + fail_image_paths.sample
   end
