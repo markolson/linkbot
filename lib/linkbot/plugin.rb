@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'pp'
 require 'faraday'
+require 'faraday_middleware'
 require 'httparty'
 require 'certifi'
 require 'image_size'
@@ -171,7 +172,8 @@ module Linkbot
     end
 
     def http_get(url, headers = {})
-      response = Faraday.get(url) { |req| req.headers.merge!(headers) }
+      conn = Faraday.new { |f| f.use FaradayMiddleware::FollowRedirects }
+      response = conn.get(url) { |req| req.headers.merge!(headers) }
       raise HttpError.new(response.status) unless response.success?
       response.body
     end
