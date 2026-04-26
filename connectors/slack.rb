@@ -62,7 +62,8 @@ module Linkbot
           channel: options[:room],
           text: message,
           username: @options["username"],
-          icon_url: @options["icon_url"]
+          icon_url: @options["icon_url"],
+          thread_ts: options[:thread_ts]
         )
       end
     end
@@ -136,7 +137,7 @@ module Linkbot
           Time.at(event["ts"].to_f),
           event["user"],
           event["text"],
-          { room: event["channel"] }
+          { room: event["channel"], thread_ts: event["thread_ts"] }
         )
       end
     end
