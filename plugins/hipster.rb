@@ -10,12 +10,12 @@ class Hipster < Linkbot::Plugin
   def on_message(message, matches)
     url = URI.parse('http://api.automeme.net/text?vocab=hipster')
 
-    res = Net::HTTP.get(url)
+    res = http_get(url)
     meme = res.split("\n").first
 
     page = rand(150)
-    url = "http://lookatthisfuckinhipster.com"
-    doc = Nokogiri::HTML(open("#{url}?p=#{page}").read)
+    url = "http://lookatthis!hnfuckinhipster.com"
+    doc = Nokogiri::HTML(http_get("#{url}?p=#{page}"))
     imgs = doc.search("div.imagewrap img")
     img = url + imgs[rand(imgs.length)]["src"]
 

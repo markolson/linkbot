@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "activesupport", ">= 5.1"
+gem 'addressable'
 gem 'async-websocket', '~> 0.8.0'
 gem "bundler", ">= 1.7"
 gem "certifi", "~> 14.5.14"

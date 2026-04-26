@@ -17,7 +17,7 @@ class Fact < Linkbot::Plugin
     end
 
     mentalfloss = "http://mentalfloss.com/amazingfactgenerator/load-fact.php?id=#{factnumber}"
-    doc = ActiveSupport::JSON.decode(http_get(mentalfloss))
+    doc = JSON.parse(http_get(mentalfloss))
 
     outputStr = doc["post_content"]
 

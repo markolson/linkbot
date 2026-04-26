@@ -41,8 +41,8 @@ class HackerNews < Linkbot::Plugin
         comments = doc.search("td.default")
         rand_comment = comments[rand(comments.length)]
 
-        user = rand_comment.search("a")[0].inner_text
-        comment = rand_comment.search("font")[0].inner_text
+        user = rand_comment.search("a")[0]&.inner_text
+        comment = rand_comment.search("div.comment")[0]&.inner_text
         "#{comment} - #{user}"
       rescue
         "Stupid Hacker News is down."

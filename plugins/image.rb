@@ -30,7 +30,7 @@ class Image < Linkbot::Plugin
       end
     end
 
-    searchterm = URI.encode(searchterm)
+    searchterm = Addressable::URI.encode(searchterm)
     searchurl = "https://www.google.com/search?tbm=isch&q=#{searchterm}&safe=active"
     searchurl += "&tbs=itp:animated" if gif_requested
 

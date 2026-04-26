@@ -14,7 +14,7 @@ class TTS < Linkbot::Plugin
       if statement.nil?
         statement = message_history(message)[1]['body']
       end
-      get("#{Linkbot::Config['plugins']['tts']['webhook']}/#{URI.encode(statement)}")
+      get("#{Linkbot::Config['plugins']['tts']['webhook']}/#{Addressable::URI.encode(statement)}")
     end
     ''
   end

@@ -3,14 +3,15 @@
 # from colourlovers.com
 
 class Bikeshed < Linkbot::Plugin
-  require 'nokogiri'
+  require 'json'
 
   def initialize
     register :regex => /\A!bikeshed\z/i
   end
 
   def on_message(message, matches)
-    colour = Nokogiri::XML(http_get('http://www.colourlovers.com/api/colors/random'))
-    colour.css("badgeUrl").children.first.content
+    hex = '%06x' % rand(0xffffff)
+    colour = JSON.parse(http_get("https://www.thecolorapi.com/id?hex=#{hex}&format=json"))
+    "#{colour['name']['value']} (##{hex.upcase})"
   end
 end

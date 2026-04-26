@@ -7,7 +7,7 @@ class Cats < Linkbot::Plugin
 
   def on_message(message, matches)
     catstreamer = "http://catstreamer.herokuapp.com/cats.json"
-    doc = ActiveSupport::JSON.decode(http_get(catstreamer))
+    doc = JSON.parse(http_get(catstreamer))
     url = doc["catpic"]
     url
   end
