@@ -11,7 +11,7 @@ class Define < Linkbot::Plugin
     word = Addressable::URI.escape(match[0])
     doc = JSON.parse(http_get("http://www.urbandictionary.com/iphone/search/define?term=#{word}"))
     if doc["result_type"] == "exact"
-      "\"#{URI.decode(word)}\": " + doc["list"][0]["definition"] + "\n" + "Example usage: " + doc["list"][0]["example"]
+      "\"#{Addressable::URI.unescape(word)}\": " + doc["list"][0]["definition"] + "\n" + "Example usage: " + doc["list"][0]["example"]
     else
       "No match!"
     end
