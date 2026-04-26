@@ -1,4 +1,5 @@
 # encoding: UTF-8
+require 'addressable/uri'
 require 'uri'
 
 class Links < Linkbot::Plugin
@@ -31,7 +32,7 @@ class Links < Linkbot::Plugin
     # So, split on the pipe and take the first thing until we get around to
     # chopping up that regex
     url = matches[0].split('|')[0]
-    url = URI.decode(url)
+    url = Addressable::URI.unescape(url)
     uri = URI.parse(url)
 
     # First, make sure this is a HTTP or HTTPS scheme
