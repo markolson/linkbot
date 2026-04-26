@@ -1,5 +1,4 @@
-require 'open-uri'
-require 'hpricot'
+require 'nokogiri'
 
 class Earth < Linkbot::Plugin
 
@@ -10,14 +9,14 @@ class Earth < Linkbot::Plugin
 
   def on_message(message, matches)
     url = URI.parse('http://www.earthlens.org/')
-    doc = Hpricot(open(url).read)
+    doc = Nokogiri::HTML(http_get(url))
     imgs = doc.search("img")
     # remove category header images
-    imgs = imgs.reject{|i| i.parent.attributes["href"].match /\/tag\//}
+    imgs = imgs.reject{|i| i.parent["href"]&.match /\/tag\//}
     # find an images.earthlens image
-    imgs = imgs.find_all{|x| x.attributes["src"].match /images.earthlens/}
+    imgs = imgs.find_all{|x| x["src"]&.match /images.earthlens/}
     # pick a random image
-    i = imgs.sample.attributes["src"]
+    i = imgs.sample["src"]
     # and return the full-size version
     i.sub "/square/", "/large/"
   end

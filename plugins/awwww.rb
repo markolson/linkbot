@@ -6,7 +6,7 @@ class Awwww < Linkbot::Plugin
 
   def on_message(message, matches)
     reddit = "https://www.reddit.com/r/aww.json"
-    doc = ActiveSupport::JSON.decode(open(reddit, "User-Agent"=>"Linkbot").read)
+    doc = JSON.parse(http_get(reddit, "User-Agent" => "Linkbot"))
     url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
 
     # Check if it's an imgur link without an image extension

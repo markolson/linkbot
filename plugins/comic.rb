@@ -16,7 +16,7 @@ class Comic < Linkbot::Plugin
       subreddit = "https://reddit.com/r/fffffffuuuuuuuuuuuu.json"
 
       Linkbot.log.debug subreddit
-      doc = ActiveSupport::JSON.decode(open(subreddit, "User-Agent"=>"Linkbot", "Cookie" => "reddit_session=8390507%2C2011-03-22T07%3A06%3A44%2C2516dcc69a22ad297b9900cbde147b365203bbbb").read)
+      doc = JSON.parse(http_get(subreddit, "User-Agent" => "Linkbot", "Cookie" => "reddit_session=8390507%2C2011-03-22T07%3A06%3A44%2C2516dcc69a22ad297b9900cbde147b365203bbbb"))
 
       url = doc["data"]["children"][rand(doc["data"]["children"].length)]["data"]["url"]
 

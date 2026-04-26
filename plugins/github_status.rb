@@ -1,5 +1,4 @@
 require 'json'
-require 'open-uri'
 require 'active_support/time'
 
 class Hubstat < Linkbot::Plugin
@@ -62,6 +61,6 @@ class Hubstat < Linkbot::Plugin
   end
 
   def get_status
-    JSON.parse(open('https://status.github.com/api/last-message.json').read)
+    JSON.parse(http_get('https://status.github.com/api/last-message.json'))
   end
 end

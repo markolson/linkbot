@@ -1,5 +1,5 @@
-require 'open-uri'
 require 'cgi'
+require 'nokogiri'
 
 class Calc < Linkbot::Plugin
 
@@ -10,10 +10,10 @@ class Calc < Linkbot::Plugin
   def on_message(message, matches)
     query = CGI.escape(matches[0])
     url = "https://encrypted.google.com/search?hl=en&q=#{query}"
-    doc = Hpricot(open(url).read)
+    doc = Nokogiri::HTML(http_get(url))
 
     begin
-      answer = (doc/'h2').find {|x| x.attributes["class"] == 'r'}.html
+      answer = doc.css('h2').find {|x| x["class"] == 'r'}.inner_html
     rescue NoMethodError
       return ["unable to calculate #{matches[0]}"]
     end

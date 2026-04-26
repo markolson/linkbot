@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'open-uri'
 require 'json'
 
 class Weather < Linkbot::Plugin
@@ -54,7 +53,7 @@ class Weather < Linkbot::Plugin
 
     # Fetch the city name from google:
     url = "http://maps.googleapis.com/maps/api/geocode/json?address=#{zip}&sensor=true"
-    doc = JSON.parse(open(url).read)
+    doc = JSON.parse(http_get(url))
     messages = []
     if doc["results"].length == 0
       messages << "(dealwithit) Could not find ZIP Code #{zip}"
@@ -64,7 +63,7 @@ class Weather < Linkbot::Plugin
       message = "Forecast for #{city}: "
 
       url = "http://api.wunderground.com/api/#{Linkbot::Config['plugins']['weather']['key']}/forecast10day/q/CA/#{zip}.json"
-      doc = JSON.parse(open(url).read)
+      doc = JSON.parse(http_get(url))
 
       days = doc["forecast"]["simpleforecast"]["forecastday"][0,days].map do |day|
         m = "#{day["date"]["weekday_short"]}: "

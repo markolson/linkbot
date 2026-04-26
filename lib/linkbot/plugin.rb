@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'pp'
+require 'faraday'
+require 'faraday_middleware'
 require 'httparty'
 require 'certifi'
 require 'image_size'
@@ -9,6 +11,12 @@ require_relative 'db'
 
 module Linkbot
   class Plugin
+    class HttpError < StandardError
+      def initialize(status)
+        super("HTTP #{status}")
+      end
+    end
+
     @@plugins = []
 
     def self.plugins; @@plugins; end;
@@ -161,6 +169,13 @@ module Linkbot
       end
 
       false
+    end
+
+    def http_get(url, headers = {})
+      conn = Faraday.new { |f| f.use FaradayMiddleware::FollowRedirects }
+      response = conn.get(url) { |req| req.headers.merge!(headers) }
+      raise HttpError.new(response.status) unless response.success?
+      response.body
     end
 
     def ago_in_words(time1, time2)

@@ -7,7 +7,7 @@ class Dogs < Linkbot::Plugin
 
   def on_message(message, matches)
     dogstreamer = "http://dogstreamer.herokuapp.com/dog"
-    gif = open(dogstreamer).read
+    gif = http_get(dogstreamer)
     gif
   end
 

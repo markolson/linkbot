@@ -1,5 +1,4 @@
-require 'open-uri'
-require 'hpricot'
+require 'nokogiri'
 
 class Cinemagraph < Linkbot::Plugin
 
@@ -14,11 +13,11 @@ class Cinemagraph < Linkbot::Plugin
       res = Net::HTTP.get(url)
       "http://www.gif.tv/gifs/#{res}.gif"
     else
-      page = rand(46)
-      doc = Hpricot(open("http://iwdrm.tumblr.com/page/#{page}").read)
-      imgs = doc.search("div[@class=post] img")
-      imgs = imgs.find_all { |x| x.attributes["src"].match /media.tumblr/ }
-      imgs[rand(imgs.length)].attributes["src"]
+      page = rand(31)
+      doc = Nokogiri::HTML(http_get("http://iwdrm.tumblr.com/page/#{page}"))
+      imgs = doc.search("div.post img")
+      imgs = imgs.find_all { |x| x["src"]&.match /media.tumblr/ }
+      imgs[rand(imgs.length)]["src"]
     end
   end
 end
