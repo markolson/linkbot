@@ -8,7 +8,7 @@ gem 'chronic', ">= 0.10.2"
 gem 'em-http-request', ">= 1.1.5"
 gem "em-irc", ">= 0.0.2"
 gem 'eventmachine', github: 'eventmachine/eventmachine'
-gem 'faraday', "~> 1.0"
+gem 'faraday', "~> 2.14"
 gem 'htmlentities', ">= 4.3"
 gem 'httparty', "~> 0.13"
 gem 'image_size', ">= 1.5.0"
