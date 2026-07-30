@@ -21,7 +21,7 @@ gem 'sanitize', ">= 2.1", "< 7.0"
 gem 'sinatra', "~> 1.4"
 gem "slack-ruby-client"
 gem 'sorted_set'
-gem 'sqlite3', "~> 1.3"
+gem 'sqlite3', "~> 2.9"
 gem 'thin', '>= 1.8.0'
 gem 'twilio-ruby', ">= 4.13.0"
 gem 'twitter-stream', ">= 0.1.12"
